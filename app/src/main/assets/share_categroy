@@ -1,0 +1,38 @@
+{
+    "errorCode": 0,
+    "errorMsg": "",
+    "data": [
+        {
+            "catename": "美食",
+            "catecode": 1
+        },
+        {
+            "catename": "时装",
+            "catecode": 2
+        },
+        {
+            "catename": "娱乐",
+            "catecode": 3
+        },
+        {
+            "catename": "运动",
+            "catecode": 4
+        },
+        {
+            "catename": "家居",
+            "catecode": 5
+        },
+        {
+            "catename": "母婴",
+            "catecode": 6
+        },
+        {
+            "catename": "旅行",
+            "catecode": 7
+        },
+        {
+            "catename": "其他",
+            "catecode": 8
+        }
+    ]
+}

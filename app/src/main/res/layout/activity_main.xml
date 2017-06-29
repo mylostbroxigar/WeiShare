@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:padding="12dp"
+        android:background="@color/button_gray">
+        <TextView
+            android:id="@+id/tv_city"
+            style="@style/menu_text_style"
+            android:text="武汉"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+
+    <FrameLayout
+        android:id="@+id/layout_content"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        android:layout_width="match_parent"/>
+    <View
+        android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="@color/line_gray"/>
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        >
+        <LinearLayout
+            android:id="@+id/layout_menu_main"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="@color/button_white"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+            <ImageView
+                android:layout_height="28dp"
+                android:layout_width="28dp"
+                android:src="@drawable/menu_main"/>
+            <TextView
+                android:id="@+id/tv_menu_main"
+                style="@style/menu_text_style"
+                android:text="首页"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_menu_share"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="@color/button_white"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+            <ImageView
+                android:layout_height="28dp"
+                android:layout_width="28dp"
+                android:src="@drawable/menu_share"/>
+            <TextView
+                android:id="@+id/tv_menu_share"
+                style="@style/menu_text_style"
+                android:text="分享"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_menu_account"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="@color/button_white"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+            <ImageView
+                android:layout_height="28dp"
+                android:layout_width="28dp"
+                android:src="@drawable/menu_account"/>
+            <TextView
+                android:id="@+id/tv_menu_account"
+                style="@style/menu_text_style"
+                android:text="账号"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_menu_mine"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="@color/button_white"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+            <ImageView
+                android:layout_height="28dp"
+                android:layout_width="28dp"
+                android:src="@drawable/menu_mine"/>
+            <TextView
+                android:id="@+id/tv_menu_mine"
+                style="@style/menu_text_style"
+                android:text="我的"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
