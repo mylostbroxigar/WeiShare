@@ -2,8 +2,8 @@ package com.borui.weishare;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -13,10 +13,8 @@ import com.borui.weishare.fragment.AccountFragment;
 import com.borui.weishare.fragment.MainFragment;
 import com.borui.weishare.fragment.MineFragment;
 import com.borui.weishare.fragment.ShareFragment;
-import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.vo.BaseVo;
 import com.borui.weishare.vo.TelAddr;
-import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -99,11 +97,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private void checkMenu(int i){
         if(i==currentMenu)
             return;
-        layoutMenuMain.setBackgroundColor(getResources().getColor(i==0?R.color.button_gray:R.color.button_white));
-        layoutMenuShare.setBackgroundColor(getResources().getColor(i==1?R.color.button_gray:R.color.button_white));
-        layoutMenuAccount.setBackgroundColor(getResources().getColor(i==2?R.color.button_gray:R.color.button_white));
-        layoutMenuMine.setBackgroundColor(getResources().getColor(i==3?R.color.button_gray:R.color.button_white));
-
+        layoutMenuMain.setBackgroundColor(ContextCompat.getColor(this, i==0?R.color.button_gray:R.color.button_white));
+        layoutMenuShare.setBackgroundColor(ContextCompat.getColor(this,i==1?R.color.button_gray:R.color.button_white));
+        layoutMenuAccount.setBackgroundColor(ContextCompat.getColor(this,i==2?R.color.button_gray:R.color.button_white));
+        layoutMenuMine.setBackgroundColor(ContextCompat.getColor(this,i==3?R.color.button_gray:R.color.button_white));
+        FragmentTransaction trans=getSupportFragmentManager().beginTransaction();
         if(fragments[i]==null){
             switch (i){
                 case 0:
@@ -119,11 +117,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                     fragments[i]=new MineFragment();
                     break;
             }
+            trans.add(R.id.layout_content,fragments[i]);
         }
 
-
-        FragmentTransaction trans=getSupportFragmentManager().beginTransaction();
-        trans.replace(R.id.layout_content,fragments[i]);
+        hideFragments(trans);
+        trans.show(fragments[i]);
         trans.commit();
+    }
+    private void hideFragments(FragmentTransaction trans){
+
+        for (Fragment fragment:fragments) {
+            if(fragment!=null)
+                trans.hide(fragment);
+        }
     }
 }
