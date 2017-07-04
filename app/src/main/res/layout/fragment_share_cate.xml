@@ -29,12 +29,11 @@
             android:gravity="center_horizontal">
             <ProgressBar
                 android:layout_height="40dp"
-                android:layout_width="40dp"
-                android:layout_centerInParent="true"/>
+                android:layout_width="40dp"/>
             <TextView
                 style="@style/menu_text_style"
                 android:layout_marginTop="10dp"
-                android:text="正在加载"/>
+                android:text="@string/loading"/>
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

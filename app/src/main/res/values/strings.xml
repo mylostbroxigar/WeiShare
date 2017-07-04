@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">WeiShare</string>
+    <string name="app_name">微分享</string>
+    <string name="loading">正在加载</string>
 </resources>
