@@ -8,4 +8,5 @@ public class APIAddress {
     public static final String LOGIN="login";
     public static final String SHARE_CATE="share_categroy";
     public static final String SHARES="shares";
+    public static final String GETCOMPANY="get_company";
 }

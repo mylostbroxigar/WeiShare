@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">微分享</string>
     <string name="loading">正在加载</string>
+    <string name="ok">确定</string>
+    <string name="cancle">取消</string>
+
+    <string name="input_company_id">请输入商户号：</string>
 </resources>
