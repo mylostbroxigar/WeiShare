@@ -5,4 +5,6 @@
     <string name="cancle">取消</string>
 
     <string name="input_company_id">请输入商户号：</string>
+    <string name="commission">佣金：</string>
+    <string name="comment">评语：</string>
 </resources>

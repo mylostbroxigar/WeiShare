@@ -23,31 +23,15 @@
 	        android:paddingTop="5dp"
 			android:textColor="@color/text_black"
 	        android:paddingBottom="5dp"/>
-	    <com.dhl.epod.view.LimitHeightLayout
-	        android:layout_height="wrap_content"
-	        android:layout_width="wrap_content">
-	    <ScrollView
-	        android:id="@+id/content_scrollview"
-	        android:layout_height="wrap_content"
-	        android:layout_width="240dp"
-	        android:background="@drawable/et_bg"
-	        android:scrollbars="none">
-	        <RelativeLayout
-	            android:layout_height="wrap_content"
-	            android:layout_width="match_parent"
-	            >
-			    <TextView
-		            android:id="@+id/common_tv_content"
-			        android:layout_height="wrap_content"
-			        android:minHeight="120dp"
-			        android:layout_width="240dp"
-			        android:textSize="16sp"
-			        android:padding="5dp"
-			        android:gravity="center"
-			        android:textColor="@color/text_black"/>
-		    </RelativeLayout>>
-	    </ScrollView>
-	    </com.dhl.epod.view.LimitHeightLayout>
+		<TextView
+			android:id="@+id/common_tv_content"
+			android:layout_height="wrap_content"
+			android:minHeight="120dp"
+			android:layout_width="240dp"
+			android:textSize="16sp"
+			android:padding="5dp"
+			android:gravity="center"
+			android:textColor="@color/text_black"/>
 	    <LinearLayout
 	        android:layout_height="wrap_content"
 	        android:layout_width="wrap_content"
