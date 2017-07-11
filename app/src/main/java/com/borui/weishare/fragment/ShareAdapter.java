@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.borui.weishare.R;
 import com.borui.weishare.vo.Shares;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,11 +24,9 @@ public class ShareAdapter extends BaseAdapter {
 
     private Context context;
     private Shares shares;
-    private RequestOptions requestOptions;
 
     public ShareAdapter(Context context) {
         this.context = context;
-        requestOptions=new RequestOptions().centerCrop();
     }
 
     public void setShares(Shares shares) {
@@ -67,7 +64,7 @@ public class ShareAdapter extends BaseAdapter {
         }
 
         Shares.DataBean shareData=shares.getData().get(position);
-        Glide.with(context).load(shareData.getCover()).apply(requestOptions).into(holder.ivShareThumb);
+        Glide.with(context).load(shareData.getCover()).centerCrop().into(holder.ivShareThumb);
         Glide.with(context).load(shareData.getHead()).into(holder.ivHead);
         holder.tvShareComment.setText(shareData.getComment());
         holder.tvLike.setText(""+shareData.getLikenum());

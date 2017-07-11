@@ -2,16 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/text_gray"
+    android:padding="1px">
     <ImageView
         android:id="@+id/iv"
         android:layout_height="match_parent"
         android:layout_width="match_parent"/>
-    <CheckBox
-        android:id="@+id/check"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/iv_del"
+        android:layout_height="20dp"
+        android:layout_width="20dp"
         android:focusable="false"
         android:layout_alignParentRight="true"
+        android:src="@drawable/icon_sub"
         />
 </RelativeLayout>
