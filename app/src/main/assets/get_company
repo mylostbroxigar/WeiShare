@@ -1,5 +1,7 @@
 {
     "errorCode": 0,
     "errorMsg": "",
-    "commission":5
+    "commission":5,
+    "isElebus":1,
+    "thumbUrl":""
     }

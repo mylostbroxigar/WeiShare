@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -13,6 +14,7 @@ import com.borui.weishare.fragment.AccountFragment;
 import com.borui.weishare.fragment.MainFragment;
 import com.borui.weishare.fragment.MineFragment;
 import com.borui.weishare.fragment.ShareFragment;
+import com.borui.weishare.util.DensityUtil;
 import com.borui.weishare.vo.BaseVo;
 import com.borui.weishare.vo.TelAddr;
 
@@ -51,6 +53,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        DisplayMetrics dm = new DisplayMetrics();
+        //获取屏幕信息
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        DensityUtil.screenWidth = dm.widthPixels;
+        DensityUtil.screenHeight = dm.heightPixels;
+        DensityUtil.dpi=dm.density;
+
         layoutMenuMain.setOnClickListener(this);
         layoutMenuShare.setOnClickListener(this);
         layoutMenuAccount.setOnClickListener(this);

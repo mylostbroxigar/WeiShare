@@ -31,7 +31,7 @@ public class ImageAdapter extends BaseAdapter {
     public ImageAdapter(Context context,int imageSize) {
         this.context = context;
         urls = new ArrayList<>();
-        this.imageSize=imageSize;
+        this.imageSize=imageSize-2;
     }
 
 

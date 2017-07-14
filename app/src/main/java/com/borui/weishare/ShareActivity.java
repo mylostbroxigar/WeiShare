@@ -18,6 +18,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.borui.weishare.util.DensityUtil;
 import com.borui.weishare.vo.Company;
 
 import java.io.File;
@@ -50,35 +51,9 @@ public class ShareActivity extends Activity {
     Company company;
     ImageAdapter imageAdapter;
 
+    private static final int REQUEST_SEND_TIMELINE=0x201;
+
     private static final int HANDLER_SHOW_GRID=0x101;
-    private Handler handler=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what){
-                case HANDLER_SHOW_GRID:
-
-                    imageAdapter=new ImageAdapter(ShareActivity.this,(gridSelectImage.getWidth()-27)/4);
-                    ViewGroup.LayoutParams layoutParams=gridSelectImage.getLayoutParams();
-                    layoutParams.height=gridSelectImage.getWidth()*3/4;
-                    gridSelectImage.setLayoutParams(layoutParams);
-                    gridSelectImage.setAdapter(imageAdapter);
-                    gridSelectImage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            if(imageAdapter.isAddButton(i)){
-                                selectImage();
-                            }else if(imageAdapter.isSubButton(i)){
-                                imageAdapter.setDelMode(true);
-                            }else{
-
-                            }
-                        }
-                    });
-                    break;
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +62,25 @@ public class ShareActivity extends Activity {
         ButterKnife.bind(this);
         company=(Company) getIntent().getSerializableExtra("company");
         tvCommission.setText(company.getCommission()+"元");
-        handler.sendEmptyMessageDelayed(HANDLER_SHOW_GRID,100);
+
+        int imageSize= (DensityUtil.screenWidth-DensityUtil.dip2px(20)-24)/4;
+        imageAdapter=new ImageAdapter(ShareActivity.this,imageSize);
+        ViewGroup.LayoutParams layoutParams=gridSelectImage.getLayoutParams();
+        layoutParams.height=imageSize*3+24;
+        gridSelectImage.setLayoutParams(layoutParams);
+        gridSelectImage.setAdapter(imageAdapter);
+        gridSelectImage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if(imageAdapter.isAddButton(i)){
+                    selectImage();
+                }else if(imageAdapter.isSubButton(i)){
+                    imageAdapter.setDelMode(true);
+                }else{
+
+                }
+            }
+        });
     }
 
     private void selectImage(){
@@ -148,8 +141,9 @@ public class ShareActivity extends Activity {
         ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");
         intent.setComponent(comp);
         intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setType("image/*");
-//        intent.putExtra("Kdescription",comment);
+        intent.putExtra("Kdescription",comment);
         //添加Uri图片地址
         ArrayList<Uri> imageUris = new ArrayList<Uri>();
         for (MediaBean mediaBean:imageAdapter.getUrls()
@@ -158,7 +152,17 @@ public class ShareActivity extends Activity {
             imageUris.add(Uri.fromFile(new File(mediaBean.getOriginalPath())));
         }
         intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
-        startActivity(intent);
+        startActivityForResult(intent,REQUEST_SEND_TIMELINE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==REQUEST_SEND_TIMELINE){
+            Intent intent=new Intent(this,SendScreenShotActivity.class);
+            intent.putExtra("company",company);
+            startActivity(intent);
+        }
     }
 
     @Override

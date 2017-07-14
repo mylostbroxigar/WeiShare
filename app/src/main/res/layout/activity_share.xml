@@ -43,7 +43,7 @@
         android:numColumns="4"
         android:horizontalSpacing="8px"
         android:verticalSpacing="8px"
-
+        android:listSelector="@null"
         />
     <LinearLayout
         android:layout_height="wrap_content"
