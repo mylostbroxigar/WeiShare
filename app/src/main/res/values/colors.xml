@@ -11,6 +11,7 @@
     <color name="text_gray">#444444</color>
     <color name="text_light_gray">#c6c6c6</color>
     <color name="text_red">#FF4081</color>
+    <color name="text_green">#009688</color>
 
     <color name="button_white">#ffffff</color>
     <color name="button_gray">#acacac</color>
