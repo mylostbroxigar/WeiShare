@@ -51,16 +51,15 @@ public class VolleyUtil {
 
 
 
-    public void doPost(String url, Type type, Map<String,String> params){
+    public void doPost(String url, Map<String,String> params, Type type){
 
-        String requestBody=getRequestBody(params);
-        Request requet=new JsonRequest(Request.Method.POST, url,type,requestBody, new JsonRequest.ResponseListener() {
+        Request requet=new JsonRequest(Request.Method.POST, url,type,params, new JsonRequest.ResponseListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
                 BaseVo basevo=new BaseVo();
-                basevo.setErrorCode(-1);
-                basevo.setErrorMsg(error.getMessage());
+                basevo.setCode(-1);
+                basevo.setMsg(error.getMessage());
                 EventBus.getDefault().post(basevo);
             }
 
@@ -84,8 +83,8 @@ public class VolleyUtil {
             public void onErrorResponse(VolleyError error) {
 
                 BaseVo basevo=new BaseVo();
-                basevo.setErrorCode(-1);
-                basevo.setErrorMsg(error.getMessage());
+                basevo.setCode(-1);
+                basevo.setMsg(error.getMessage());
                 EventBus.getDefault().post(basevo);
             }
 
@@ -97,7 +96,7 @@ public class VolleyUtil {
         requet.setShouldCache(false);
         getRequestQueue().add(requet);
     }
-    private String getRequestBody(Map<String,String> params){
+    private String getRequestBody(Map<String,Object> params){
         return "";
     }
 

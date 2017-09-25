@@ -2,6 +2,7 @@ package com.borui.weishare.net;
 
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -11,6 +12,8 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by borui on 2017/5/16.
@@ -26,7 +29,7 @@ public class JsonRequest<T> extends Request<T> {
     private ResponseListener mListener;
     private Gson mGson;
     private Type mClazz;
-    private String mRequestBody;
+    private Map<String,String> mParams;
     public JsonRequest(int method,String url, Type type, ResponseListener listener){
         super(method, url, listener);
         this.mListener = listener ;
@@ -35,13 +38,13 @@ public class JsonRequest<T> extends Request<T> {
     }
 
 
-    public JsonRequest(int method,String url, Type type, String requestBody,ResponseListener listener){
+    public JsonRequest(int method,String url, Type type, Map<String,String> params,ResponseListener listener){
         super(method, url, listener);
 
         this.mListener = listener ;
         mGson = new Gson();
         mClazz = type ;
-        mRequestBody=requestBody;
+        mParams=params;
     }
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
@@ -66,15 +69,20 @@ public class JsonRequest<T> extends Request<T> {
         mListener.onResponse(response);
     }
 
+//    @Override
+//    public byte[] getBody() {
+//        Log.e("JsonRequest", "JsonRequest getBody: "+mRequestBody );
+//        try {
+//            return mRequestBody == null ? null : mRequestBody.getBytes(PROTOCOL_CHARSET);
+//        } catch (UnsupportedEncodingException uee) {
+//            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
+//                    mRequestBody, PROTOCOL_CHARSET);
+//            return null;
+//        }
+//    }
+
     @Override
-    public byte[] getBody() {
-        Log.e("JsonRequest", "JsonRequest getBody: "+mRequestBody );
-        try {
-            return mRequestBody == null ? null : mRequestBody.getBytes(PROTOCOL_CHARSET);
-        } catch (UnsupportedEncodingException uee) {
-            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-                    mRequestBody, PROTOCOL_CHARSET);
-            return null;
-        }
+    protected Map<String, String> getParams() throws AuthFailureError {
+        return mParams;
     }
 }

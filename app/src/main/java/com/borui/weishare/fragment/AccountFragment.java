@@ -46,6 +46,9 @@ public class AccountFragment extends Fragment {
         return view;
     }
 
+    private void loadAccount(){
+
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
