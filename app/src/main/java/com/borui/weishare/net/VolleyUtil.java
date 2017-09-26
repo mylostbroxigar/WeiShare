@@ -53,7 +53,7 @@ public class VolleyUtil {
 
     public void doPost(String url, Map<String,String> params, Type type){
 
-        Request requet=new JsonRequest(Request.Method.POST, url,type,params, new JsonRequest.ResponseListener() {
+        final Request requet=new JsonRequest(Request.Method.POST, url,type,params, new JsonRequest.ResponseListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
@@ -65,7 +65,8 @@ public class VolleyUtil {
 
             @Override
             public void onResponse(Object response) {
-                EventBus.getDefault().post(response);
+                BaseVo vo=(BaseVo)response;
+                EventBus.getDefault().post(vo);
             }
         });
         requet.setShouldCache(false);

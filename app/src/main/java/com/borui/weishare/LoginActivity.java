@@ -30,7 +30,7 @@ import butterknife.OnClick;
  * Created by borui on 2017/9/25.
  */
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends BaseActivity {
     @BindView(R.id.et_username)
     EditText etUsername;
     @BindView(R.id.et_password)
@@ -93,17 +93,7 @@ public class LoginActivity extends Activity {
         VolleyUtil.getInstance().doPost(APIAddress.LOGIN,params,new TypeToken<BaseVo>(){}.getType());
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        EventBus.getDefault().register(this);
-    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        EventBus.getDefault().unregister(this);
-    }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResult(BaseVo basevo) {
         if(basevo.getCode()==0){

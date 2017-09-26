@@ -10,6 +10,13 @@
 
     <string name="username">用户名</string>
     <string name="password">密码</string>
+    <string name="realname">真实姓名</string>
+    <string name="personalid">身份证</string>
+    <string name="telephone">手机号</string>
+    <string name="sex">性别</string>
+    <string name="email">邮箱</string>
+    <string name="roles">角色</string>
+    <string name="vericode">验证码</string>
     <string name="login">登录</string>
     <string name="user_register">新用户注册</string>
     <string name="register">注册</string>
@@ -18,6 +25,7 @@
     <string name="string_cannot_null">%1$s不能为空</string>
     <string name="string_cannot_less">%1$s不能少于%2$d位</string>
     <string name="string_cannot_more">%1$s不能多于%2$d位</string>
+    <string name="string_not_regex">%1$s不合规范</string>
     <string name="tel_cannnot_null">手机号不能为空</string>
     <string name="tel_not_confirm">手机号不合规范</string>
 

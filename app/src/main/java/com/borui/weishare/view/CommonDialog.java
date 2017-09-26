@@ -39,6 +39,13 @@ public class CommonDialog extends Dialog {
 				cancel();
 			}
 		});
+		btn_ok.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dismiss();
+				cancel();
+			}
+		});
 		setCancelable(false);
 		setCanceledOnTouchOutside(false);
 	}
@@ -64,7 +71,8 @@ public class CommonDialog extends Dialog {
 	public CommonDialog setOKButton(String str,View.OnClickListener l){
 		if(str!=null&&!str.equals(""))
 			btn_ok.setText(str);
-		btn_ok.setOnClickListener(l);
+		if(l!=null)
+			btn_ok.setOnClickListener(l);
 		return this;
 	}
 	public CommonDialog setCancleButton(String str,View.OnClickListener l){
