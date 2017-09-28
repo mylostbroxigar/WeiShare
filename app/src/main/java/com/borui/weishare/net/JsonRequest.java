@@ -10,10 +10,32 @@ import com.android.volley.Response;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
+
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okio.Buffer;
+import okio.BufferedSink;
+import okio.ByteString;
+import okio.Source;
+import okio.Timeout;
 
 /**
  * Created by borui on 2017/5/16.
@@ -30,6 +52,9 @@ public class JsonRequest<T> extends Request<T> {
     private Gson mGson;
     private Type mClazz;
     private Map<String,String> mParams;
+    private List<String> imgFiles;
+//    private MultipartEntityBuilder entity =MultipartEntityBuilder.create();
+    MultipartBody mutipart;
     public JsonRequest(int method,String url, Type type, ResponseListener listener){
         super(method, url, listener);
         this.mListener = listener ;
@@ -46,6 +71,9 @@ public class JsonRequest<T> extends Request<T> {
         mClazz = type ;
         mParams=params;
     }
+
+
+
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
@@ -54,8 +82,7 @@ public class JsonRequest<T> extends Request<T> {
 //                    new String(response.data, HttpHeaderParser.parseCharset(response.headers));
             String jsonString =
                     new String(response.data, PROTOCOL_CHARSET);
-            jsonString=jsonString.substring(jsonString.indexOf("{"));
-            Log.i(TAG, "jsonStr: "+jsonString);
+            Log.e(TAG, "jsonStr: "+jsonString);
             result = mGson.fromJson(jsonString,mClazz) ;
             return Response.success(result,
                     HttpHeaderParser.parseCacheHeaders(response));
@@ -68,18 +95,6 @@ public class JsonRequest<T> extends Request<T> {
     protected void deliverResponse(T response) {
         mListener.onResponse(response);
     }
-
-//    @Override
-//    public byte[] getBody() {
-//        Log.e("JsonRequest", "JsonRequest getBody: "+mRequestBody );
-//        try {
-//            return mRequestBody == null ? null : mRequestBody.getBytes(PROTOCOL_CHARSET);
-//        } catch (UnsupportedEncodingException uee) {
-//            VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s",
-//                    mRequestBody, PROTOCOL_CHARSET);
-//            return null;
-//        }
-//    }
 
     @Override
     protected Map<String, String> getParams() throws AuthFailureError {

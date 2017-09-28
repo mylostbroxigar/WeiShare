@@ -14,6 +14,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -73,6 +74,28 @@ public class VolleyUtil {
         getRequestQueue().add(requet);
     }
 
+    public void doPost(String url, Map<String,String> params, List<String> imgPaths, Type type){
+
+        FileUploadUtil fileUploadUtil=new FileUploadUtil();
+        fileUploadUtil.FileUpload(url, params, imgPaths, type, new JsonRequest.ResponseListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                BaseVo basevo=new BaseVo();
+                basevo.setCode(-1);
+                basevo.setMsg(error.getMessage());
+                EventBus.getDefault().post(basevo);
+            }
+
+            @Override
+            public void onResponse(Object response) {
+
+                BaseVo vo=(BaseVo)response;
+                EventBus.getDefault().post(vo);
+            }
+        });
+
+    }
     /**
      *
      * @param url  eg:https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=15007167330
