@@ -52,38 +52,39 @@ public class VolleyUtil {
 
 
 
-    public void doPost(String url, Map<String,String> params, Type type){
+    public void doPost(String url, Map<String,String> params, Type type,final String tag){
 
-        final Request requet=new JsonRequest(Request.Method.POST, url,type,params, new JsonRequest.ResponseListener() {
+        final Request requet=new JsonRequest(Request.Method.POST, url,type,params, tag,new JsonRequest.ResponseListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
                 BaseVo basevo=new BaseVo();
-                basevo.setCode(-1);
+                basevo.setCode("-1");
                 basevo.setMsg(error.getMessage());
+                basevo.setTag(tag);
                 EventBus.getDefault().post(basevo);
             }
 
             @Override
             public void onResponse(Object response) {
-                BaseVo vo=(BaseVo)response;
-                EventBus.getDefault().post(vo);
+                EventBus.getDefault().post(response);
             }
         });
         requet.setShouldCache(false);
         getRequestQueue().add(requet);
     }
 
-    public void doPost(String url, Map<String,String> params, List<String> imgPaths, Type type){
+    public void doPost(String url, Map<String,String> params, List<String> imgPaths, Type type,final String tag){
 
         FileUploadUtil fileUploadUtil=new FileUploadUtil();
-        fileUploadUtil.FileUpload(url, params, imgPaths, type, new JsonRequest.ResponseListener() {
+        fileUploadUtil.FileUpload(url, params, imgPaths, type, tag,new JsonRequest.ResponseListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
                 BaseVo basevo=new BaseVo();
-                basevo.setCode(-1);
+                basevo.setCode("-1");
                 basevo.setMsg(error.getMessage());
+                basevo.setTag(tag);
                 EventBus.getDefault().post(basevo);
             }
 
@@ -101,14 +102,15 @@ public class VolleyUtil {
      * @param url  eg:https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=15007167330
      * @param type
      */
-    public void doGet(String url,Type type){
-        Request requet=new JsonRequest(Request.Method.GET, url,type, new JsonRequest.ResponseListener() {
+    public void doGet(String url,Type type,final String tag){
+        Request requet=new JsonRequest(Request.Method.GET, url,type,tag, new JsonRequest.ResponseListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
                 BaseVo basevo=new BaseVo();
-                basevo.setCode(-1);
+                basevo.setCode("-1");
                 basevo.setMsg(error.getMessage());
+                basevo.setTag(tag);
                 EventBus.getDefault().post(basevo);
             }
 
@@ -119,9 +121,6 @@ public class VolleyUtil {
         });
         requet.setShouldCache(false);
         getRequestQueue().add(requet);
-    }
-    private String getRequestBody(Map<String,Object> params){
-        return "";
     }
 
 

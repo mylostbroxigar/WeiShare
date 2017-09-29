@@ -11,8 +11,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.borui.weishare.net.APIAddress;
+import com.borui.weishare.net.Cache;
 import com.borui.weishare.net.VolleyUtil;
+import com.borui.weishare.util.SPUtil;
 import com.borui.weishare.vo.BaseVo;
+import com.borui.weishare.vo.UserVo;
 import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
@@ -45,6 +48,8 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        etUsername.setText(SPUtil.getString(this,SPUtil.KEY_USERNAME));
+        etPassword.setText(SPUtil.getString(this,SPUtil.KEY_PASSWORD));
     }
     @OnClick({R.id.btn_login, R.id.tv_register})
     public void onViewClicked(View view) {
@@ -87,17 +92,26 @@ public class LoginActivity extends BaseActivity {
             return;
         }
 
+        showProgress("正在登录，请稍候");
         Map<String,String> params=new HashMap<>();
         params.put("username",username);
         params.put("password",password);
-        VolleyUtil.getInstance().doPost(APIAddress.LOGIN,params,new TypeToken<BaseVo>(){}.getType());
+        SPUtil.insertString(this,SPUtil.KEY_USERNAME,username);
+        SPUtil.insertString(this,SPUtil.KEY_PASSWORD,password);
+        VolleyUtil.getInstance().doPost(APIAddress.LOGIN,params,new TypeToken<UserVo>(){}.getType(),"login");
     }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onResult(BaseVo basevo) {
-        if(basevo.getCode()==0){
-            //TODO 登录成功
+    public void onResult(UserVo uservo) {
+        dismissProgress();
+        if(uservo.getCode().equals("0")){
+            Cache.currenUser=uservo;
+            SPUtil.insertBoolean(this,SPUtil.KEY_LOGINED,true);
+            finish();
+        }else{
+            showDialog("登录失败："+uservo.getMsg());
+            SPUtil.insertBoolean(this,SPUtil.KEY_LOGINED,false);
         }
 
     }

@@ -7,6 +7,9 @@ import android.util.Log;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -29,7 +32,7 @@ public class FileUploadUtil {
     private static final String BOUNDARY="******";
     private Handler handler;
 
-    public void FileUpload(final String uploadUrl, final Map<String,String> params, final List<String> imgFiles, final Type type, final JsonRequest.ResponseListener listener){
+    public void FileUpload(final String uploadUrl, final Map<String,String> params, final List<String> imgFiles, final Type type,final String tag, final JsonRequest.ResponseListener listener){
         handler=new Handler();
         new Thread(new Runnable() {
             @Override
@@ -42,15 +45,22 @@ public class FileUploadUtil {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                VolleyError error=new VolleyError("上传失败，网络错误");
-                                listener.onErrorResponse(error);
+                                listener.onErrorResponse(new VolleyError("网络错误"));
                             }
                         });
                     }else{
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                listener.onResponse(new Gson().fromJson(result,type));
+
+                                try {
+                                    JSONObject jo=new JSONObject(result);
+                                    jo.put("tag",tag);
+                                    listener.onResponse(new Gson().fromJson(jo.toString(),type));
+                                } catch (JSONException e) {
+                                    listener.onErrorResponse(new VolleyError("JSON解析错误"));
+                                }
+
                             }
                         });
                     }

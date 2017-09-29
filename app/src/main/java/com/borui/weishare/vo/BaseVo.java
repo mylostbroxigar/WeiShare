@@ -7,14 +7,15 @@ import java.io.Serializable;
  */
 
 public class BaseVo implements Serializable {
-    private int code;
+    private String code;
     private String msg;
+    private String tag;
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(String code) {
         this.code = code;
     }
 
@@ -26,4 +27,11 @@ public class BaseVo implements Serializable {
         this.msg = msg;
     }
 
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 }

@@ -14,11 +14,19 @@ import com.borui.weishare.fragment.AccountFragment;
 import com.borui.weishare.fragment.MainFragment;
 import com.borui.weishare.fragment.MineFragment;
 import com.borui.weishare.fragment.ShareFragment;
+import com.borui.weishare.net.APIAddress;
+import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.util.DensityUtil;
+import com.borui.weishare.util.SPUtil;
 import com.borui.weishare.vo.BaseVo;
 import com.borui.weishare.vo.TelAddr;
+import com.borui.weishare.vo.UserVo;
+import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,8 +75,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         layoutMenuMine.setOnClickListener(this);
         fragments=new Fragment[4];
         checkMenu(0);
+        autoLogin();
     }
 
+    private void autoLogin(){
+        if(SPUtil.getBoolean(this,SPUtil.KEY_LOGINED)){
+            Map<String,String> params=new HashMap<>();
+            params.put("username",SPUtil.getString(this,SPUtil.getString(this,SPUtil.KEY_USERNAME)));
+            params.put("password",SPUtil.getString(this,SPUtil.getString(this,SPUtil.KEY_PASSWORD)));
+            VolleyUtil.getInstance().doPost(APIAddress.LOGIN,params,new TypeToken<UserVo>(){}.getType(),"login");
+        }
+
+    }
 
 //    public void getTel(View view) {
 //        VolleyUtil.getInstance().doGet("https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=15007167330", new TypeToken<TelAddr>() {
@@ -104,7 +122,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     private int currentMenu=-1;
     private Fragment[] fragments;
-    private void checkMenu(int i){
+    public void checkMenu(int i){
         if(i==currentMenu)
             return;
         layoutMenuMain.setBackgroundColor(ContextCompat.getColor(this, i==0?R.color.button_gray:R.color.button_white));

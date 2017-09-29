@@ -5,7 +5,8 @@ package com.borui.weishare.net;
  */
 
 public class APIAddress {
-    public static final String ROOT="http://106.15.193.137:80/weshare/api/";
+    public static final String SERVERADDRESS="http://106.15.193.137:80/";
+    public static final String ROOT=SERVERADDRESS+"weshare/api/";
     public static final String LOGIN=ROOT+"login";
     public static final String REGISTER=ROOT+"user/register";
     public static final String GETVILIDATECODE=ROOT+"user/getValidateCode";

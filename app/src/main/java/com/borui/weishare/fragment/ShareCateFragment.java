@@ -1,9 +1,13 @@
 package com.borui.weishare.fragment;
 
+import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,13 +34,13 @@ import butterknife.ButterKnife;
 
 public class ShareCateFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     @BindView(R.id.grid_share)
-    GridView gridShare;
+    RecyclerView gridShare;
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.loading_progress)
     RelativeLayout loadingProgress;
 
-    ShareAdapter adapter;
+    ShareCateAdapter adapter;
     boolean isVisable=false;
     Shares shares;
     @Nullable
@@ -44,8 +48,24 @@ public class ShareCateFragment extends Fragment implements SwipeRefreshLayout.On
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_share_cate, null);
         ButterKnife.bind(this, view);
-        adapter=new ShareAdapter(getContext());
+        gridShare.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+        adapter=new ShareCateAdapter(getContext());
         gridShare.setAdapter(adapter);
+        gridShare.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                super.onDraw(c, parent, state);
+            }
+
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                outRect.left = 20;
+                outRect.right = 20;
+                outRect.bottom = 30;
+            }
+
+        });
         refreshLayout.setOnRefreshListener(this);
         return view;
     }

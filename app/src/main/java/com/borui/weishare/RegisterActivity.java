@@ -139,7 +139,7 @@ public class RegisterActivity extends BaseActivity {
         Map<String, String> params = new HashMap<>();
         params.put("phone", telephone);
         VolleyUtil.getInstance().doPost(APIAddress.GETVILIDATECODE, params, new TypeToken<BaseVo>() {
-        }.getType());
+        }.getType(),"getValidateCode");
         btnGetVericode.setEnabled(false);
         handler.sendEmptyMessage(0);
     }
@@ -237,29 +237,26 @@ public class RegisterActivity extends BaseActivity {
         params.put("email", email);
         params.put("roles", role);
         params.put("code", validataCode);
-        isRegistering = true;
         if(TextUtils.isEmpty(headPath)){
 
             VolleyUtil.getInstance().doPost(APIAddress.REGISTER, params, new TypeToken<BaseVo>() {
-            }.getType());
+            }.getType(),"register");
         }else{
 
             List<String> images=new ArrayList<>();
             images.add(headPath);
             VolleyUtil.getInstance().doPost(APIAddress.REGISTER, params,images, new TypeToken<BaseVo>() {
-            }.getType());
+            }.getType(),"register");
         }
         showProgress("正在注册");
     }
-
-    boolean isRegistering;
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResult(BaseVo baseVo) {
         dismissProgress();
 
-        if (isRegistering) {
-            if (baseVo.getCode() == 0) {
+        if (baseVo.getTag().equals("register")) {
+            if (baseVo.getCode() .equals("0")) {
                 commonDialog = new CommonDialog(this);
                 commonDialog.removeCancleButton().setContent("注册成功").setOKButton("", new View.OnClickListener() {
                     @Override
@@ -271,7 +268,6 @@ public class RegisterActivity extends BaseActivity {
             } else {
                 showDialog("注册失败," + baseVo.getMsg());
             }
-            isRegistering = false;
         }
 
     }

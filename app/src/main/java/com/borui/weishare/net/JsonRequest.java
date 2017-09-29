@@ -7,15 +7,19 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -53,23 +57,25 @@ public class JsonRequest<T> extends Request<T> {
     private Type mClazz;
     private Map<String,String> mParams;
     private List<String> imgFiles;
+    private String mTag;
 //    private MultipartEntityBuilder entity =MultipartEntityBuilder.create();
     MultipartBody mutipart;
-    public JsonRequest(int method,String url, Type type, ResponseListener listener){
+    public JsonRequest(int method,String url, Type type, String tag,ResponseListener listener){
         super(method, url, listener);
         this.mListener = listener ;
         mGson = new Gson();
         mClazz = type ;
+        mTag=tag;
     }
 
 
-    public JsonRequest(int method,String url, Type type, Map<String,String> params,ResponseListener listener){
+    public JsonRequest(int method,String url, Type type, Map<String,String> params,String tag,ResponseListener listener){
         super(method, url, listener);
-
         this.mListener = listener ;
         mGson = new Gson();
         mClazz = type ;
         mParams=params;
+        mTag=tag;
     }
 
 
@@ -82,12 +88,17 @@ public class JsonRequest<T> extends Request<T> {
 //                    new String(response.data, HttpHeaderParser.parseCharset(response.headers));
             String jsonString =
                     new String(response.data, PROTOCOL_CHARSET);
+            JSONObject jo=new JSONObject(jsonString);
+            jo.put("tag",mTag);
+            jsonString=jo.toString();
             Log.e(TAG, "jsonStr: "+jsonString);
             result = mGson.fromJson(jsonString,mClazz) ;
             return Response.success(result,
                     HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
-            return Response.error(new ParseError(e));
+            return Response.error(new VolleyError("不支持的编码"));
+        } catch (JSONException e){
+            return Response.error(new VolleyError("JSON格式错误"));
         }
     }
 

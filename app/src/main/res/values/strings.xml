@@ -19,6 +19,7 @@
     <string name="roles">角色</string>
     <string name="vericode">验证码</string>
     <string name="login">登录</string>
+    <string name="logout">退出登录</string>
     <string name="user_register">新用户注册</string>
     <string name="register">注册</string>
 

@@ -14,8 +14,10 @@
     <color name="text_light_gray">#c6c6c6</color>
     <color name="text_red">#FF4081</color>
     <color name="text_green">#009688</color>
+    <color name="text_blue">#50AFD5</color>
 
     <color name="button_white">#ffffff</color>
+    <color name="backgroud_gray">#ececec</color>
     <color name="button_gray">#acacac</color>
     <color name="line_gray">#565656</color>
 
