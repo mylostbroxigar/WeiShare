@@ -13,14 +13,18 @@ import android.view.ViewGroup;
 
 import com.borui.weishare.R;
 import com.borui.weishare.net.APIAddress;
+import com.borui.weishare.net.Cache;
 import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.vo.ShareCate;
+import com.borui.weishare.vo.Shares;
 import com.google.gson.reflect.TypeToken;
 import com.viewpagerindicator.TabPageIndicator;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +42,6 @@ public class MainFragment extends Fragment {
 
 
     private ContentAdapter contentAdapter;
-    private ShareCate shareCate;
 
     @Nullable
     @Override
@@ -52,8 +55,8 @@ public class MainFragment extends Fragment {
     @Override
     public void onResume() {
         EventBus.getDefault().register(this);
-        if(shareCate==null)
-            VolleyUtil.getInstance().doGetFromAssets(getContext(), APIAddress.SHARE_CATE,new TypeToken<ShareCate>(){}.getType());
+        if(Cache.shareCate==null)
+            VolleyUtil.getInstance().doGetFromAssets(getContext(), APIAddress.SHARE_CATE,new TypeToken<ShareCate>(){}.getType(),"");
         else
             initView();
         super.onResume();
@@ -66,9 +69,13 @@ public class MainFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onResult(Object obj){
-        if(obj instanceof ShareCate){
-            shareCate=(ShareCate)obj;
+    public void onResult(ShareCate shareCate){
+        if(shareCate.getCode().equals("0")){
+            for (ShareCate.DataBean data:shareCate.getData()){
+                Cache.shareCache.put(data.getCatecode(),new ArrayList<Shares.ShareItem>());
+            }
+
+            Cache.shareCate=shareCate;
             initView();
         }
     }
@@ -93,17 +100,18 @@ public class MainFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             Bundle bundle=new Bundle();
-            bundle.putInt("cateCode",shareCate.getData().get(position).getCatecode());
+            bundle.putInt("cateCode",Cache.shareCate.getData().get(position).getCatecode());
+            Log.e("=======", "getItem: position="+position+"   code=" +Cache.shareCate.getData().get(position).getCatecode());
             return Fragment.instantiate(getActivity(),ShareCateFragment.class.getName(),bundle);
         }
 
         @Override
         public int getCount() {
-            return shareCate.getData().size();
+            return Cache.shareCate.getData().size();
         }
         @Override
         public CharSequence getPageTitle(int position) {
-            return shareCate.getData().get(position).getCatename();
+            return Cache.shareCate.getData().get(position).getCatename();
         }
     }
 }

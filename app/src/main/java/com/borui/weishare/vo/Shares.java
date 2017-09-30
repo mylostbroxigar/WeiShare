@@ -8,17 +8,17 @@ import java.util.List;
 
 public class Shares extends BaseVo {
 
-    private List<DataBean> data;
+    private List<ShareItem> data;
 
-    public List<DataBean> getData() {
+    public List<ShareItem> getData() {
         return data;
     }
 
-    public void setData(List<DataBean> data) {
+    public void setData(List<ShareItem> data) {
         this.data = data;
     }
 
-    public static class DataBean {
+    public static class ShareItem {
         /**
          * shareId : 10001
          * cover : url

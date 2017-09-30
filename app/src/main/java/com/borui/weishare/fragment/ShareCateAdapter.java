@@ -2,6 +2,8 @@ package com.borui.weishare.fragment;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.borui.weishare.R;
+import com.borui.weishare.net.Cache;
 import com.borui.weishare.vo.Shares;
 import com.bumptech.glide.Glide;
+
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,15 +27,15 @@ import butterknife.ButterKnife;
 public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.ViewHolder> {
 
     private Context context;
-    private Shares shares;
+    private int cateCode;
+    private SparseIntArray heights;
 
-    public ShareCateAdapter(Context context){
+    public ShareCateAdapter(Context context,int cateCode){
         this.context=context;
+        this.cateCode=cateCode;
+        heights=new SparseIntArray();
     }
-    public void setShares(Shares shares) {
-        this.shares = shares;
-        notifyDataSetChanged();
-    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -40,19 +45,27 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Shares.DataBean shareData=shares.getData().get(position);
-        Glide.with(context).load(shareData.getCover()).thumbnail(0.1f).fitCenter().into(holder.ivShareThumb);
-        Glide.with(context).load(shareData.getHead()).into(holder.ivHead);
-        holder.tvShareComment.setText(shareData.getComment());
-        holder.tvLike.setText(""+shareData.getLikenum());
-        holder.tvCollect.setText(""+shareData.getCollectnum());
-        holder.tvName.setText(shareData.getNickname());
-        holder.tvSign.setText(shareData.getSign());
+        Shares.ShareItem shareItem=Cache.shareCache.get(cateCode).get(position);
+        Glide.with(context).load(shareItem.getCover()).thumbnail(0.1f).fitCenter().into(holder.ivShareThumb);
+        Glide.with(context).load(shareItem.getHead()).into(holder.ivHead);
+        if(heights.get(position)==0){
+            heights.put(position,holder.ivShareThumb.getHeight());
+        }else{
+            ViewGroup.LayoutParams layoutParams=holder.ivShareThumb.getLayoutParams();
+            layoutParams.height=heights.get(position);
+            holder.ivShareThumb.setLayoutParams(layoutParams);
+        }
+        Log.e("===", "onBindViewHolder: postion="+position+"   height="+heights.get(position) );
+        holder.tvShareComment.setText(shareItem.getComment());
+        holder.tvLike.setText(""+shareItem.getLikenum());
+        holder.tvCollect.setText(""+shareItem.getCollectnum());
+        holder.tvName.setText(shareItem.getNickname());
+        holder.tvSign.setText(shareItem.getSign());
     }
 
     @Override
     public int getItemCount() {
-        return shares==null?0:shares.getData().size();
+        return Cache.shareCache.get(cateCode)==null?0: Cache.shareCache.get(cateCode).size();
     }
 
 

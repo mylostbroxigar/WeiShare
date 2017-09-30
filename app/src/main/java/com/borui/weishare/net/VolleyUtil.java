@@ -1,6 +1,7 @@
 package com.borui.weishare.net;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -10,6 +11,7 @@ import com.borui.weishare.vo.BaseVo;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -124,7 +126,7 @@ public class VolleyUtil {
     }
 
 
-    public void doGetFromAssets(final Context context, final String url, final Type type){
+    public void doGetFromAssets(final Context context, final String url, final Type type,final String tag){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -136,8 +138,12 @@ public class VolleyUtil {
                     String result="";
                     while((line = bufReader.readLine()) != null)
                         result += line;
+
+                    JSONObject jo=new JSONObject(result);
+                    jo.put("tag",tag);
                     Gson mGson=new Gson();
-                    Object obj=mGson.fromJson(result,type);
+                    Log.e("=====", "run: reslut="+result );
+                    Object obj=mGson.fromJson(jo.toString(),type);
                     EventBus.getDefault().post(obj);
                 } catch (Exception e) {
                     e.printStackTrace();
