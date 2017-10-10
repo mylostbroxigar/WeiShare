@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.borui.weishare.fragment.AccountFragment;
 import com.borui.weishare.fragment.MainFragment;
 import com.borui.weishare.fragment.MineFragment;
+import com.borui.weishare.fragment.ShareEntraFragment;
 import com.borui.weishare.fragment.ShareFragment;
 import com.borui.weishare.net.APIAddress;
 import com.borui.weishare.net.VolleyUtil;
@@ -137,7 +138,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                     fragments[i]=new MainFragment();
                     break;
                 case 1:
-                    fragments[i]=new ShareFragment();
+                    fragments[i]=new ShareEntraFragment();
                     break;
                 case 2:
                     fragments[i]=new AccountFragment();
