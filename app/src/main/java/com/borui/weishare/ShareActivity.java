@@ -18,11 +18,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.borui.weishare.net.APIAddress;
+import com.borui.weishare.net.Cache;
+import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.util.DensityUtil;
+import com.borui.weishare.util.SPUtil;
+import com.borui.weishare.vo.BaseVo;
 import com.borui.weishare.vo.Company;
+import com.borui.weishare.vo.UserVo;
+import com.google.gson.reflect.TypeToken;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,7 +50,7 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
  * Created by zhuborui on 2017/7/4.
  */
 
-public class ShareActivity extends Activity {
+public class ShareActivity extends BaseActivity {
 
     @BindView(R.id.tv_commission)
     TextView tvCommission;
@@ -135,10 +148,7 @@ public class ShareActivity extends Activity {
 //        }
 //        return data;
 //    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
+
 
     private  void shareToTimeline(String comment){
         Intent intent = new Intent();
@@ -160,7 +170,36 @@ public class ShareActivity extends Activity {
         startActivityForResult(intent, REQUEST_SEND_TIMELINE);
     }
 
-    private void share(){
+    private void share(String comment){
+        Map<String,String> params=new HashMap<>();
+        params.put("token","");
+        params.put("userId", Cache.currenUser.getData().getId()+"");
+        params.put("longitude",MyApplication.amapLocation.getLongitude()+"");
+        params.put("latitude",MyApplication.amapLocation.getLatitude()+"");
+        params.put("title",comment);
+        params.put("merchanType","111");
+        params.put("remark","");
+
+        ArrayList<String> imgPaths = new ArrayList<>();
+        for (MediaBean mediaBean : imageAdapter.getUrls()
+                ) {
+            imgPaths.add(mediaBean.getOriginalPath());
+        }
+
+        VolleyUtil.getInstance().doPost(APIAddress.LOCAL_SHARE,params,imgPaths,new TypeToken<BaseVo>(){}.getType(),"localshare");
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResult(BaseVo baseVo) {
+        dismissProgress();
+        if(baseVo.getTag().equals("localshare")&&company==null){
+            if(baseVo.getCode().equals("0")){
+                showDialog("上传成功");
+            }else{
+                showDialog("上传失败："+baseVo.getMsg());
+            }
+        }
+
 
     }
     @OnClick(R.id.btn_share)
@@ -171,8 +210,7 @@ public class ShareActivity extends Activity {
             return;
         }
         shareToTimeline(comment);
-        share();
-
+        share(comment);
     }
 
 

@@ -233,7 +233,7 @@ public class RegisterActivity extends BaseActivity {
         params.put("realname", realname);
         params.put("personalid", personalid);
         params.put("sex", sex);
-        params.put("telephone", phone);
+        params.put("telphone", phone);
         params.put("email", email);
         params.put("roles", role);
         params.put("code", validataCode);
