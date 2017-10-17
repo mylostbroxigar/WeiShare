@@ -1,5 +1,6 @@
 package com.borui.weishare.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -68,15 +69,16 @@ public class MineFragment extends BaseFragment {
                 Toast.makeText(getContext(),"tap "+position,Toast.LENGTH_SHORT).show();
             }
         });
+
+        if (checkLogin()) {
+            initView();
+        }
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (checkLogin()) {
-            initView();
-        }
     }
 
     private void initView() {
@@ -101,6 +103,7 @@ public class MineFragment extends BaseFragment {
                 SPUtil.insertBoolean(getContext(),SPUtil.KEY_LOGINED,false);
                 MainActivity activity=(MainActivity)getActivity();
                 activity.checkMenu(0);
+                Cache.currenUser=null;
                 break;
         }
     }
@@ -180,6 +183,19 @@ public class MineFragment extends BaseFragment {
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==REQUEST_LOGIN){
+            if(Cache.currenUser==null){
+                MainActivity activity=(MainActivity)getActivity();
+                activity.checkMenu(0);
+            }else{
+                initView();
+            }
         }
     }
 }

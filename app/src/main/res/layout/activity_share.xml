@@ -68,6 +68,11 @@
         style="@style/commen_text_style"
         android:text="分享到本地"
         android:layout_marginLeft="10dp"/>
+    <Spinner
+        android:id="@+id/spinner_dict"
+        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_marginLeft="10dp"/>
 
     <Button
         android:id="@+id/btn_share"

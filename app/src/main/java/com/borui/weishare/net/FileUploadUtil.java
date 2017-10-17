@@ -75,7 +75,7 @@ public class FileUploadUtil {
             URL url = new URL(uploadUrl);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setDoInput(true);
-            httpURLConnection.setDoOutput(true);
+//            httpURLConnection.setDoOutput(true);
             httpURLConnection.setUseCaches(false);
             httpURLConnection.setRequestMethod("POST");
             httpURLConnection.setRequestProperty("Connection", "Keep-Alive");
@@ -95,7 +95,7 @@ public class FileUploadUtil {
             Log.e(TAG, "FileUpload: upload params="+textEntity.toString() );
             dos.write(textEntity.toString().getBytes());
             //传文件
-            int N = imgFiles.size() ;
+            int N = imgFiles==null?0:imgFiles.size() ;
             for (int i = 0; i < N ;i++){
                 Log.e(TAG, "FileUpload: strat upload "+i);
                 File imagefile=new File(imgFiles.get(i));
@@ -118,9 +118,6 @@ public class FileUploadUtil {
                 int count = 0;
                 while ((count = fis.read(buffer)) != -1)
                 {
-
-                    Log.e(TAG, "FileUpload: upload "+count);
-                    System.out.println("count="+count);
                     dos.write(buffer, 0, count);
 
                 }
@@ -132,6 +129,8 @@ public class FileUploadUtil {
             String endLine = "--" + BOUNDARY + "--" + "\r\n" ;
             dos.write(endLine.toString().getBytes("utf-8"));
 
+            int responseCode=httpURLConnection.getResponseCode();
+            Log.e(TAG, "upload: responseCode="+responseCode );
             //获取返回数据
             InputStream is = httpURLConnection.getInputStream();
             InputStreamReader isr = new InputStreamReader(is, "utf-8");

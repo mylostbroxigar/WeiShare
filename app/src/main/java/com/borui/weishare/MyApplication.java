@@ -1,6 +1,7 @@
 package com.borui.weishare;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -33,8 +34,10 @@ public class MyApplication extends Application {
         mLocationListener = new AMapLocationListener() {
             @Override
             public void onLocationChanged(AMapLocation amapLocation) {
+                Log.e("borui", "onLocationChanged: "+ amapLocation);
                 if (amapLocation != null) {
                     if (amapLocation.getErrorCode() == 0) {
+                        Log.e("borui", "onLocationChanged: init" );
                         //解析定位结果
                         MyApplication.this.amapLocation=amapLocation;
                     }

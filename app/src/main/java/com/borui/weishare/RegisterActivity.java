@@ -72,12 +72,13 @@ public class RegisterActivity extends BaseActivity {
     Button btnGetVericode;
     @BindView(R.id.et_vericode)
     EditText etVericode;
-    @BindView(R.id.btn_login)
-    Button btnLogin;
     @BindView(R.id.iv_head)
     ImageView ivHead;
 
     String headPath;
+    @BindView(R.id.btn_register)
+    Button btnRegister;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,13 +96,13 @@ public class RegisterActivity extends BaseActivity {
 
     int countSec = 60;
 
-    @OnClick({R.id.btn_get_vericode, R.id.btn_login, R.id.iv_head})
+    @OnClick({R.id.btn_get_vericode, R.id.btn_register, R.id.iv_head})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_get_vericode:
                 getVericode();
                 break;
-            case R.id.btn_login:
+            case R.id.btn_register:
                 doRegister();
                 break;
             case R.id.iv_head:
@@ -109,9 +110,10 @@ public class RegisterActivity extends BaseActivity {
                 break;
         }
     }
-    private void selectImage(){
 
-        final String TAG="shareActvity";
+    private void selectImage() {
+
+        final String TAG = "shareActvity";
         RxGalleryFinal.with(this)
                 .image()
                 .multiple()
@@ -120,12 +122,13 @@ public class RegisterActivity extends BaseActivity {
                 .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
                     @Override
                     protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
-                        headPath=imageMultipleResultEvent.getResult().get(0).getOriginalPath();
-                        Glide.with(RegisterActivity.this).load(new File(headPath)).centerCrop().override(ivHead.getWidth(),ivHead.getHeight()).into(ivHead);
+                        headPath = imageMultipleResultEvent.getResult().get(0).getOriginalPath();
+                        Glide.with(RegisterActivity.this).load(new File(headPath)).centerCrop().override(ivHead.getWidth(), ivHead.getHeight()).into(ivHead);
                     }
 
                 }).openGallery();
     }
+
     private void getVericode() {
         String telephone = etTelephone.getText().toString().trim();
         if (TextUtils.isEmpty(telephone)) {
@@ -139,7 +142,7 @@ public class RegisterActivity extends BaseActivity {
         Map<String, String> params = new HashMap<>();
         params.put("phone", telephone);
         VolleyUtil.getInstance().doPost(APIAddress.GETVILIDATECODE, params, new TypeToken<BaseVo>() {
-        }.getType(),"getValidateCode");
+        }.getType(), "getValidateCode");
         btnGetVericode.setEnabled(false);
         handler.sendEmptyMessage(0);
     }
@@ -237,16 +240,16 @@ public class RegisterActivity extends BaseActivity {
         params.put("email", email);
         params.put("roles", role);
         params.put("code", validataCode);
-        if(TextUtils.isEmpty(headPath)){
+        if (TextUtils.isEmpty(headPath)) {
 
-            VolleyUtil.getInstance().doPost(APIAddress.REGISTER, params, new TypeToken<BaseVo>() {
-            }.getType(),"register");
-        }else{
+            VolleyUtil.getInstance().doPost(APIAddress.REGISTER, params,null, new TypeToken<BaseVo>() {
+            }.getType(), "register");
+        } else {
 
-            List<String> images=new ArrayList<>();
+            List<String> images = new ArrayList<>();
             images.add(headPath);
-            VolleyUtil.getInstance().doPost(APIAddress.REGISTER, params,images, new TypeToken<BaseVo>() {
-            }.getType(),"register");
+            VolleyUtil.getInstance().doPost(APIAddress.REGISTER, params, images, new TypeToken<BaseVo>() {
+            }.getType(), "register");
         }
         showProgress("正在注册");
     }
@@ -256,7 +259,7 @@ public class RegisterActivity extends BaseActivity {
         dismissProgress();
 
         if (baseVo.getTag().equals("register")) {
-            if (baseVo.getCode() .equals("0")) {
+            if (baseVo.getCode().equals("0")) {
                 commonDialog = new CommonDialog(this);
                 commonDialog.removeCancleButton().setContent("注册成功").setOKButton("", new View.OnClickListener() {
                     @Override

@@ -11,7 +11,7 @@ public class APIAddress {
     public static final String REGISTER=ROOT+"user/register";
     public static final String GETVILIDATECODE=ROOT+"user/getValidateCode";
     public static final String LOCAL_SHARE=ROOT+"localshare/share";
-    public static final String SHARE_CATE="share_categroy";
+    public static final String SHARE_CATE=ROOT+"dict/listDicts";
     public static final String SHARES="shares";
     public static final String GETCOMPANY="get_company";
 }

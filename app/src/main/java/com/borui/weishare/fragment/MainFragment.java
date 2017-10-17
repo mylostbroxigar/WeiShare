@@ -25,6 +25,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,8 +57,11 @@ public class MainFragment extends Fragment {
     @Override
     public void onResume() {
         EventBus.getDefault().register(this);
-        if(Cache.shareCate==null)
-            VolleyUtil.getInstance().doGetFromAssets(getContext(), APIAddress.SHARE_CATE,new TypeToken<ShareCate>(){}.getType(),"");
+        if(Cache.shareCate==null){
+            Map<String,String> params=new HashMap<>();
+            params.put("dictType","MERCHANT_TYPE");
+            VolleyUtil.getInstance().doPost(APIAddress.SHARE_CATE,params,null,new TypeToken<ShareCate>(){}.getType(),"");
+        }
         else
             initView();
         super.onResume();
@@ -71,8 +76,8 @@ public class MainFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResult(ShareCate shareCate){
         if(shareCate.getCode().equals("0")){
-            for (ShareCate.DataBean data:shareCate.getData()){
-                Cache.shareCache.put(data.getCatecode(),new ArrayList<Shares.ShareItem>());
+            for (ShareCate.Dict data:shareCate.getData()){
+                Cache.shareCache.put(data.getId(),new ArrayList<Shares.ShareItem>());
             }
 
             Cache.shareCate=shareCate;
@@ -100,8 +105,8 @@ public class MainFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             Bundle bundle=new Bundle();
-            bundle.putInt("cateCode",Cache.shareCate.getData().get(position).getCatecode());
-            Log.e("=======", "getItem: position="+position+"   code=" +Cache.shareCate.getData().get(position).getCatecode());
+            bundle.putInt("cateCode",Cache.shareCate.getData().get(position).getId());
+            Log.e("=======", "getItem: position="+position+"   code=" +Cache.shareCate.getData().get(position).getId());
             return Fragment.instantiate(getActivity(),ShareCateFragment.class.getName(),bundle);
         }
 
@@ -111,7 +116,7 @@ public class MainFragment extends Fragment {
         }
         @Override
         public CharSequence getPageTitle(int position) {
-            return Cache.shareCate.getData().get(position).getCatename();
+            return Cache.shareCate.getData().get(position).getDictName();
         }
     }
 }

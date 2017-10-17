@@ -20,6 +20,7 @@ public class BaseFragment extends Fragment {
     public CommonProgressDialog commonProgress;
     public CommonDialog commonDialog;
 
+    public static final int REQUEST_LOGIN=0x101;
 
     @Override
     public void onResume() {
@@ -60,7 +61,7 @@ public class BaseFragment extends Fragment {
 
     public boolean checkLogin(){
         if(Cache.currenUser==null){
-            startActivity(new Intent(getContext(), LoginActivity.class));
+            startActivityForResult(new Intent(getContext(), LoginActivity.class),REQUEST_LOGIN);
             return false;
         }
         return true;

@@ -1,6 +1,5 @@
 package com.borui.weishare;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,11 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,13 +23,11 @@ import com.borui.weishare.net.APIAddress;
 import com.borui.weishare.net.Cache;
 import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.util.DensityUtil;
-import com.borui.weishare.util.SPUtil;
 import com.borui.weishare.vo.BaseVo;
 import com.borui.weishare.vo.Company;
-import com.borui.weishare.vo.UserVo;
+import com.borui.weishare.vo.ShareCate;
 import com.google.gson.reflect.TypeToken;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -71,6 +70,8 @@ public class ShareActivity extends BaseActivity {
     LinearLayout layoutCommission;
     @BindView(R.id.cb_addto_share)
     CheckBox cbAddtoShare;
+    @BindView(R.id.spinner_dict)
+    Spinner spinnerDict;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,13 +79,15 @@ public class ShareActivity extends BaseActivity {
         setContentView(R.layout.activity_share);
         ButterKnife.bind(this);
         company = (Company) getIntent().getSerializableExtra("company");
-        if(company==null){
+        if (company == null) {
             layoutCommission.setVisibility(View.GONE);
             cbAddtoShare.setVisibility(View.GONE);
-        }else{
+            spinnerDict.setVisibility(View.VISIBLE);
+        } else {
 
             layoutCommission.setVisibility(View.VISIBLE);
             cbAddtoShare.setVisibility(View.VISIBLE);
+            spinnerDict.setVisibility(View.GONE);
             tvCommission.setText(company.getCommission() + "元");
         }
 
@@ -106,6 +109,10 @@ public class ShareActivity extends BaseActivity {
                 }
             }
         });
+
+        ArrayAdapter<ShareCate.Dict> adapter = new ArrayAdapter<ShareCate.Dict>(this,android.R.layout.simple_spinner_item, Cache.shareCate.getData());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerDict.setAdapter(adapter);
     }
 
     private void selectImage() {
@@ -150,7 +157,7 @@ public class ShareActivity extends BaseActivity {
 //    }
 
 
-    private  void shareToTimeline(String comment){
+    private void shareToTimeline(String comment) {
         Intent intent = new Intent();
         //分享精确到微信的页面，朋友圈页面，或者选择好友分享页面
         ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");
@@ -170,15 +177,21 @@ public class ShareActivity extends BaseActivity {
         startActivityForResult(intent, REQUEST_SEND_TIMELINE);
     }
 
-    private void share(String comment){
-        Map<String,String> params=new HashMap<>();
-        params.put("token","");
-        params.put("userId", Cache.currenUser.getData().getId()+"");
-        params.put("longitude",MyApplication.amapLocation.getLongitude()+"");
-        params.put("latitude",MyApplication.amapLocation.getLatitude()+"");
-        params.put("title",comment);
-        params.put("merchanType","111");
-        params.put("remark","");
+    private void share(String comment) {
+        Map<String, String> params = new HashMap<>();
+        params.put("token", Cache.currenUser.getMsg());
+        params.put("userId", Cache.currenUser.getData().getId() + "");
+        params.put("longitude", MyApplication.amapLocation.getLongitude() + "");
+        params.put("latitude", MyApplication.amapLocation.getLatitude() + "");
+        params.put("title", comment);
+        String merchanType="";
+        if(company==null){
+            merchanType=Cache.shareCate.getData().get(spinnerDict.getSelectedItemPosition()).getId()+"";
+        }else{
+            merchanType="0";
+        }
+        params.put("merchanType", merchanType);
+        params.put("remark", "1111");
 
         ArrayList<String> imgPaths = new ArrayList<>();
         for (MediaBean mediaBean : imageAdapter.getUrls()
@@ -186,22 +199,24 @@ public class ShareActivity extends BaseActivity {
             imgPaths.add(mediaBean.getOriginalPath());
         }
 
-        VolleyUtil.getInstance().doPost(APIAddress.LOCAL_SHARE,params,imgPaths,new TypeToken<BaseVo>(){}.getType(),"localshare");
+        VolleyUtil.getInstance().doPost(APIAddress.LOCAL_SHARE, params, imgPaths, new TypeToken<BaseVo>() {
+        }.getType(), "localshare");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResult(BaseVo baseVo) {
         dismissProgress();
-        if(baseVo.getTag().equals("localshare")&&company==null){
-            if(baseVo.getCode().equals("0")){
+        if (baseVo.getTag().equals("localshare") && company == null) {
+            if (baseVo.getCode().equals("0")) {
                 showDialog("上传成功");
-            }else{
-                showDialog("上传失败："+baseVo.getMsg());
+            } else {
+                showDialog("上传失败：" + baseVo.getMsg());
             }
         }
 
 
     }
+
     @OnClick(R.id.btn_share)
     public void onViewClicked() {
         String comment = etComment.getText().toString().trim();
@@ -209,16 +224,23 @@ public class ShareActivity extends BaseActivity {
             Toast.makeText(this, "评语不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
-        shareToTimeline(comment);
-        share(comment);
-    }
+        if (company != null) {
+            shareToTimeline(comment);
+            if (cbAddtoShare.isChecked()) {
+                share(comment);
+            }
+        } else {
+            share(comment);
+        }
 
+
+    }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("===", "onActivityResult: "+resultCode);
+        Log.e("===", "onActivityResult: " + resultCode);
         if (requestCode == REQUEST_SEND_TIMELINE) {
             Intent intent = new Intent(this, SendScreenShotActivity.class);
             intent.putExtra("company", company);

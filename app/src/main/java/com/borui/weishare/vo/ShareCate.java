@@ -8,39 +8,94 @@ import java.util.List;
 
 public class ShareCate extends BaseVo{
 
-    private List<DataBean> data;
+    private List<Dict> data;
 
-    public List<DataBean> getData() {
+    public List<Dict> getData() {
         return data;
     }
 
-    public void setData(List<DataBean> data) {
+    public void setData(List<Dict> data) {
         this.data = data;
     }
 
-    public static class DataBean {
+    public static class Dict {
         /**
-         * catename : 美食
-         * catecode : 1
+         * id : 2
+         * pid : 1
+         * dictName : 衣服
+         * dictValue : YF
+         * dictOrder : 1
+         * dictRemark : null
+         * dictStatus : 1
          */
 
-        private String catename;
-        private int catecode;
+        private int id;
+        private int pid;
+        private String dictName;
+        private String dictValue;
+        private int dictOrder;
+        private Object dictRemark;
+        private int dictStatus;
 
-        public String getCatename() {
-            return catename;
+        public int getId() {
+            return id;
         }
 
-        public void setCatename(String catename) {
-            this.catename = catename;
+        public void setId(int id) {
+            this.id = id;
         }
 
-        public int getCatecode() {
-            return catecode;
+        public int getPid() {
+            return pid;
         }
 
-        public void setCatecode(int catecode) {
-            this.catecode = catecode;
+        public void setPid(int pid) {
+            this.pid = pid;
+        }
+
+        public String getDictName() {
+            return dictName;
+        }
+
+        public void setDictName(String dictName) {
+            this.dictName = dictName;
+        }
+
+        public String getDictValue() {
+            return dictValue;
+        }
+
+        public void setDictValue(String dictValue) {
+            this.dictValue = dictValue;
+        }
+
+        public int getDictOrder() {
+            return dictOrder;
+        }
+
+        public void setDictOrder(int dictOrder) {
+            this.dictOrder = dictOrder;
+        }
+
+        public Object getDictRemark() {
+            return dictRemark;
+        }
+
+        public void setDictRemark(Object dictRemark) {
+            this.dictRemark = dictRemark;
+        }
+
+        public int getDictStatus() {
+            return dictStatus;
+        }
+
+        public void setDictStatus(int dictStatus) {
+            this.dictStatus = dictStatus;
+        }
+
+        @Override
+        public String toString() {
+            return dictName;
         }
     }
 }
