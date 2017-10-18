@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -99,20 +100,34 @@ public class LoginActivity extends BaseActivity {
         SPUtil.insertString(this,SPUtil.KEY_USERNAME,username);
         SPUtil.insertString(this,SPUtil.KEY_PASSWORD,password);
         VolleyUtil.getInstance().doPost(APIAddress.LOGIN,params,new TypeToken<UserVo>(){}.getType(),"login");
+//        VolleyUtil.getInstance().doPost(APIAddress.LOGIN,params,null,new TypeToken<UserVo>(){}.getType(),"login");
     }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResult(UserVo uservo) {
+        if(!uservo.getTag().equals("login")){
+            return;
+        }
         dismissProgress();
         if(uservo.getCode().equals("0")){
             Cache.currenUser=uservo;
             SPUtil.insertBoolean(this,SPUtil.KEY_LOGINED,true);
+
+            Intent intent=new Intent();
+            intent.putExtra("checkMenu",getIntent().getIntExtra("checkMenu",0));
+            setResult(0,getIntent() );
             finish();
         }else{
             showDialog("登录失败："+uservo.getMsg());
             SPUtil.insertBoolean(this,SPUtil.KEY_LOGINED,false);
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(-1);
+        finish();
     }
 }

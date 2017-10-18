@@ -81,10 +81,17 @@ public class FileUploadUtil {
             httpURLConnection.setRequestProperty("Connection", "Keep-Alive");
             httpURLConnection.setRequestProperty("Charset", "UTF-8");
             httpURLConnection.setRequestProperty("Content-Type","multipart/form-data;boundary=" + BOUNDARY);
+
+//            httpURLConnection.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
             DataOutputStream dos = new DataOutputStream(httpURLConnection.getOutputStream());
 
             //传参数
             StringBuilder textEntity = new StringBuilder();
+//            for (Map.Entry<String, String> entry : params.entrySet()) {
+//                textEntity.append( entry.getKey() + "="+entry.getValue());
+//                textEntity.append("&");
+//            }
+
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 textEntity.append("--"+BOUNDARY+"\r\n");
                 textEntity.append("Content-Disposition: form-data; name=\""+ entry.getKey() + "\"\r\n\r\n");
@@ -131,18 +138,23 @@ public class FileUploadUtil {
 
             int responseCode=httpURLConnection.getResponseCode();
             Log.e(TAG, "upload: responseCode="+responseCode );
-            //获取返回数据
-            InputStream is = httpURLConnection.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is, "utf-8");
-            BufferedReader br = new BufferedReader(isr);
-            resultStr = br.readLine();
+            if(responseCode==200){
+
+                //获取返回数据
+                InputStream is = httpURLConnection.getInputStream();
+                InputStreamReader isr = new InputStreamReader(is, "utf-8");
+                BufferedReader br = new BufferedReader(isr);
+                resultStr = br.readLine();
+
+                is.close();
+            }
 
             dos.close();
-            is.close();
         }catch (Exception e){
             e.printStackTrace();
         }
 
         return resultStr;
     }
+
 }

@@ -69,17 +69,10 @@ public class MineFragment extends BaseFragment {
                 Toast.makeText(getContext(),"tap "+position,Toast.LENGTH_SHORT).show();
             }
         });
-
-        if (checkLogin()) {
-            initView();
-        }
+        initView();
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     private void initView() {
         Glide.with(getActivity()).load(APIAddress.SERVERADDRESS + Cache.currenUser.getData().getPersonalPicture()).into(civHead);
@@ -186,16 +179,4 @@ public class MineFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_LOGIN){
-            if(Cache.currenUser==null){
-                MainActivity activity=(MainActivity)getActivity();
-                activity.checkMenu(0);
-            }else{
-                initView();
-            }
-        }
-    }
 }

@@ -54,17 +54,16 @@ public class VolleyUtil {
 
 
 
-    public void doPost(String url, Map<String,String> params, Type type,final String tag){
+    public void doPost(String url, Map<String,String> params, final Type type,final String tag){
 
         final Request requet=new JsonRequest(Request.Method.POST, url,type,params, tag,new JsonRequest.ResponseListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                BaseVo basevo=new BaseVo();
-                basevo.setCode("-1");
-                basevo.setMsg(error.getMessage());
-                basevo.setTag(tag);
-                EventBus.getDefault().post(basevo);
+
+                String errorjson="{\"code\"=\"-1\",\"msg\"=\""+error.getMessage()+"\",\"tag\"=\""+tag+"\"}";
+
+                EventBus.getDefault().post(new Gson().fromJson(errorjson,type));
             }
 
             @Override
@@ -76,25 +75,22 @@ public class VolleyUtil {
         getRequestQueue().add(requet);
     }
 
-    public void doPost(String url, Map<String,String> params, List<String> imgPaths, Type type,final String tag){
+    public void doPost(String url, Map<String,String> params, List<String> imgPaths, final Type type, final String tag){
 
         FileUploadUtil fileUploadUtil=new FileUploadUtil();
         fileUploadUtil.FileUpload(url, params, imgPaths, type, tag,new JsonRequest.ResponseListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                BaseVo basevo=new BaseVo();
-                basevo.setCode("-1");
-                basevo.setMsg(error.getMessage());
-                basevo.setTag(tag);
-                EventBus.getDefault().post(basevo);
+                String errorjson="{\"code\"=\"-1\",\"msg\"=\""+error.getMessage()+"\",\"tag\"=\""+tag+"\"}";
+
+                EventBus.getDefault().post(new Gson().fromJson(errorjson,type));
             }
 
             @Override
             public void onResponse(Object response) {
 
-                BaseVo vo=(BaseVo)response;
-                EventBus.getDefault().post(vo);
+                EventBus.getDefault().post(response);
             }
         });
 

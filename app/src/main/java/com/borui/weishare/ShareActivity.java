@@ -23,6 +23,7 @@ import com.borui.weishare.net.APIAddress;
 import com.borui.weishare.net.Cache;
 import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.util.DensityUtil;
+import com.borui.weishare.util.ImageUtil;
 import com.borui.weishare.vo.BaseVo;
 import com.borui.weishare.vo.Company;
 import com.borui.weishare.vo.ShareCate;
@@ -126,7 +127,13 @@ public class ShareActivity extends BaseActivity {
                 .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
                     @Override
                     protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
-                        imageAdapter.addUrls(imageMultipleResultEvent.getResult());
+                        ArrayList<String> imageUris = new ArrayList<String>();
+                        for (MediaBean mediaBean : imageMultipleResultEvent.getResult()) {
+                            String imgPath= ImageUtil.compressImage(mediaBean.getOriginalPath(),720,960);
+                            if(!TextUtils.isEmpty(imgPath))
+                                imageUris.add(imgPath);
+                        }
+                        imageAdapter.addUrls(imageUris);
                     }
 
                 }).openGallery();
@@ -168,10 +175,9 @@ public class ShareActivity extends BaseActivity {
         intent.putExtra("Kdescription", comment);
         //添加Uri图片地址
         ArrayList<Uri> imageUris = new ArrayList<Uri>();
-        for (MediaBean mediaBean : imageAdapter.getUrls()
+        for (String imgPath : imageAdapter.getUrls()
                 ) {
-            Log.e("========", "onViewClicked: path=" + mediaBean.getOriginalPath() + "   Uri=" + Uri.fromFile(new File(mediaBean.getOriginalPath())));
-            imageUris.add(Uri.fromFile(new File(mediaBean.getOriginalPath())));
+            imageUris.add(Uri.fromFile(new File(imgPath)));
         }
         intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
         startActivityForResult(intent, REQUEST_SEND_TIMELINE);
@@ -193,13 +199,7 @@ public class ShareActivity extends BaseActivity {
         params.put("merchanType", merchanType);
         params.put("remark", "1111");
 
-        ArrayList<String> imgPaths = new ArrayList<>();
-        for (MediaBean mediaBean : imageAdapter.getUrls()
-                ) {
-            imgPaths.add(mediaBean.getOriginalPath());
-        }
-
-        VolleyUtil.getInstance().doPost(APIAddress.LOCAL_SHARE, params, imgPaths, new TypeToken<BaseVo>() {
+        VolleyUtil.getInstance().doPost(APIAddress.LOCAL_SHARE, params, imageAdapter.getUrls(), new TypeToken<BaseVo>() {
         }.getType(), "localshare");
     }
 
@@ -209,9 +209,17 @@ public class ShareActivity extends BaseActivity {
         if (baseVo.getTag().equals("localshare") && company == null) {
             if (baseVo.getCode().equals("0")) {
                 showDialog("上传成功");
+
+                for (String string:imageAdapter.getUrls()){
+                    ImageUtil.deleteImage(string);
+                }
+                imageAdapter.clearUrls();
+                etComment.setText("");
             } else {
                 showDialog("上传失败：" + baseVo.getMsg());
             }
+
+
         }
 
 
@@ -230,6 +238,7 @@ public class ShareActivity extends BaseActivity {
                 share(comment);
             }
         } else {
+            showProgress("正在上传");
             share(comment);
         }
 

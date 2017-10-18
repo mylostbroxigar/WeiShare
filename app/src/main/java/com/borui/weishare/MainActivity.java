@@ -1,6 +1,8 @@
 package com.borui.weishare;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +19,7 @@ import com.borui.weishare.fragment.MineFragment;
 import com.borui.weishare.fragment.ShareEntraFragment;
 import com.borui.weishare.fragment.ShareFragment;
 import com.borui.weishare.net.APIAddress;
+import com.borui.weishare.net.Cache;
 import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.util.DensityUtil;
 import com.borui.weishare.util.SPUtil;
@@ -26,6 +29,7 @@ import com.borui.weishare.vo.UserVo;
 import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,6 +62,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     @BindView(R.id.activity_main)
     LinearLayout activityMain;
 
+    public static final int REQUEST_LOGIN=0x101;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,15 +82,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         layoutMenuMine.setOnClickListener(this);
         fragments=new Fragment[4];
         checkMenu(0);
-        autoLogin();
     }
 
     private void autoLogin(){
-        if(SPUtil.getBoolean(this,SPUtil.KEY_LOGINED)){
+        if(SPUtil.getBoolean(this,SPUtil.KEY_LOGINED)&&Cache.currenUser==null){
+            Log.e("==========", "autoLogin: ");
             Map<String,String> params=new HashMap<>();
-            params.put("username",SPUtil.getString(this,SPUtil.getString(this,SPUtil.KEY_USERNAME)));
-            params.put("password",SPUtil.getString(this,SPUtil.getString(this,SPUtil.KEY_PASSWORD)));
-            VolleyUtil.getInstance().doPost(APIAddress.LOGIN,params,new TypeToken<UserVo>(){}.getType(),"login");
+            params.put("username",SPUtil.getString(this,SPUtil.KEY_USERNAME));
+            params.put("password",SPUtil.getString(this,SPUtil.KEY_PASSWORD));
+            Log.e("=========", "autoLogin: "+params.get("username")+"//"+params.get("password"));
+            VolleyUtil.getInstance().doPost(APIAddress.LOGIN,params,new TypeToken<UserVo>(){}.getType(),"autoLogin");
         }
 
     }
@@ -95,13 +101,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 //        }.getType());
 //    }
 
-    @Subscribe
-    public void receiveData(Object obj) {
-        if (obj instanceof BaseVo) {
-            BaseVo basevo = (BaseVo) obj;
-        } else if (obj instanceof TelAddr) {
-            TelAddr teladdr = (TelAddr) obj;
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResult(UserVo uservo) {
+        if(!uservo.getTag().equals("autoLogin")){
+            return;
         }
+        if(uservo.getCode().equals("0")){
+            Cache.currenUser=uservo;
+        }
+
     }
 
     @Override
@@ -111,13 +119,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 checkMenu(0);
                 break;
             case R.id.layout_menu_share:
-                checkMenu(1);
+                if(checkLogin(1))
+                    checkMenu(1);
                 break;
             case R.id.layout_menu_account:
-                checkMenu(2);
+                if(checkLogin(2))
+                    checkMenu(2);
                 break;
             case R.id.layout_menu_mine:
-                checkMenu(3);
+                if(checkLogin(3))
+                    checkMenu(3);
                 break;
         }
     }
@@ -161,4 +172,41 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 trans.hide(fragment);
         }
     }
+
+    private boolean checkLogin(int checkMenu){
+
+        if(Cache.currenUser==null){
+            Intent intent=new Intent(this,LoginActivity.class);
+            intent.putExtra("checkMenu",checkMenu);
+            startActivityForResult(intent,REQUEST_LOGIN);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==REQUEST_LOGIN){
+            if(resultCode==0){
+                int checkMenu=data.getIntExtra("checkMenu",0);
+                checkMenu(checkMenu);
+            }
+        }
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                autoLogin();
+            }
+        },1000);
+    }
+
+    Handler handler=new Handler();
 }

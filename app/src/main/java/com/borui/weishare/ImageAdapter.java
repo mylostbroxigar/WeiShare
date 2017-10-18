@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 
+import com.borui.weishare.util.ImageUtil;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
@@ -25,7 +26,7 @@ import cn.finalteam.rxgalleryfinal.bean.MediaBean;
 
 public class ImageAdapter extends BaseAdapter {
     Context context;
-    List<MediaBean> urls;
+    List<String> urls;
     int imageSize;
     boolean delMode;
     public ImageAdapter(Context context,int imageSize) {
@@ -35,10 +36,10 @@ public class ImageAdapter extends BaseAdapter {
     }
 
 
-    public List<MediaBean> getUrls(){
+    public List<String> getUrls(){
         return urls;
     }
-    public void addUrls(List<MediaBean> urls) {
+    public void addUrls(List<String> urls) {
         this.urls.addAll(urls);
         if (this.urls.size() > 8) {
             this.urls = this.urls.subList(0, 8);
@@ -46,6 +47,11 @@ public class ImageAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void clearUrls(){
+        this.urls.clear();
+        this.urls=new ArrayList<>();
+        notifyDataSetChanged();
+    }
     public void setDelMode(boolean delMode){
         this.delMode=delMode;
         notifyDataSetChanged();
@@ -95,20 +101,21 @@ public class ImageAdapter extends BaseAdapter {
         }
 
         if(delMode){
-            File file=new File(urls.get(i).getOriginalPath());
+            File file=new File(urls.get(i));
             Glide.with(context).load(file).centerCrop().override(imageSize,imageSize).into(holder.iv);
             holder.ivDel.setVisibility(View.VISIBLE);
             holder.ivDel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    urls.remove(i);
+
+                    ImageUtil.deleteImage(urls.remove(i));
                     notifyDataSetChanged();
                 }
             });
         }else{
             if(i<urls.size()){
 
-                File file=new File(urls.get(i).getOriginalPath());
+                File file=new File(urls.get(i));
                 Glide.with(context).load(file).centerCrop().override(imageSize,imageSize).into(holder.iv);
             }else if(i==urls.size()){
                 Glide.with(context).load(R.drawable.icon_add).centerCrop().override(imageSize,imageSize).into(holder.iv);

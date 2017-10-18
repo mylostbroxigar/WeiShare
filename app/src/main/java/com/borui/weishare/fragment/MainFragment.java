@@ -1,6 +1,7 @@
 package com.borui.weishare.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -35,13 +36,14 @@ import butterknife.ButterKnife;
  * Created by borui on 2017/6/30.
  */
 
-public class MainFragment extends Fragment {
+public class MainFragment extends BaseFragment {
     String TAG="SharesFragment";
     @BindView(R.id.shares_tab)
     TabPageIndicator sharesTab;
     @BindView(R.id.shares_content)
     ViewPager sharesContent;
 
+    Handler handler=new Handler();
 
     private ContentAdapter contentAdapter;
 
@@ -56,25 +58,31 @@ public class MainFragment extends Fragment {
 
     @Override
     public void onResume() {
-        EventBus.getDefault().register(this);
         if(Cache.shareCate==null){
-            Map<String,String> params=new HashMap<>();
-            params.put("dictType","MERCHANT_TYPE");
-            VolleyUtil.getInstance().doPost(APIAddress.SHARE_CATE,params,null,new TypeToken<ShareCate>(){}.getType(),"");
+            showProgress("");
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    loadShareCate();
+                }
+            },1000);
         }
         else
             initView();
         super.onResume();
     }
 
-    @Override
-    public void onPause() {
-        EventBus.getDefault().unregister(this);
-        super.onPause();
+    private void loadShareCate(){
+
+        Map<String,String> params=new HashMap<>();
+        params.put("dictType","MERCHANT_TYPE");
+        VolleyUtil.getInstance().doPost(APIAddress.SHARE_CATE,params,new TypeToken<ShareCate>(){}.getType(),"");
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResult(ShareCate shareCate){
+        dismissProgress();
         if(shareCate.getCode().equals("0")){
             for (ShareCate.Dict data:shareCate.getData()){
                 Cache.shareCache.put(data.getId(),new ArrayList<Shares.ShareItem>());

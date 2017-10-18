@@ -56,33 +56,28 @@ public class ShareEntraFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_entra_weshare:
-                if(checkLogin()){
-
-                    inputDialog=new CommonInputDialog(getContext());
-                    inputDialog.setDescribe("请输入商户号:").setHint("商户号").setOKButton(View.VISIBLE, null, new CommonInputDialog.OnOkClickListener() {
-                        @Override
-                        public void onClick(String companyid) {
-                            if(TextUtils.isEmpty(companyid)){
-                                Toast.makeText(getContext(),"商户号不能为空",Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-
-                            if(companyid.length()<6){
-                                Toast.makeText(getContext(),"商户号应为不小于6位数字",Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            inputDialog.dismiss();
-                            showProgress("正在加载商户信息");
-                            VolleyUtil.getInstance().doGetFromAssets(getContext(), APIAddress.GETCOMPANY,new TypeToken<Company>(){}.getType(),"company");
+                inputDialog=new CommonInputDialog(getContext());
+                inputDialog.setDescribe("请输入商户号:").setHint("商户号").setOKButton(View.VISIBLE, null, new CommonInputDialog.OnOkClickListener() {
+                    @Override
+                    public void onClick(String companyid) {
+                        if(TextUtils.isEmpty(companyid)){
+                            Toast.makeText(getContext(),"商户号不能为空",Toast.LENGTH_SHORT).show();
+                            return;
                         }
-                    }).show();
-                }
+
+                        if(companyid.length()<6){
+                            Toast.makeText(getContext(),"商户号应为不小于6位数字",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        inputDialog.dismiss();
+                        showProgress("正在加载商户信息");
+                        VolleyUtil.getInstance().doGetFromAssets(getContext(), APIAddress.GETCOMPANY,new TypeToken<Company>(){}.getType(),"company");
+                    }
+                }).show();
 
                 break;
             case R.id.btn_entra_share:
-                if(checkLogin()){
-                    startActivity(new Intent(getContext(), ShareActivity.class));
-                }
+                startActivity(new Intent(getContext(), ShareActivity.class));
                 break;
         }
     }

@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -12,17 +11,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.borui.weishare.R;
 import com.borui.weishare.net.APIAddress;
 import com.borui.weishare.net.Cache;
 import com.borui.weishare.net.VolleyUtil;
+import com.borui.weishare.view.EndlessRecyclerOnScrollListener;
 import com.borui.weishare.vo.Shares;
 import com.google.gson.reflect.TypeToken;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -35,33 +33,46 @@ import butterknife.ButterKnife;
  * Created by borui on 2017/6/29.
  */
 
-public class ShareCateFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class ShareCateFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
     @BindView(R.id.grid_share)
     RecyclerView gridShare;
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refreshLayout;
-    @BindView(R.id.loading_progress)
-    RelativeLayout loadingProgress;
 
     ShareCateAdapter adapter;
-//    boolean isViewCreate=false;
+    //    boolean isViewCreate=false;
     StaggeredGridLayoutManager layoutManager;
     int cateCode;
+    @BindView(R.id.tv_footer)
+    TextView tvFooter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_share_cate, null);
         ButterKnife.bind(this, view);
-        cateCode=getArguments().getInt("cateCode");
-        Log.e("======", "onCreateView: cateCode="+cateCode);
+        cateCode = getArguments().getInt("cateCode");
+        Log.e("======", "onCreateView: cateCode=" + cateCode);
 //        isViewCreate=true;
-        loadCate(false);
+        if (Cache.shareCache.get(cateCode) != null && Cache.shareCache.get(cateCode).size() > 0) {
+            setGridShare();
+        } else {
+
+            loadCate(true);
+        }
         refreshLayout.setOnRefreshListener(this);
+        gridShare.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                tvFooter.setText("正在加载更多...");
+                loadCate(false);
+            }
+        });
         return view;
     }
 
-    private void setGridShare(){
-        layoutManager=new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+    private void setGridShare() {
+        layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
         gridShare.setLayoutManager(layoutManager);
 
@@ -73,7 +84,7 @@ public class ShareCateFragment extends Fragment implements SwipeRefreshLayout.On
             }
         });
 
-        adapter=new ShareCateAdapter(getContext(),cateCode);
+        adapter = new ShareCateAdapter(getContext(), cateCode);
         gridShare.setAdapter(adapter);
         gridShare.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -100,52 +111,35 @@ public class ShareCateFragment extends Fragment implements SwipeRefreshLayout.On
 //            loadCate(false);
 //    }
 
-    private void loadCate(boolean fromUser){
+    private void loadCate(boolean refresh) {
 
-//        if(getUserVisibleHint()){
-            Log.e("======", "loadCate: cateCode="+cateCode);
-            if(fromUser){
-                Cache.shareCache.put(cateCode,new ArrayList<Shares.ShareItem>());
-                VolleyUtil.getInstance().doGetFromAssets(getContext(),APIAddress.SHARES,new TypeToken<Shares>(){}.getType(),""+cateCode);
-            }else {
-                if(Cache.shareCache.get(cateCode).size()==0){
-                    loadingProgress.setVisibility(View.VISIBLE);
-                    VolleyUtil.getInstance().doGetFromAssets(getContext(),APIAddress.SHARES,new TypeToken<Shares>(){}.getType(),""+cateCode);
-                }else{
-                    setGridShare();
-                }
-            }
+        if (refresh) {
 
-//        }
-    }
-    @Override
-    public void onResume() {
-        EventBus.getDefault().register(this);
-//        isVisable=true;
-//        Log.e("======", "onResume: "+"  code="+cateCode);
-//        loadCate(false);
-        super.onResume();
-    }
+            Cache.shareCache.put(cateCode, new ArrayList<Shares.ShareItem>());
+            VolleyUtil.getInstance().doGetFromAssets(getContext(), APIAddress.SHARES, new TypeToken<Shares>() {
+            }.getType(), "" + cateCode);
+            refreshLayout.setRefreshing(true);
+        } else {
 
-    @Override
-    public void onPause() {
-        EventBus.getDefault().unregister(this);
-        super.onPause();
+            VolleyUtil.getInstance().doGetFromAssets(getContext(), APIAddress.SHARES, new TypeToken<Shares>() {
+            }.getType(), "" + cateCode);
+
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onResult(Shares shares){
-        if(!shares.getTag().equals(""+cateCode))
+    public void onResult(Shares shares) {
+        if (!shares.getTag().equals("" + cateCode))
             return;
         refreshLayout.setRefreshing(false);
-        loadingProgress.setVisibility(View.GONE);
-        if(shares.getCode().equals("0")){
-            if(Cache.shareCache.get(cateCode).size()==0){
+        tvFooter.setText("");
+        if (shares.getCode().equals("0")) {
+            if (Cache.shareCache.get(cateCode).size() == 0) {
                 Cache.shareCache.get(cateCode).addAll(shares.getData());
                 setGridShare();
-            }else{
+            } else {
                 Cache.shareCache.get(cateCode).addAll(shares.getData());
-                adapter.notifyItemRangeChanged(adapter.getItemCount(),shares.getData().size());
+                adapter.notifyItemRangeChanged(adapter.getItemCount(), shares.getData().size());
             }
         }
     }
@@ -154,4 +148,5 @@ public class ShareCateFragment extends Fragment implements SwipeRefreshLayout.On
     public void onRefresh() {
         loadCate(true);
     }
+
 }
