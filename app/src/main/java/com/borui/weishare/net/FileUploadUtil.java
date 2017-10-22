@@ -38,7 +38,6 @@ public class FileUploadUtil {
             @Override
             public void run() {
                 final String result=upload(uploadUrl,params,imgFiles);
-                Log.e(TAG, "run: result="+result );
                 if(listener!=null){
                     if(TextUtils.isEmpty(result)){
 

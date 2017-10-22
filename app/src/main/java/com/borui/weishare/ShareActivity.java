@@ -197,7 +197,7 @@ public class ShareActivity extends BaseActivity {
             merchanType="0";
         }
         params.put("merchanType", merchanType);
-        params.put("remark", "1111");
+        params.put("remark", "");
 
         VolleyUtil.getInstance().doPost(APIAddress.LOCAL_SHARE, params, imageAdapter.getUrls(), new TypeToken<BaseVo>() {
         }.getType(), "localshare");

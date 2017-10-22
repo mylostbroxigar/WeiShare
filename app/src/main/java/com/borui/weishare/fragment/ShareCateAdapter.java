@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.borui.weishare.R;
+import com.borui.weishare.net.APIAddress;
 import com.borui.weishare.net.Cache;
 import com.borui.weishare.vo.Shares;
 import com.bumptech.glide.Glide;
@@ -46,8 +47,8 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Shares.ShareItem shareItem=Cache.shareCache.get(cateCode).get(position);
-        Glide.with(context).load(shareItem.getCover()).thumbnail(0.1f).fitCenter().into(holder.ivShareThumb);
-        Glide.with(context).load(shareItem.getHead()).into(holder.ivHead);
+        Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPics().get(0).getPicPath()).fitCenter().into(holder.ivShareThumb);
+        Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPersonalPicture()).into(holder.ivHead);
         if(heights.get(position)==0){
             heights.put(position,holder.ivShareThumb.getHeight());
         }else{
@@ -55,12 +56,14 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
             layoutParams.height=heights.get(position);
             holder.ivShareThumb.setLayoutParams(layoutParams);
         }
+
         Log.e("===", "onBindViewHolder: postion="+position+"   height="+heights.get(position) );
-        holder.tvShareComment.setText(shareItem.getComment());
-        holder.tvLike.setText(""+shareItem.getLikenum());
-        holder.tvCollect.setText(""+shareItem.getCollectnum());
-        holder.tvName.setText(shareItem.getNickname());
-        holder.tvSign.setText(shareItem.getSign());
+        Log.e("===", "onBindViewHolder: shareItem.getTitle()="+shareItem.getTitle()+"  "+shareItem.getLiked()  );
+        holder.tvShareComment.setText(shareItem.getTitle());
+        holder.tvLike.setText(""+shareItem.getLiked());
+        holder.tvCollect.setText(""+shareItem.getCollections());
+        holder.tvName.setText(shareItem.getRealname());
+//        holder.tvSign.setText(shareItem.getSign());
     }
 
     @Override

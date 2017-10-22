@@ -114,7 +114,6 @@ public class MainFragment extends BaseFragment {
         public Fragment getItem(int position) {
             Bundle bundle=new Bundle();
             bundle.putInt("cateCode",Cache.shareCate.getData().get(position).getId());
-            Log.e("=======", "getItem: position="+position+"   code=" +Cache.shareCate.getData().get(position).getId());
             return Fragment.instantiate(getActivity(),ShareCateFragment.class.getName(),bundle);
         }
 

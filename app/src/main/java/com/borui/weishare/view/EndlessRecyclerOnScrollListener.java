@@ -11,8 +11,10 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+
         int lastPosition=-1;
         StaggeredGridLayoutManager layoutManager=(StaggeredGridLayoutManager) recyclerView.getLayoutManager();
+        layoutManager.invalidateSpanAssignments();
         if(newState==RecyclerView.SCROLL_STATE_IDLE){
             int[] lastPositions = new int[layoutManager.getSpanCount()];
             layoutManager.findLastVisibleItemPositions(lastPositions);

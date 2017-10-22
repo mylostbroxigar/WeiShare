@@ -24,7 +24,7 @@ public class ImageUtil {
         Bitmap bmp = BitmapFactory.decodeFile(path);
         if(bmp==null||bmp.getWidth()==0||bmp.getHeight()==0)
             return null;
-        String newPath=SdcardUtil.getCompressFolder()+"/temp_"+System.currentTimeMillis()+".jpg";
+        String newPath=SdcardUtil.getCompressFolder()+"/weshare_"+System.currentTimeMillis()+".jpg";
         float scalex = (float) bmp.getWidth() / (float) maxWidth;
         float scaleY = (float) bmp.getHeight() / (float) maxHeight;
         float scale = scalex > scaleY ? scalex : scaleY;

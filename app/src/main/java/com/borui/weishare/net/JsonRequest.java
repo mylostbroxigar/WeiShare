@@ -11,7 +11,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
@@ -92,6 +97,7 @@ public class JsonRequest<T> extends Request<T> {
             jo.put("tag",mTag);
             jsonString=jo.toString();
             Log.e(TAG, "jsonStr: "+jsonString);
+//            Gson mGson=new GsonBuilder().create();
             result = mGson.fromJson(jsonString,mClazz) ;
             return Response.success(result,
                     HttpHeaderParser.parseCacheHeaders(response));
@@ -111,4 +117,33 @@ public class JsonRequest<T> extends Request<T> {
     protected Map<String, String> getParams() throws AuthFailureError {
         return mParams;
     }
+
+
+    public static final TypeAdapter<String> StringAdapter = new TypeAdapter<String>() {
+        public String read(JsonReader reader) {
+            try {
+                Log.e(TAG, "read:reader.peek= "+reader.peek() );
+                if (reader.peek() == JsonToken.NULL) {
+                    reader.nextNull();
+                    return "";//原先是返回Null，这里改为返回空字符串
+                }
+                return reader.nextString();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return "";
+        }
+
+        public void write(JsonWriter writer, String value) {
+            try {
+                if (value == null) {
+                    writer.nullValue();
+                    return;
+                }
+                writer.value(value);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
 }
