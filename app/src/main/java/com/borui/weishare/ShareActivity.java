@@ -196,7 +196,7 @@ public class ShareActivity extends BaseActivity {
         }else{
             merchanType="0";
         }
-        params.put("merchanType", merchanType);
+        params.put("merchantType", merchanType);
         params.put("remark", "");
 
         VolleyUtil.getInstance().doPost(APIAddress.LOCAL_SHARE, params, imageAdapter.getUrls(), new TypeToken<BaseVo>() {
@@ -230,6 +230,10 @@ public class ShareActivity extends BaseActivity {
         String comment = etComment.getText().toString().trim();
         if (TextUtils.isEmpty(comment)) {
             Toast.makeText(this, "评语不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(imageAdapter.getUrls().size()==0){
+            Toast.makeText(this, "必须添加图片", Toast.LENGTH_SHORT).show();
             return;
         }
         if (company != null) {

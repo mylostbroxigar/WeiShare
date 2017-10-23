@@ -29,12 +29,12 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
 
     private Context context;
     private int cateCode;
-    private SparseIntArray heights;
+    private int frameWidth;
 
-    public ShareCateAdapter(Context context,int cateCode){
+    public ShareCateAdapter(Context context,int cateCode,int frameWidth){
         this.context=context;
         this.cateCode=cateCode;
-        heights=new SparseIntArray();
+        this.frameWidth=frameWidth;
     }
 
 
@@ -47,18 +47,15 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Shares.ShareItem shareItem=Cache.shareCache.get(cateCode).get(position);
-        Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPics().get(0).getPicPath()).fitCenter().into(holder.ivShareThumb);
-        Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPersonalPicture()).into(holder.ivHead);
-        if(heights.get(position)==0){
-            heights.put(position,holder.ivShareThumb.getHeight());
-        }else{
-            ViewGroup.LayoutParams layoutParams=holder.ivShareThumb.getLayoutParams();
-            layoutParams.height=heights.get(position);
-            holder.ivShareThumb.setLayoutParams(layoutParams);
-        }
+        ViewGroup.LayoutParams layoutParams=holder.ivShareThumb.getLayoutParams();
+        layoutParams.width=frameWidth;
+        layoutParams.height=getHeight(shareItem);
+        holder.ivShareThumb.setLayoutParams(layoutParams);
 
-        Log.e("===", "onBindViewHolder: postion="+position+"   height="+heights.get(position) );
-        Log.e("===", "onBindViewHolder: shareItem.getTitle()="+shareItem.getTitle()+"  "+shareItem.getLiked()  );
+        Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPics().get(0).getPicPath()).thumbnail(0.1f).fitCenter().into(holder.ivShareThumb);
+        Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPersonalPicture()).into(holder.ivHead);
+
+
         holder.tvShareComment.setText(shareItem.getTitle());
         holder.tvLike.setText(""+shareItem.getLiked());
         holder.tvCollect.setText(""+shareItem.getCollections());
@@ -66,6 +63,9 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
 //        holder.tvSign.setText(shareItem.getSign());
     }
 
+    private int getHeight(Shares.ShareItem shareItem){
+        return shareItem.getPics().get(0).getPicHeight()*frameWidth/shareItem.getPics().get(0).getPicWidth();
+    }
     @Override
     public int getItemCount() {
         return Cache.shareCache.get(cateCode)==null?0: Cache.shareCache.get(cateCode).size();

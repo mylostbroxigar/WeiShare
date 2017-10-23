@@ -233,6 +233,8 @@ public class Shares extends BaseVo {
             private int id;
             private int shareId;
             private String picPath;
+            private int picWidth;
+            private int picHeight;
 
             public int getId() {
                 return id;
@@ -256,6 +258,22 @@ public class Shares extends BaseVo {
 
             public void setPicPath(String picPath) {
                 this.picPath = picPath;
+            }
+
+            public int getPicWidth() {
+                return picWidth;
+            }
+
+            public void setPicWidth(int picWidth) {
+                this.picWidth = picWidth;
+            }
+
+            public int getPicHeight() {
+                return picHeight;
+            }
+
+            public void setPicHeight(int picHeight) {
+                this.picHeight = picHeight;
             }
         }
     }
