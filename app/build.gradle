@@ -16,6 +16,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['lib']
+        }
+    }
 }
 
 dependencies {
@@ -32,4 +38,6 @@ dependencies {
     compile 'org.apache.httpcomponents:httpmime:4.5.3'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.amap.api:location:latest.integration'
+    compile files('lib/jcore-android-1.1.7.jar')
+    compile files('lib/jpush-android-3.0.9.jar')
 }
