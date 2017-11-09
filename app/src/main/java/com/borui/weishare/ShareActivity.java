@@ -26,6 +26,7 @@ import com.borui.weishare.util.DensityUtil;
 import com.borui.weishare.util.ImageUtil;
 import com.borui.weishare.vo.BaseVo;
 import com.borui.weishare.vo.Company;
+import com.borui.weishare.vo.MerchantVo;
 import com.borui.weishare.vo.ShareCate;
 import com.google.gson.reflect.TypeToken;
 
@@ -61,10 +62,11 @@ public class ShareActivity extends BaseActivity {
     @BindView(R.id.btn_share)
     Button btnShare;
 
-    Company company;
+    MerchantVo merchantVo;
     ImageAdapter imageAdapter;
 
     private static final int REQUEST_SEND_TIMELINE = 0x201;
+    private static final int REQUEST_SEND_SCREENSHOT = 0x202;
 
     private static final int HANDLER_SHOW_GRID = 0x101;
     @BindView(R.id.layout_commission)
@@ -79,8 +81,8 @@ public class ShareActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
         ButterKnife.bind(this);
-        company = (Company) getIntent().getSerializableExtra("company");
-        if (company == null) {
+        merchantVo = (MerchantVo) getIntent().getSerializableExtra("merchant");
+        if (merchantVo == null) {
             layoutCommission.setVisibility(View.GONE);
             cbAddtoShare.setVisibility(View.GONE);
             spinnerDict.setVisibility(View.VISIBLE);
@@ -89,7 +91,7 @@ public class ShareActivity extends BaseActivity {
             layoutCommission.setVisibility(View.VISIBLE);
             cbAddtoShare.setVisibility(View.VISIBLE);
             spinnerDict.setVisibility(View.GONE);
-            tvCommission.setText(company.getCommission() + "元");
+            tvCommission.setText( "5元");
         }
 
         int imageSize = (DensityUtil.screenWidth - DensityUtil.dip2px(20) - 24) / 4;
@@ -191,7 +193,7 @@ public class ShareActivity extends BaseActivity {
         params.put("latitude", MyApplication.amapLocation.getLatitude() + "");
         params.put("title", comment);
         String merchanType="";
-        if(company==null){
+        if(merchantVo==null){
             merchanType=Cache.shareCate.getData().get(spinnerDict.getSelectedItemPosition()).getId()+"";
         }else{
             merchanType="0";
@@ -206,7 +208,7 @@ public class ShareActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResult(BaseVo baseVo) {
         dismissProgress();
-        if (baseVo.getTag().equals("localshare") && company == null) {
+        if (baseVo.getTag().equals("localshare") && merchantVo == null) {
             if (baseVo.getCode().equals("0")) {
                 showDialog("上传成功");
 
@@ -236,7 +238,7 @@ public class ShareActivity extends BaseActivity {
             Toast.makeText(this, "必须添加图片", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (company != null) {
+        if (merchantVo != null) {
             shareToTimeline(comment);
             if (cbAddtoShare.isChecked()) {
                 share(comment);
@@ -256,8 +258,11 @@ public class ShareActivity extends BaseActivity {
         Log.e("===", "onActivityResult: " + resultCode);
         if (requestCode == REQUEST_SEND_TIMELINE) {
             Intent intent = new Intent(this, SendScreenShotActivity.class);
-            intent.putExtra("company", company);
-            startActivity(intent);
+            intent.putExtra("merchant", merchantVo);
+            startActivityForResult(intent,REQUEST_SEND_SCREENSHOT);
+        }
+        if(requestCode==REQUEST_SEND_SCREENSHOT&&resultCode==200){
+            finish();
         }
     }
 

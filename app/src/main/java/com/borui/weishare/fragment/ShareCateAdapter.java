@@ -7,6 +7,7 @@ import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +32,21 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
     private int cateCode;
     private int frameWidth;
 
+    public interface OnItemClickListener{
+        public void onItemClick(View view,int position);
+    }
+    public interface OnItemLongClickListener{
+        public void onItemLongClick(View view,int position);
+    }
+    private OnItemClickListener onItemClickListener;
+    private OnItemLongClickListener onItemLongClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+        this.onItemClickListener=onItemClickListener;
+    }
+    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener){
+        this.onItemLongClickListener=onItemLongClickListener;
+    }
     public ShareCateAdapter(Context context,int cateCode,int frameWidth){
         this.context=context;
         this.cateCode=cateCode;
@@ -38,6 +54,9 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
     }
 
 
+    public Shares.ShareItem getItem(int position){
+        return Cache.shareCache.get(cateCode).get(position);
+    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.layout_shares_item, parent, false);
@@ -45,13 +64,27 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         Shares.ShareItem shareItem=Cache.shareCache.get(cateCode).get(position);
         ViewGroup.LayoutParams layoutParams=holder.ivShareThumb.getLayoutParams();
         layoutParams.width=frameWidth;
         layoutParams.height=getHeight(shareItem);
         holder.ivShareThumb.setLayoutParams(layoutParams);
-
+        holder.ivShareThumb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(onItemClickListener!=null)
+                    onItemClickListener.onItemClick(view,position);
+            }
+        });
+        holder.ivShareThumb.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if(onItemLongClickListener!=null)
+                    onItemLongClickListener.onItemLongClick(view,position);
+                return true;
+            }
+        });
         Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPics().get(0).getPicPath()).thumbnail(0.1f).fitCenter().into(holder.ivShareThumb);
         Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPersonalPicture()).into(holder.ivHead);
 

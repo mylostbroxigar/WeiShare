@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:scrollbars="none">
-        <LinearLayout
+        <LinearLayout202
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:orientation="vertical">
@@ -417,7 +417,7 @@
                 android:layout_marginTop="20dp"
                 android:padding="10dp"/>
 
-        </LinearLayout>
+        </LinearLayout202>
     </ScrollView>
 
 </RelativeLayout>

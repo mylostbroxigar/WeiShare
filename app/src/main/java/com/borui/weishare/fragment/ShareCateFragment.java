@@ -1,16 +1,24 @@
 package com.borui.weishare.fragment;
 
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.borui.weishare.MyApplication;
@@ -73,7 +81,6 @@ public class ShareCateFragment extends BaseFragment implements SwipeRefreshLayou
         } else {
             loadCate(true);
         }
-
         return view;
     }
 
@@ -119,9 +126,48 @@ public class ShareCateFragment extends BaseFragment implements SwipeRefreshLayou
 
         int width=gridShare.getWidth()/2-DensityUtil.dip2px(20);
         adapter = new ShareCateAdapter(getContext(), cateCode,width);
+        adapter.setOnItemLongClickListener(new ShareCateAdapter.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(View view, int position) {
+                Log.e("boruiz", "onItemLongClick: ==================" );
+            }
+        });
+        adapter.setOnItemClickListener(new ShareCateAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Log.e("boruiz", "onItemClick: ==================" );
+            }
+        });
         gridShare.setAdapter(adapter);
     }
-
+//    PopupWindow operateWindow;
+//    LinearLayout operateLayout;
+//    private void showOperatePanle(View view, Shares.ShareItem shareItem){
+//        operateLayout = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.operate_layout, null);
+//        Button btn_collect=(Button) operateLayout.findViewById(R.id.btn_collect);
+//        Button brn_like=(Button) operateLayout.findViewById(R.id.btn_like);
+//
+//        btn_collect.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//            }
+//        });
+//        brn_like.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//            }
+//        });
+//        operateWindow=new PopupWindow(operateLayout,operateLayout.getMeasuredWidth(),operateLayout.getMeasuredHeight());
+//        operateWindow.setBackgroundDrawable(new BitmapDrawable());
+//        operateWindow.setFocusable(true);
+//        operateWindow.setOutsideTouchable(true);
+//
+////        operateWindow.showAsDropDown(view);
+//        operateWindow.showAtLocation(view,Gravity.CENTER,0,0 );
+//        operateWindow.show
+//    }
     private void loadCate(boolean refresh) {
 
         if(refresh){

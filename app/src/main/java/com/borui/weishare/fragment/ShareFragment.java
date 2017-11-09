@@ -61,7 +61,7 @@ public class ShareFragment extends Fragment {
         }
         progress=new CommonProgressDialog(getContext());
         progress.show();
-        VolleyUtil.getInstance().doGetFromAssets(getContext(), APIAddress.GETCOMPANY,new TypeToken<Company>(){}.getType(),"company");
+//        VolleyUtil.getInstance().doGetFromAssets(getContext(), APIAddress.GETCOMPANY,new TypeToken<Company>(){}.getType(),"company");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -10,17 +10,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.borui.weishare.LoginActivity;
 import com.borui.weishare.R;
 import com.borui.weishare.ShareActivity;
 import com.borui.weishare.net.APIAddress;
+import com.borui.weishare.net.Cache;
 import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.view.CommonInputDialog;
 import com.borui.weishare.view.CommonProgressDialog;
 import com.borui.weishare.vo.Company;
+import com.borui.weishare.vo.MerchantVo;
 import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,13 +70,16 @@ public class ShareEntraFragment extends BaseFragment {
                             return;
                         }
 
-                        if(companyid.length()<6){
-                            Toast.makeText(getContext(),"商户号应为不小于6位数字",Toast.LENGTH_SHORT).show();
-                            return;
-                        }
+//                        if(companyid.length()<6){
+//                            Toast.makeText(getContext(),"商户号应为不小于6位数字",Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
                         inputDialog.dismiss();
                         showProgress("正在加载商户信息");
-                        VolleyUtil.getInstance().doGetFromAssets(getContext(), APIAddress.GETCOMPANY,new TypeToken<Company>(){}.getType(),"company");
+                        HashMap<String,String> params=new HashMap<String, String>();
+                        params.put("token", Cache.currenUser.getMsg());
+                        params.put("merchantId",companyid);
+                        VolleyUtil.getInstance().doPost(APIAddress.GET_MERCHANT,params,new TypeToken<MerchantVo>(){}.getType(),"getMerchant");
                     }
                 }).show();
 
@@ -83,15 +91,15 @@ public class ShareEntraFragment extends BaseFragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onResult(Company company){
+    public void onResult(MerchantVo merchant){
         dismissProgress();
 
-        if(company.getCode().equals("0")){
+        if(merchant.getCode().equals("0")){
             Intent intent=new Intent(getContext(), ShareActivity.class);
-            intent.putExtra("company",company);
+            intent.putExtra("merchant",merchant);
             startActivity(intent);
         }else{
-            showDialog("商户信息加载失败，"+company.getMsg()+",请稍后再试");
+            showDialog("商户信息加载失败，"+merchant.getMsg()+",请稍后再试");
         }
     }
 

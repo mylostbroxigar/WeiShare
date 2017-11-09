@@ -16,5 +16,6 @@ public class APIAddress {
     public static final String LOCAL_SHARE=ROOT+"localshare/share";
     public static final String SHARE_CATE=ROOT+"dict/listDicts";
     public static final String QUERYSHARES=ROOT+"localshare/query";
-    public static final String GETCOMPANY="get_company";
+    public static final String SEND_SCREENSHOT=ROOT+"auditing/application";
+    public static final String GET_MERCHANT=ROOT+"merchant/getWeshareMerchant";
 }

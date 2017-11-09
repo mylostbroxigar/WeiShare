@@ -8,11 +8,25 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.borui.weishare.net.APIAddress;
+import com.borui.weishare.net.Cache;
+import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.util.DensityUtil;
+import com.borui.weishare.util.ImageUtil;
+import com.borui.weishare.view.CommonDialog;
+import com.borui.weishare.vo.BaseVo;
 import com.borui.weishare.vo.Company;
+import com.borui.weishare.vo.MerchantVo;
 import com.bumptech.glide.Glide;
+import com.google.gson.reflect.TypeToken;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,8 +41,8 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
  * Created by borui on 2017/7/12.
  */
 
-public class SendScreenShotActivity extends Activity {
-    Company company;
+public class SendScreenShotActivity extends BaseActivity {
+    MerchantVo merchantVo;
     @BindView(R.id.iv_screenshot_timeline)
     ImageView ivScreenshotTimeline;
     @BindView(R.id.layout_screenshot_timeline)
@@ -52,7 +66,7 @@ public class SendScreenShotActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screenshot);
         ButterKnife.bind(this);
-        company = (Company) getIntent().getSerializableExtra("company");
+        merchantVo = (MerchantVo) getIntent().getSerializableExtra("merchant");
 
         int imageWidth = DensityUtil.screenWidth / 2 - 40;
         int imageHeight = imageWidth * DensityUtil.screenHeight / DensityUtil.screenWidth;
@@ -70,7 +84,7 @@ public class SendScreenShotActivity extends Activity {
 
         setTimelineLayout();
         setELebusLayout();
-        layoutScreenshotElebus.setVisibility(company.getIsElebus() == 1 ? View.VISIBLE : View.GONE);
+        layoutScreenshotElebus.setVisibility(merchantVo.getData().getMerchantType().equals("3")? View.VISIBLE : View.GONE);
     }
 
 
@@ -120,11 +134,44 @@ public class SendScreenShotActivity extends Activity {
                 setELebusLayout();
                 break;
             case R.id.btn_share_submit:
+                HashMap<String,String> params=new HashMap<>();
+                params.put("token", Cache.currenUser.getMsg());
+//                params.put("merchantId",company.get);
+                params.put("userId",Cache.currenUser.getData().getId()+"");
+                List<String> images=new ArrayList<>();
+                images.add(timeline_shot.getOriginalPath());
+                if(merchantVo.getData().getMerchantType().equals("3"))
+                    images.add(elebus_shot.getOriginalPath());
+                VolleyUtil.getInstance().doPost(APIAddress.SEND_SCREENSHOT,params,images,new TypeToken<BaseVo>(){}.getType(),"sendScreenshot");
+                showProgress("正在提交");
                 break;
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResult(BaseVo baseVo) {
+        dismissProgress();
+        if (baseVo.getTag().equals("sendScreenshot")) {
+            if (baseVo.getCode().equals("0")) {
+                commonDialog=new CommonDialog(this);
+                commonDialog.setContent("提交成功").removeCancleButton().setOKButton("确定", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        commonDialog.dismiss();
+                        setResult(200);
+                        finish();
+                    }
+                });
 
+            } else {
+                showDialog("提交失败：" + baseVo.getMsg());
+            }
+
+
+        }
+
+
+    }
     private void setELebusLayout(){
         if(elebus_shot==null){
 
