@@ -116,8 +116,7 @@ public class LoginActivity extends BaseActivity {
 
             Intent intent=new Intent();
             intent.putExtra("checkMenu",getIntent().getIntExtra("checkMenu",0));
-            setResult(0,getIntent() );
-            finish();
+            startActivity(new Intent(this,MainActivity.class));
         }else{
             showDialog("登录失败："+uservo.getMsg());
             SPUtil.insertBoolean(this,SPUtil.KEY_LOGINED,false);
@@ -125,9 +124,18 @@ public class LoginActivity extends BaseActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        setResult(-1);
-        finish();
+    private void autoLogin() {
+        if (SPUtil.getBoolean(this, SPUtil.KEY_LOGINED) && Cache.currenUser == null) {
+            Log.e("==========", "autoLogin: ");
+            Map<String, String> params = new HashMap<>();
+            params.put("username", SPUtil.getString(this, SPUtil.KEY_USERNAME));
+            params.put("password", SPUtil.getString(this, SPUtil.KEY_PASSWORD));
+            Log.e("=========", "autoLogin: " + params.get("username") + "//" + params.get("password"));
+            VolleyUtil.getInstance().doPost(APIAddress.LOGIN, params, new TypeToken<UserVo>() {
+            }.getType(), "autoLogin");
+        }
+
     }
+
+
 }

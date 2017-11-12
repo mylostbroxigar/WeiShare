@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.borui.weishare.MainActivity;
+import com.borui.weishare.PasswordActivity;
 import com.borui.weishare.R;
 import com.borui.weishare.net.APIAddress;
 import com.borui.weishare.net.Cache;
@@ -66,7 +67,9 @@ public class MineFragment extends BaseFragment {
         listItem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(),"tap "+position,Toast.LENGTH_SHORT).show();
+                if(position==0){
+                    startActivity(new Intent(getContext(), PasswordActivity.class));
+                }
             }
         });
         initView();

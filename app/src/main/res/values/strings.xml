@@ -25,6 +25,8 @@
     <string name="logout">退出登录</string>
     <string name="user_register">新用户注册</string>
     <string name="register">注册</string>
+    <string name="balance">账户余额</string>
+    <string name="recharge">账户充值</string>
 
 
     <string name="string_cannot_null">%1$s不能为空</string>

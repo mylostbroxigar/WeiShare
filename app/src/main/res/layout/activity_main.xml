@@ -73,6 +73,26 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_menu_merchant"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="@color/button_white"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:visibility="gone">
+            <ImageView
+                android:layout_height="28dp"
+                android:layout_width="28dp"
+                android:src="@drawable/menu_merchant"/>
+            <TextView
+                android:id="@+id/tv_menu_merchant"
+                style="@style/menu_text_style"
+                android:text="商户中心"/>
+        </LinearLayout>
+        <LinearLayout
             android:id="@+id/layout_menu_account"
             android:layout_height="wrap_content"
             android:layout_width="0dp"

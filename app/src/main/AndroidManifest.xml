@@ -54,7 +54,7 @@
             android:name="com.amap.api.v2.apikey"
             android:value="db6c7043a6a3217a68ea3f09264dfc23"/>
         <service android:name="com.amap.api.location.APSService"></service>
-        <activity android:name=".MainActivity"
+        <activity android:name=".LoginActivity"
             android:theme="@style/StyledIndicators">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -68,10 +68,13 @@
         <activity android:name=".SendScreenShotActivity"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait"/>
-        <activity android:name=".LoginActivity"
+        <activity android:name=".MainActivity"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait"/>
         <activity android:name=".RegisterActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".PasswordActivity"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait"/>
 
