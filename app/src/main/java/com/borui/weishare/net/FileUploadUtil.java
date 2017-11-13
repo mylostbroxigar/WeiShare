@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.volley.VolleyError;
+import com.borui.weishare.vo.ImagePath;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -32,7 +33,7 @@ public class FileUploadUtil {
     private static final String BOUNDARY="******";
     private Handler handler;
 
-    public void FileUpload(final String uploadUrl, final Map<String,String> params, final List<String> imgFiles, final Type type,final String tag, final JsonRequest.ResponseListener listener){
+    public void FileUpload(final String uploadUrl, final Map<String,String> params, final List<ImagePath> imgFiles, final Type type,final String tag, final JsonRequest.ResponseListener listener){
         handler=new Handler();
         new Thread(new Runnable() {
             @Override
@@ -68,7 +69,7 @@ public class FileUploadUtil {
             }
         }).start();
     }
-    public String upload(String uploadUrl, Map<String,String> params, List<String> imgFiles){
+    public String upload(String uploadUrl, Map<String,String> params, List<ImagePath> imgFiles){
         String resultStr="";
         try {
             URL url = new URL(uploadUrl);
@@ -104,12 +105,12 @@ public class FileUploadUtil {
             int N = imgFiles==null?0:imgFiles.size() ;
             for (int i = 0; i < N ;i++){
                 Log.e(TAG, "FileUpload: strat upload "+i);
-                File imagefile=new File(imgFiles.get(i));
+                File imagefile=new File(imgFiles.get(i).getPath());
                 StringBuffer sb= new StringBuffer() ;
             /*第一行*/
                 sb.append("--"+BOUNDARY+"\r\n");
             /*第二行*/
-                sb.append("Content-Disposition: form-data; name=\"file\"; filename=\"") ;
+                sb.append("Content-Disposition: form-data; name=\""+imgFiles.get(i).getDataname()+"\"; filename=\"") ;
                 sb.append(imagefile.getName()) ;
                 sb.append("\"\r\n") ;
             /*第三行*/

@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
  * Created by borui on 2017/6/30.
  */
 
-public class MainFragment extends BaseFragment {
+public class MainFragment extends Fragment {
     String TAG="SharesFragment";
     @BindView(R.id.shares_tab)
     TabPageIndicator sharesTab;
@@ -58,40 +58,37 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void onResume() {
-        if(Cache.shareCate==null){
-            showProgress("");
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    loadShareCate();
-                }
-            },1000);
-        }
-        else
-            initView();
+
         super.onResume();
-    }
-
-    private void loadShareCate(){
-
-        Map<String,String> params=new HashMap<>();
-        params.put("dictType","MERCHANT_TYPE");
-        VolleyUtil.getInstance().doPost(APIAddress.SHARE_CATE,params,new TypeToken<ShareCate>(){}.getType(),"");
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onResult(ShareCate shareCate){
-        dismissProgress();
-        if(shareCate.getCode().equals("0")){
-            for (ShareCate.Dict data:shareCate.getData()){
-                Cache.shareCache.put(data.getId(),new ArrayList<Shares.ShareItem>());
+        initView();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+               initView();
             }
-
-            Cache.shareCate=shareCate;
-            initView();
-        }
+        },200);
     }
+
+//    private void loadShareCate(){
+//
+//        Map<String,String> params=new HashMap<>();
+//        params.put("dictType","MERCHANT_TYPE");
+//        VolleyUtil.getInstance().doPost(APIAddress.SHARE_CATE,params,new TypeToken<ShareCate>(){}.getType(),"");
+//    }
+//
+//
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onResult(ShareCate shareCate){
+//        dismissProgress();
+//        if(shareCate.getCode().equals("0")){
+//            for (ShareCate.Dict data:shareCate.getData()){
+//                Cache.shareCache.put(data.getId(),new ArrayList<Shares.ShareItem>());
+//            }
+//
+//            Cache.shareCate=shareCate;
+//            initView();
+//        }
+//    }
 
     private void initView(){
         contentAdapter = new ContentAdapter(getChildFragmentManager());// 此处，如果不是继承的FragmentActivity,而是继承的Fragment，则参数应该传入getChildFragmentManager()

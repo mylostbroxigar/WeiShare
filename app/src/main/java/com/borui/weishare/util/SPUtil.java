@@ -15,6 +15,9 @@ public class SPUtil {
     public static final String KEY_USERNAME="key_username";
     public static final String KEY_PASSWORD="key_password";
     public static final String KEY_LOGINED="key_logined";
+    public static final String KEY_LATITUDE="key_latitude";
+    public static final String KEY_LONGITUDE="key_longitude";
+    public static final String KEY_CITY="key_city";
 
     public static void insertInt(Context context, String key, int value){
         SharedPreferences sp=context.getSharedPreferences(SP_NAME, Activity.MODE_PRIVATE);

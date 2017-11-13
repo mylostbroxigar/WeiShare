@@ -17,6 +17,7 @@ import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.util.RegexUtil;
 import com.borui.weishare.view.CommonDialog;
 import com.borui.weishare.vo.BaseVo;
+import com.borui.weishare.vo.ImagePath;
 import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
 
@@ -42,6 +43,10 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
  */
 
 public class RegisterActivity extends BaseActivity {
+
+    public static final String ROLE_USER="4";
+    public static final String ROLE_COMPANY="3";
+    public static final String ROLE_COMPANY_ONLINE="2";
     @BindView(R.id.et_username)
     EditText etUsername;
     @BindView(R.id.et_password)
@@ -246,8 +251,8 @@ public class RegisterActivity extends BaseActivity {
             }.getType(), "register");
         } else {
 
-            List<String> images = new ArrayList<>();
-            images.add(headPath);
+            List<ImagePath> images = new ArrayList<>();
+            images.add(new ImagePath(headPath,"file"));
             VolleyUtil.getInstance().doPost(APIAddress.REGISTER, params, images, new TypeToken<BaseVo>() {
             }.getType(), "register");
         }

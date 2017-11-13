@@ -24,8 +24,10 @@ import com.borui.weishare.net.Cache;
 import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.util.DensityUtil;
 import com.borui.weishare.util.ImageUtil;
+import com.borui.weishare.util.SPUtil;
 import com.borui.weishare.vo.BaseVo;
 import com.borui.weishare.vo.Company;
+import com.borui.weishare.vo.ImagePath;
 import com.borui.weishare.vo.MerchantVo;
 import com.borui.weishare.vo.ShareCate;
 import com.google.gson.reflect.TypeToken;
@@ -36,6 +38,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -189,8 +192,8 @@ public class ShareActivity extends BaseActivity {
         Map<String, String> params = new HashMap<>();
         params.put("token", Cache.currenUser.getMsg());
         params.put("userId", Cache.currenUser.getData().getId() + "");
-        params.put("longitude", MyApplication.amapLocation.getLongitude() + "");
-        params.put("latitude", MyApplication.amapLocation.getLatitude() + "");
+        params.put("longitude", SPUtil.getString(this,SPUtil.KEY_LONGITUDE));
+        params.put("latitude", SPUtil.getString(this,SPUtil.KEY_LATITUDE));
         params.put("title", comment);
         String merchanType="";
         if(merchantVo==null){
@@ -201,7 +204,11 @@ public class ShareActivity extends BaseActivity {
         params.put("merchantType", merchanType);
         params.put("remark", "");
 
-        VolleyUtil.getInstance().doPost(APIAddress.LOCAL_SHARE, params, imageAdapter.getUrls(), new TypeToken<BaseVo>() {
+        List<ImagePath> imagePaths=new ArrayList<>();
+        for (String str:imageAdapter.getUrls()){
+            imagePaths.add(new ImagePath(str,"file"));
+        }
+        VolleyUtil.getInstance().doPost(APIAddress.LOCAL_SHARE, params, imagePaths, new TypeToken<BaseVo>() {
         }.getType(), "localshare");
     }
 

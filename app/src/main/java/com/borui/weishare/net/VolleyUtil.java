@@ -8,6 +8,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.borui.weishare.vo.BaseVo;
+import com.borui.weishare.vo.ImagePath;
 import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
@@ -75,7 +76,7 @@ public class VolleyUtil {
         getRequestQueue().add(requet);
     }
 
-    public void doPost(String url, Map<String,String> params, List<String> imgPaths, final Type type, final String tag){
+    public void doPost(String url, Map<String,String> params, List<ImagePath> imgPaths, final Type type, final String tag){
 
         FileUploadUtil fileUploadUtil=new FileUploadUtil();
         fileUploadUtil.FileUpload(url, params, imgPaths, type, tag,new JsonRequest.ResponseListener() {

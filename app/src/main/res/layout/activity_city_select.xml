@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/back">
+
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:padding="12dp"
+        android:background="@color/button_gray">
+        <TextView
+            style="@style/menu_text_style"
+            android:text="选择城市"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+    <Button
+        android:id="@+id/btn_location"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="定位"/>
+
+    <TableLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:stretchColumns="0,1,2,3">
+        <TableRow>
+            <Button
+                android:id="@+id/btn_1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="北京"/>
+            <Button
+                android:id="@+id/btn_2"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="上海"/>
+            <Button
+                android:id="@+id/btn_3"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="武汉"/>
+            <Button
+                android:id="@+id/btn_4"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="广州"/>
+        </TableRow>
+    </TableLayout>
+</LinearLayout>

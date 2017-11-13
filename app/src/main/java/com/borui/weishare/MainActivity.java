@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
 import com.borui.weishare.fragment.AccountFragment;
 import com.borui.weishare.fragment.MainFragment;
 import com.borui.weishare.fragment.MerchantFragment;
@@ -20,15 +21,20 @@ import com.borui.weishare.fragment.MineFragment;
 import com.borui.weishare.fragment.ShareEntraFragment;
 import com.borui.weishare.net.APIAddress;
 import com.borui.weishare.net.Cache;
+import com.borui.weishare.net.LocationUtil;
 import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.util.DensityUtil;
 import com.borui.weishare.util.SPUtil;
+import com.borui.weishare.view.CommonDialog;
+import com.borui.weishare.vo.ShareCate;
+import com.borui.weishare.vo.Shares;
 import com.borui.weishare.vo.UserVo;
 import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +42,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
+
 
     @BindView(R.id.tv_city)
     TextView tvCity;
@@ -60,12 +67,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.activity_main)
     LinearLayout activityMain;
 
-    public static final int REQUEST_LOGIN = 0x101;
+//    public static final int REQUEST_LOGIN = 0x101;
     @BindView(R.id.tv_menu_merchant)
     TextView tvMenuMerchant;
     @BindView(R.id.layout_menu_merchant)
     LinearLayout layoutMenuMerchant;
 
+
+    public static int REQUEST_CODE_LOCATION=0x101;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,18 +95,72 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         layoutMenuMerchant.setOnClickListener(this);
         fragments = new Fragment[4];
 
-        if(Cache.currenUser.getData().getRoles().equals("1")){
+        if(Cache.currenUser.getData().getRoles().equals(RegisterActivity.ROLE_USER)){
             layoutMenuShare.setVisibility(View.VISIBLE);
             layoutMenuMerchant.setVisibility(View.GONE);
         }else{
             layoutMenuShare.setVisibility(View.GONE);
             layoutMenuMerchant.setVisibility(View.VISIBLE);
         }
-        checkMenu(0);
+
+        showProgress("获取定位");
+        //初始化位置
+        LocationUtil.getInstance().startLocation();
+    }
+    private void loadShareCate(){
+
+        showProgress("加载分类");
+        Map<String,String> params=new HashMap<>();
+        params.put("dictType","MERCHANT_TYPE");
+        VolleyUtil.getInstance().doPost(APIAddress.SHARE_CATE,params,new TypeToken<ShareCate>(){}.getType(),"");
     }
 
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResult(ShareCate shareCate){
+        dismissProgress();
+        if(shareCate.getCode().equals("0")){
+            for (ShareCate.Dict data:shareCate.getData()){
+                Cache.shareCache.put(data.getId(),new ArrayList<Shares.ShareItem>());
+            }
 
+            Cache.shareCate=shareCate;
+            checkMenu(0);
+        }else{
+            commonDialog=new CommonDialog(this);
+            commonDialog.setContent("分类加载失败，点击重试").removeCancleButton().setOKButton(null, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    commonDialog.dismiss();
+                    loadShareCate();
+                }
+            }).show();
+        }
+
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResult(AMapLocation amapLocation){
+        dismissProgress();
+        if (amapLocation != null&&amapLocation.getErrorCode() == 0) {
+            //解析定位结果
+            SPUtil.insertString(this,SPUtil.KEY_LATITUDE,amapLocation.getLatitude()+"");
+            SPUtil.insertString(this,SPUtil.KEY_LONGITUDE,amapLocation.getLongitude()+"");
+            SPUtil.insertString(this,SPUtil.KEY_CITY,amapLocation.getCity());
+            onLocationSuccess();
+        }else{
+            if(SPUtil.getString(this,SPUtil.KEY_LATITUDE).equals("")||
+                    SPUtil.getString(this,SPUtil.KEY_LONGITUDE).equals("")||
+                    SPUtil.getString(this,SPUtil.KEY_CITY).equals("")){
+                startActivityForResult(new Intent(this,CitySelectActivity.class),REQUEST_CODE_LOCATION);
+            }
+        }
+    }
+
+    private void onLocationSuccess(){
+        tvCity.setText(SPUtil.getString(this,SPUtil.KEY_CITY));
+        //初始化分类
+        loadShareCate();
+    }
 
     @Override
     public void onClick(View v) {
@@ -105,6 +168,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.layout_menu_main:
                 checkMenu(0);
                 break;
+            case R.id.layout_menu_merchant:
             case R.id.layout_menu_share:
                 checkMenu(1);
                 break;
@@ -135,7 +199,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     fragments[i] = new MainFragment();
                     break;
                 case 1:
-                    if(Cache.currenUser.getData().getRoles().equals("1")){
+                    if(Cache.currenUser.getData().getRoles().equals(RegisterActivity.ROLE_USER)){
                         fragments[i] = new ShareEntraFragment();
                     }else{
                         fragments[i] = new MerchantFragment();
@@ -168,12 +232,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_LOGIN) {
-            if (resultCode == 0) {
-                int checkMenu = data.getIntExtra("checkMenu", 0);
-                checkMenu(checkMenu);
-            }
+//        if (requestCode == REQUEST_LOGIN) {
+//            if (resultCode == 0) {
+//                int checkMenu = data.getIntExtra("checkMenu", 0);
+//                checkMenu(checkMenu);
+//            }
+//        }
+        if(requestCode==REQUEST_CODE_LOCATION&&resultCode==200){
+            onLocationSuccess();
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        setResult(4);
+        finish();
+    }
 }

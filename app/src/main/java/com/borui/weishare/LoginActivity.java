@@ -116,12 +116,22 @@ public class LoginActivity extends BaseActivity {
 
             Intent intent=new Intent();
             intent.putExtra("checkMenu",getIntent().getIntExtra("checkMenu",0));
-            startActivity(new Intent(this,MainActivity.class));
+            startActivityForResult(new Intent(this,MainActivity.class),100);
         }else{
             showDialog("登录失败："+uservo.getMsg());
             SPUtil.insertBoolean(this,SPUtil.KEY_LOGINED,false);
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==100){
+            if(resultCode==4){
+             finish();
+            }
+        }
     }
 
     private void autoLogin() {

@@ -16,6 +16,7 @@ import com.borui.weishare.util.ImageUtil;
 import com.borui.weishare.view.CommonDialog;
 import com.borui.weishare.vo.BaseVo;
 import com.borui.weishare.vo.Company;
+import com.borui.weishare.vo.ImagePath;
 import com.borui.weishare.vo.MerchantVo;
 import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
@@ -84,7 +85,7 @@ public class SendScreenShotActivity extends BaseActivity {
 
         setTimelineLayout();
         setELebusLayout();
-        layoutScreenshotElebus.setVisibility(merchantVo.getData().getMerchantType().equals("3")? View.VISIBLE : View.GONE);
+        layoutScreenshotElebus.setVisibility(merchantVo.getData().getMerchantType().equals(RegisterActivity.ROLE_COMPANY_ONLINE)? View.VISIBLE : View.GONE);
     }
 
 
@@ -138,10 +139,10 @@ public class SendScreenShotActivity extends BaseActivity {
                 params.put("token", Cache.currenUser.getMsg());
 //                params.put("merchantId",company.get);
                 params.put("userId",Cache.currenUser.getData().getId()+"");
-                List<String> images=new ArrayList<>();
-                images.add(timeline_shot.getOriginalPath());
+                List<ImagePath> images=new ArrayList<>();
+                images.add(new ImagePath(timeline_shot.getOriginalPath(),"auditingfile1"));
                 if(merchantVo.getData().getMerchantType().equals("3"))
-                    images.add(elebus_shot.getOriginalPath());
+                    images.add(new ImagePath(elebus_shot.getOriginalPath(),"auditingfile2"));
                 VolleyUtil.getInstance().doPost(APIAddress.SEND_SCREENSHOT,params,images,new TypeToken<BaseVo>(){}.getType(),"sendScreenshot");
                 showProgress("正在提交");
                 break;

@@ -27,6 +27,7 @@ import com.borui.weishare.net.APIAddress;
 import com.borui.weishare.net.Cache;
 import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.util.DensityUtil;
+import com.borui.weishare.util.SPUtil;
 import com.borui.weishare.view.EndlessRecyclerOnScrollListener;
 import com.borui.weishare.vo.Shares;
 import com.google.gson.reflect.TypeToken;
@@ -175,8 +176,8 @@ public class ShareCateFragment extends BaseFragment implements SwipeRefreshLayou
             page=1;
         }
         Map<String,String> params=new HashMap<>();
-        params.put("longitude", MyApplication.amapLocation.getLongitude()+"");
-        params.put("latitude",MyApplication.amapLocation.getLatitude()+"");
+        params.put("longitude", SPUtil.getString(getContext(),SPUtil.KEY_LONGITUDE));
+        params.put("latitude",SPUtil.getString(getContext(),SPUtil.KEY_LATITUDE));
         params.put("merchantType",cateCode+"");
         params.put("distance","50");
 //        params.put("startTime","");
