@@ -40,4 +40,5 @@ dependencies {
     compile 'com.amap.api:location:latest.integration'
     compile files('lib/jcore-android-1.1.7.jar')
     compile files('lib/jpush-android-3.0.9.jar')
+    compile files('lib/alipaySdk-20170922.jar')
 }

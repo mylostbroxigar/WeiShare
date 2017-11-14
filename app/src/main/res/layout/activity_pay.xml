@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/back">
+
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:padding="12dp"
+        android:background="@color/button_gray">
+        <TextView
+            style="@style/menu_text_style"
+            android:text="充值"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+    <RadioGroup
+        android:id="@+id/rg_money"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp"
+        android:padding="5dp">
+        <RadioButton
+            android:id="@+id/rb_100"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_width="0dp"
+            android:layout_weight="1.0"
+            android:text="100元"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:button="@null"
+            android:background="@drawable/radiobutton_selector"/>
+
+        <RadioButton
+            android:id="@+id/rb_200"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_width="0dp"
+            android:layout_weight="1.0"
+            android:text="200元"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:button="@null"
+            android:background="@drawable/radiobutton_selector"
+            android:layout_marginLeft="10dp"/>
+
+        <RadioButton
+            android:id="@+id/rb_500"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_width="0dp"
+            android:layout_weight="1.0"
+            android:text="500元"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:button="@null"
+            android:background="@drawable/radiobutton_selector"
+            android:layout_marginLeft="10dp"/>
+
+        <RadioButton
+            android:id="@+id/rb_1000"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_width="0dp"
+            android:layout_weight="1.0"
+            android:text="1000元"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:button="@null"
+            android:background="@drawable/radiobutton_selector"
+            android:layout_marginLeft="10dp"/>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_pay"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_margin="20dp"
+        android:background="@drawable/btn_round_selector"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:text="充值"/>
+</LinearLayout>
