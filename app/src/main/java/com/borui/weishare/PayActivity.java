@@ -56,7 +56,6 @@ public class PayActivity extends Activity {
 //                mHandler.sendMessage(msg);
             }
         };
-
         Thread payThread = new Thread(payRunnable);
         payThread.start();
     }

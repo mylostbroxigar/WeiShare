@@ -1,5 +1,6 @@
 package com.borui.weishare.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.borui.weishare.PickCashActivity;
 import com.borui.weishare.R;
 
 import butterknife.BindView;
@@ -21,10 +23,12 @@ import butterknife.Unbinder;
  */
 //微信提现
 //https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
+    //微信授权
 //支付宝提现
 //https://doc.open.alipay.com/docs/doc.htm?spm=a219a.7629140.0.0.JDWvLc&treeId=193&articleId=106236&docType=1
+    //支付宝授权
+//https://doc.open.alipay.com/docs/doc.htm?spm=a219a.7629140.0.0.Pe05YU&treeId=193&articleId=105329&docType=1
 public class AccountFragment extends Fragment {
-
     @BindView(R.id.tv_curr_account)
     TextView tvCurrAccount;
     @BindView(R.id.tv_year_account)
@@ -64,6 +68,7 @@ public class AccountFragment extends Fragment {
             case R.id.tv_details:
                 break;
             case R.id.tv_cash:
+                startActivity(new Intent(getContext(), PickCashActivity.class));
                 break;
             case R.id.layout_bind:
                 break;

@@ -40,13 +40,25 @@
                 android:layout_height="64dp"
                 android:layout_width="64dp"
                 android:src="@drawable/icon_balance"/>
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
             <TextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="@string/recharge"
-                android:layout_marginTop="5dp"
+                android:text="@string/balance"
                 android:textColor="@color/white"
                 android:textSize="@dimen/normal_text_size"/>
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="0.00"
+                android:textColor="@color/white"
+                android:textSize="@dimen/normal_text_size"
+                android:layout_marginLeft="5dp"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
     <TextView
