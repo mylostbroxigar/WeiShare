@@ -1,5 +1,8 @@
 package com.borui.weishare.vo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by zhuborui on 2017/11/9.
  */
@@ -20,7 +23,7 @@ public class MerchantVo extends BaseVo {
         this.data = data;
     }
 
-    public static class Merchant {
+    public static class Merchant implements Parcelable {
         /**
          * id : 1
          * merchantName : XX商家
@@ -40,6 +43,49 @@ public class MerchantVo extends BaseVo {
         private String merchantCertificateUrl;
         private String mercharLegalRepresentative;
         private String authorize;
+
+        public Merchant(){
+
+        }
+
+        public Merchant(Parcel in){
+            id=in.readInt();
+            merchantName=in.readString();
+            merchantAddress=in.readString();
+            merchantType=in.readString();
+            marchantUsers=in.readString();
+            merchantCertificateUrl=in.readString();
+            mercharLegalRepresentative=in.readString();
+            authorize=in.readString();
+        }
+
+        public static final Parcelable.Creator<Merchant> CREATOR=new Creator<Merchant>() {
+            @Override
+            public Merchant createFromParcel(Parcel in) {
+                return new Merchant(in);
+            }
+
+            @Override
+            public Merchant[] newArray(int i) {
+                return new Merchant[0];
+            }
+        };
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int i) {
+            out.writeInt(id);
+            out.writeString("merchantName");
+            out.writeString("merchantAddress");
+            out.writeString("merchantType");
+            out.writeString("marchantUsers");
+            out.writeString("merchantCertificateUrl");
+            out.writeString("mercharLegalRepresentative");
+            out.writeString("authorize");
+        }
 
         public int getId() {
             return id;

@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.borui.weishare.MyApplication;
 import com.borui.weishare.R;
@@ -29,6 +30,7 @@ import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.util.DensityUtil;
 import com.borui.weishare.util.SPUtil;
 import com.borui.weishare.view.EndlessRecyclerOnScrollListener;
+import com.borui.weishare.vo.BaseVo;
 import com.borui.weishare.vo.Shares;
 import com.google.gson.reflect.TypeToken;
 
@@ -127,48 +129,40 @@ public class ShareCateFragment extends BaseFragment implements SwipeRefreshLayou
 
         int width=gridShare.getWidth()/2-DensityUtil.dip2px(20);
         adapter = new ShareCateAdapter(getContext(), cateCode,width);
-        adapter.setOnItemLongClickListener(new ShareCateAdapter.OnItemLongClickListener() {
+        adapter.setOnOperateClickListener(new ShareCateAdapter.OnOperateClickListener() {
             @Override
-            public void onItemLongClick(View view, int position) {
-                Log.e("boruiz", "onItemLongClick: ==================" );
+            public void onLikeClick(int position) {
+                like(position);
             }
-        });
-        adapter.setOnItemClickListener(new ShareCateAdapter.OnItemClickListener() {
+
             @Override
-            public void onItemClick(View view, int position) {
-                Log.e("boruiz", "onItemClick: ==================" );
+            public void onCollectClick(int position) {
+                collect(position);
             }
         });
         gridShare.setAdapter(adapter);
     }
-//    PopupWindow operateWindow;
-//    LinearLayout operateLayout;
-//    private void showOperatePanle(View view, Shares.ShareItem shareItem){
-//        operateLayout = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.operate_layout, null);
-//        Button btn_collect=(Button) operateLayout.findViewById(R.id.btn_collect);
-//        Button brn_like=(Button) operateLayout.findViewById(R.id.btn_like);
-//
-//        btn_collect.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//            }
-//        });
-//        brn_like.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//            }
-//        });
-//        operateWindow=new PopupWindow(operateLayout,operateLayout.getMeasuredWidth(),operateLayout.getMeasuredHeight());
-//        operateWindow.setBackgroundDrawable(new BitmapDrawable());
-//        operateWindow.setFocusable(true);
-//        operateWindow.setOutsideTouchable(true);
-//
-////        operateWindow.showAsDropDown(view);
-//        operateWindow.showAtLocation(view,Gravity.CENTER,0,0 );
-//        operateWindow.show
-//    }
+
+    private void like(int position){
+
+        Shares.ShareItem item=Cache.shareCache.get(cateCode).get(position);
+
+        Map<String,String> params=new HashMap<>();
+        params.put("token", Cache.currenUser.getMsg());
+        params.put("shareId",item.getId()+"");
+        params.put("userId",Cache.currenUser.getData().getId()+"");
+        VolleyUtil.getInstance().doPost(APIAddress.LIKE,params,new TypeToken<BaseVo>(){}.getType(),"like#"+position);
+    }
+    private void collect(int position){
+
+        Shares.ShareItem item=Cache.shareCache.get(cateCode).get(position);
+
+        Map<String,String> params=new HashMap<>();
+        params.put("token", Cache.currenUser.getMsg());
+        params.put("shareId",item.getId()+"");
+        params.put("userId",Cache.currenUser.getData().getId()+"");
+        VolleyUtil.getInstance().doPost(APIAddress.COLLECTION,params,new TypeToken<BaseVo>(){}.getType(),"collect#"+position);
+    }
     private void loadCate(boolean refresh) {
 
         if(refresh){
@@ -187,6 +181,36 @@ public class ShareCateFragment extends BaseFragment implements SwipeRefreshLayou
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResult(BaseVo obj) {
+        if(obj instanceof Shares){
+            onResult((Shares)obj);
+        }else{
+            if(obj.getTag().startsWith("like")){
+                if(obj.getCode().equals("0")){
+                    String[] strs=obj.getTag().split("#");
+                    int position=Integer.parseInt(strs[1]);
+                    Cache.shareCache.get(cateCode).get(position).setLiked(Cache.shareCache.get(cateCode).get(position).getLiked()+1);
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(getContext(),"已赞",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getContext(),obj.getMsg(),Toast.LENGTH_SHORT).show();
+                }
+            }
+            if(obj.getTag().startsWith("collect")){
+                if(obj.getCode().equals("0")){
+                    String[] strs=obj.getTag().split("#");
+                    int position=Integer.parseInt(strs[1]);
+                    Cache.shareCache.get(cateCode).get(position).setCollections(Cache.shareCache.get(cateCode).get(position).getCollections()+1);
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(getContext(),"收藏成功",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getContext(),obj.getMsg(),Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+
     public void onResult(Shares shares) {
 
         if (!shares.getTag().equals("" + cateCode))

@@ -43,7 +43,7 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
  */
 
 public class SendScreenShotActivity extends BaseActivity {
-    MerchantVo merchantVo;
+    MerchantVo.Merchant merchant;
     @BindView(R.id.iv_screenshot_timeline)
     ImageView ivScreenshotTimeline;
     @BindView(R.id.layout_screenshot_timeline)
@@ -67,7 +67,7 @@ public class SendScreenShotActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screenshot);
         ButterKnife.bind(this);
-        merchantVo = (MerchantVo) getIntent().getSerializableExtra("merchant");
+        merchant = getIntent().getParcelableExtra("merchant");
 
         int imageWidth = DensityUtil.screenWidth / 2 - 40;
         int imageHeight = imageWidth * DensityUtil.screenHeight / DensityUtil.screenWidth;
@@ -85,7 +85,7 @@ public class SendScreenShotActivity extends BaseActivity {
 
         setTimelineLayout();
         setELebusLayout();
-        layoutScreenshotElebus.setVisibility(merchantVo.getData().getMerchantType().equals(RegisterActivity.ROLE_COMPANY_ONLINE)? View.VISIBLE : View.GONE);
+        layoutScreenshotElebus.setVisibility(merchant.getMerchantType().equals(RegisterActivity.ROLE_COMPANY_ONLINE)? View.VISIBLE : View.GONE);
     }
 
 
@@ -137,11 +137,11 @@ public class SendScreenShotActivity extends BaseActivity {
             case R.id.btn_share_submit:
                 HashMap<String,String> params=new HashMap<>();
                 params.put("token", Cache.currenUser.getMsg());
-//                params.put("merchantId",company.get);
+                params.put("merchantId",merchant.getId()+"");
                 params.put("userId",Cache.currenUser.getData().getId()+"");
                 List<ImagePath> images=new ArrayList<>();
                 images.add(new ImagePath(timeline_shot.getOriginalPath(),"auditingfile1"));
-                if(merchantVo.getData().getMerchantType().equals("3"))
+                if(merchant.getMerchantType().equals("3"))
                     images.add(new ImagePath(elebus_shot.getOriginalPath(),"auditingfile2"));
                 VolleyUtil.getInstance().doPost(APIAddress.SEND_SCREENSHOT,params,images,new TypeToken<BaseVo>(){}.getType(),"sendScreenshot");
                 showProgress("正在提交");

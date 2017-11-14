@@ -1,0 +1,38 @@
+1.分享查询  添加是否已分享字段
+            添加是否已收藏字段
+
+2.登录      添加认证状态字段
+
+3.点赞接口
+
+4.商户查询接口  不能正确通过id查询
+                添加封面图片
+                添加佣金字段
+5.需要接口  商户获取待审核列表 审核列表必备参数（订单号 客户名称 截图1 截图2 佣金 ）
+
+6.商户通过或拒绝审核接口
+
+7.用户提交审核申请后 向商户推送消息 参数应包括（tag=1，其他待定）
+
+8.商户通过或拒绝审核后 向用户推送消息 参数应包括 （tag=2 佣金= 其他待定）
+
+9.支付宝和微信认证接口 入参 （type=支付宝/微信  openid 实名）
+
+10.提现接口 入参（type=支付宝/微信 提现金额）
+
+//提现参考文档
+//微信提现
+//https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
+//微信授权
+// https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419317851&token=&lang=zh_CN
+//支付宝提现
+//https://doc.open.alipay.com/docs/doc.htm?spm=a219a.7629140.0.0.JDWvLc&treeId=193&articleId=106236&docType=1
+//支付宝授权
+//https://doc.open.alipay.com/docs/doc.htm?spm=a219a.7629140.0.0.Pe05YU&treeId=193&articleId=105329&docType=1
+
+11.商户充值 获取orderInfo接口（仅支付宝）
+
+12.修改密码接口
+
+13. 修改资料接口
+

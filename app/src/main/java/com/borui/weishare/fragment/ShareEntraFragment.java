@@ -96,7 +96,8 @@ public class ShareEntraFragment extends BaseFragment {
 
         if(merchant.getCode().equals("0")){
             Intent intent=new Intent(getContext(), ShareActivity.class);
-            intent.putExtra("merchant",merchant);
+            intent.putExtra("merchant",merchant.getData());
+
             startActivity(intent);
         }else{
             showDialog("商户信息加载失败，"+merchant.getMsg()+",请稍后再试");

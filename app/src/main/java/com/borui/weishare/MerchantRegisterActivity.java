@@ -70,6 +70,7 @@ public class MerchantRegisterActivity extends BaseActivity {
                 selectImage(ivLegalPersionalid,1);
                 break;
             case R.id.btn_register:
+                doRegister();
                 break;
         }
     }

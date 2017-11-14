@@ -65,7 +65,7 @@ public class ShareActivity extends BaseActivity {
     @BindView(R.id.btn_share)
     Button btnShare;
 
-    MerchantVo merchantVo;
+    MerchantVo.Merchant merchant;
     ImageAdapter imageAdapter;
 
     private static final int REQUEST_SEND_TIMELINE = 0x201;
@@ -84,8 +84,8 @@ public class ShareActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
         ButterKnife.bind(this);
-        merchantVo = (MerchantVo) getIntent().getSerializableExtra("merchant");
-        if (merchantVo == null) {
+        merchant = getIntent().getParcelableExtra("merchant");
+        if (merchant == null) {
             layoutCommission.setVisibility(View.GONE);
             cbAddtoShare.setVisibility(View.GONE);
             spinnerDict.setVisibility(View.VISIBLE);
@@ -196,7 +196,7 @@ public class ShareActivity extends BaseActivity {
         params.put("latitude", SPUtil.getString(this,SPUtil.KEY_LATITUDE));
         params.put("title", comment);
         String merchanType="";
-        if(merchantVo==null){
+        if(merchant==null){
             merchanType=Cache.shareCate.getData().get(spinnerDict.getSelectedItemPosition()).getId()+"";
         }else{
             merchanType="0";
@@ -215,7 +215,7 @@ public class ShareActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResult(BaseVo baseVo) {
         dismissProgress();
-        if (baseVo.getTag().equals("localshare") && merchantVo == null) {
+        if (baseVo.getTag().equals("localshare") && merchant == null) {
             if (baseVo.getCode().equals("0")) {
                 showDialog("上传成功");
 
@@ -245,7 +245,7 @@ public class ShareActivity extends BaseActivity {
             Toast.makeText(this, "必须添加图片", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (merchantVo != null) {
+        if (merchant != null) {
             shareToTimeline(comment);
             if (cbAddtoShare.isChecked()) {
                 share(comment);
@@ -265,7 +265,7 @@ public class ShareActivity extends BaseActivity {
         Log.e("===", "onActivityResult: " + resultCode);
         if (requestCode == REQUEST_SEND_TIMELINE) {
             Intent intent = new Intent(this, SendScreenShotActivity.class);
-            intent.putExtra("merchant", merchantVo);
+            intent.putExtra("merchant", merchant);
             startActivityForResult(intent,REQUEST_SEND_SCREENSHOT);
         }
         if(requestCode==REQUEST_SEND_SCREENSHOT&&resultCode==200){

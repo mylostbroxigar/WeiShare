@@ -32,21 +32,16 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
     private int cateCode;
     private int frameWidth;
 
-    public interface OnItemClickListener{
-        public void onItemClick(View view,int position);
+    public interface OnOperateClickListener{
+        public void onLikeClick(int position);
+        public void onCollectClick(int position);
     }
-    public interface OnItemLongClickListener{
-        public void onItemLongClick(View view,int position);
-    }
-    private OnItemClickListener onItemClickListener;
-    private OnItemLongClickListener onItemLongClickListener;
+    private OnOperateClickListener onOperateClickListener;
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
-        this.onItemClickListener=onItemClickListener;
+    public void setOnOperateClickListener(OnOperateClickListener onOperateClickListener){
+        this.onOperateClickListener=onOperateClickListener;
     }
-    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener){
-        this.onItemLongClickListener=onItemLongClickListener;
-    }
+
     public ShareCateAdapter(Context context,int cateCode,int frameWidth){
         this.context=context;
         this.cateCode=cateCode;
@@ -70,21 +65,7 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
         layoutParams.width=frameWidth;
         layoutParams.height=getHeight(shareItem);
         holder.ivShareThumb.setLayoutParams(layoutParams);
-        holder.ivShareThumb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(onItemClickListener!=null)
-                    onItemClickListener.onItemClick(view,position);
-            }
-        });
-        holder.ivShareThumb.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if(onItemLongClickListener!=null)
-                    onItemLongClickListener.onItemLongClick(view,position);
-                return true;
-            }
-        });
+
         Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPics().get(0).getPicPath()).thumbnail(0.1f).fitCenter().error(R.drawable.img_error).into(holder.ivShareThumb);
         Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPersonalPicture()).into(holder.ivHead);
 
@@ -93,9 +74,32 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
         holder.tvLike.setText(""+shareItem.getLiked());
         holder.tvCollect.setText(""+shareItem.getCollections());
         holder.tvName.setText(shareItem.getRealname());
+        holder.tvLocation.setText(getDistance(shareItem.getDistance()));
+        if(onOperateClickListener!=null){
+
+            holder.ivCollect.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onOperateClickListener.onCollectClick(position);
+                }
+            });
+            holder.ivLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onOperateClickListener.onLikeClick(position);
+                }
+            });
+        }
 //        holder.tvSign.setText(shareItem.getSign());
     }
 
+    private String getDistance(double distance){
+        if(distance>=1d){
+            return "<1KM";
+        }else{
+            return (int)distance+"KM";
+        }
+    }
     private int getHeight(Shares.ShareItem shareItem){
         return shareItem.getPics().get(0).getPicHeight()*frameWidth/shareItem.getPics().get(0).getPicWidth();
     }
@@ -122,6 +126,10 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
         TextView tvName;
         @BindView(R.id.tv_sign)
         TextView tvSign;
+        @BindView(R.id.iv_like)
+        ImageView ivLike;
+        @BindView(R.id.iv_collect)
+        ImageView ivCollect;
 
         ViewHolder(View view) {
             super(view);

@@ -19,4 +19,7 @@ public class APIAddress {
     public static final String SEND_SCREENSHOT=ROOT+"auditing/application";
     public static final String GET_MERCHANT=ROOT+"merchant/getWeshareMerchant";
     public static final String MERCHANT_REGISTER=ROOT+"merchant/authentication";
+
+    public static final String COLLECTION=ROOT+"localshare/collections";
+    public static final String LIKE=ROOT+"localshare/like";
 }

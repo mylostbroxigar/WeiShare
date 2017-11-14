@@ -23,11 +23,11 @@ import butterknife.Unbinder;
  */
 //微信提现
 //https://pay.weixin.qq.com/wiki/doc/api/tools/mch_pay.php?chapter=14_2
-    //微信授权
+//微信授权
 // https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419317851&token=&lang=zh_CN
 //支付宝提现
 //https://doc.open.alipay.com/docs/doc.htm?spm=a219a.7629140.0.0.JDWvLc&treeId=193&articleId=106236&docType=1
-    //支付宝授权
+//支付宝授权
 //https://doc.open.alipay.com/docs/doc.htm?spm=a219a.7629140.0.0.Pe05YU&treeId=193&articleId=105329&docType=1
 public class AccountFragment extends Fragment {
     @BindView(R.id.tv_curr_account)

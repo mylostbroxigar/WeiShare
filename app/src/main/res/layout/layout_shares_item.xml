@@ -38,6 +38,7 @@
                 android:text="12km"
                 android:layout_marginLeft="5dp"/>
             <ImageView
+                android:id="@+id/iv_like"
                 android:layout_height="16dp"
                 android:layout_width="16dp"
                 android:src="@drawable/icon_heart"
@@ -48,6 +49,7 @@
                 android:text="24"
                 android:layout_marginLeft="5dp"/>
             <ImageView
+                android:id="@+id/iv_collect"
                 android:layout_height="16dp"
                 android:layout_width="16dp"
                 android:src="@drawable/icon_star"
