@@ -126,6 +126,7 @@ public class PickCashActivity extends Activity {
      * @param v
      */
     public void authV2(View v) {
+
         if (TextUtils.isEmpty(PID) || TextUtils.isEmpty(APPID)
                 || (TextUtils.isEmpty(RSA2_PRIVATE) && TextUtils.isEmpty(RSA_PRIVATE))
                 || TextUtils.isEmpty(TARGET_ID)) {
