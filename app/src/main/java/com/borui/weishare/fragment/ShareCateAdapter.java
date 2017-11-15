@@ -1,6 +1,12 @@
 package com.borui.weishare.fragment;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseIntArray;
@@ -66,7 +72,7 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
         layoutParams.height=getHeight(shareItem);
         holder.ivShareThumb.setLayoutParams(layoutParams);
 
-        Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPics().get(0).getPicPath()).thumbnail(0.1f).fitCenter().error(R.drawable.img_error).into(holder.ivShareThumb);
+        Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPics().get(0).getPicPath()).thumbnail(0.1f).error(getErrorDrawable(layoutParams.width,layoutParams.height)).into(holder.ivShareThumb);
         Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPersonalPicture()).into(holder.ivHead);
 
 
@@ -93,6 +99,16 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
 //        holder.tvSign.setText(shareItem.getSign());
     }
 
+    private Drawable getErrorDrawable(int width,int height){
+        Bitmap bitmap=Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
+        Canvas canvas=new Canvas(bitmap);
+        canvas.drawColor(context.getResources().getColor(R.color.error_img_bg));
+        Bitmap errBmp= BitmapFactory.decodeResource(context.getResources(),R.drawable.img_error);
+        Rect src=new Rect(0,0,errBmp.getWidth(),errBmp.getHeight());
+        Rect dst=new Rect(width/4,height/2-width/4,width*3/4,height/2+width/4);
+        canvas.drawBitmap(errBmp,src,dst,null);
+        return new BitmapDrawable(bitmap);
+    }
     private String getDistance(double distance){
         if(distance>=1d){
             return "<1KM";

@@ -1,11 +1,13 @@
 package com.borui.weishare.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +32,7 @@ import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.util.DensityUtil;
 import com.borui.weishare.util.SPUtil;
 import com.borui.weishare.view.EndlessRecyclerOnScrollListener;
+import com.borui.weishare.view.pullloadmore.PullLoadMoreRecyclerView;
 import com.borui.weishare.vo.BaseVo;
 import com.borui.weishare.vo.Shares;
 import com.google.gson.reflect.TypeToken;
@@ -48,21 +51,27 @@ import butterknife.ButterKnife;
  * Created by borui on 2017/6/29.
  */
 
-public class ShareCateFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class ShareCateFragment extends BaseFragment {
     @BindView(R.id.grid_share)
-    RecyclerView gridShare;
-    @BindView(R.id.refresh_layout)
-    SwipeRefreshLayout refreshLayout;
+    PullLoadMoreRecyclerView gridShare;
+//    @BindView(R.id.refresh_layout)
+//    SwipeRefreshLayout refreshLayout;
 
     ShareCateAdapter adapter;
     //    boolean isViewCreate=false;
     StaggeredGridLayoutManager layoutManager;
     int cateCode;
-    @BindView(R.id.tv_footer)
-    TextView tvFooter;
+//    @BindView(R.id.tv_footer)
+//    TextView tvFooter;
     int page;
     boolean end;
-    private Handler handler=new Handler();
+    private Handler handler=new Handler(){
+        @Override
+        public void dispatchMessage(Message msg) {
+            super.dispatchMessage(msg);
+            initGride();
+        }
+    };
 
     @Nullable
     @Override
@@ -71,63 +80,53 @@ public class ShareCateFragment extends BaseFragment implements SwipeRefreshLayou
         ButterKnife.bind(this, view);
         cateCode = getArguments().getInt("cateCode");
 //        isViewCreate=true;
-        refreshLayout.setOnRefreshListener(this);
-        initGride();
-        if (Cache.shareCache.get(cateCode) != null && Cache.shareCache.get(cateCode).size() > 0) {
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//               initGride();
+//            }
+//        },200);
 
-                    setGridShare();
-                }
-            },200);
-        } else {
-            loadCate(true);
-        }
         return view;
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        handler.sendEmptyMessageDelayed(0,200);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        handler.sendEmptyMessageDelayed(0,200);
+    }
+
+
     private void initGride(){
-
-//        gridShare.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//                layoutManager.invalidateSpanAssignments();
-//            }
-//        });
-        gridShare.addItemDecoration(new RecyclerView.ItemDecoration() {
+        if(!isResumed()||!getUserVisibleHint()){
+            return ;
+        }
+        if(adapter!=null)
+            return;
+        gridShare.setStaggeredGridLayout(2);
+        gridShare.setOnPullLoadMoreListener(new PullLoadMoreRecyclerView.PullLoadMoreListener() {
             @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-                super.onDraw(c, parent, state);
+            public void onRefresh() {
+
+                loadCate(true);
             }
 
-            @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                super.getItemOffsets(outRect, view, parent, state);
-                outRect.left = DensityUtil.dip2px(10);
-                outRect.right = DensityUtil.dip2px(10);
-                outRect.bottom = DensityUtil.dip2px(15);
-            }
-
-        });
-        gridShare.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
             @Override
             public void onLoadMore() {
                 if(!end){
-                    tvFooter.setText("正在加载更多...");
                     loadCate(false);
                 }
             }
         });
-    }
-    private void setGridShare() {
 
-        layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
-        gridShare.setLayoutManager(layoutManager);
-
-        int width=gridShare.getWidth()/2-DensityUtil.dip2px(20);
+        int width=gridShare.getWidth()/2-DensityUtil.dip2px(10);
         adapter = new ShareCateAdapter(getContext(), cateCode,width);
         adapter.setOnOperateClickListener(new ShareCateAdapter.OnOperateClickListener() {
             @Override
@@ -141,6 +140,39 @@ public class ShareCateFragment extends BaseFragment implements SwipeRefreshLayou
             }
         });
         gridShare.setAdapter(adapter);
+
+
+        if (Cache.shareCache.get(cateCode) != null && Cache.shareCache.get(cateCode).size() > 0) {
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//
+//                    setGridShare();
+//                }
+//            },200);
+        } else {
+            loadCate(true);
+        }
+
+    }
+    private void setGridShare() {
+
+
+//        int width=gridShare.getWidth()/2-DensityUtil.dip2px(20);
+//        adapter = new ShareCateAdapter(getContext(), cateCode,width);
+//        adapter.setOnOperateClickListener(new ShareCateAdapter.OnOperateClickListener() {
+//            @Override
+//            public void onLikeClick(int position) {
+//                like(position);
+//            }
+//
+//            @Override
+//            public void onCollectClick(int position) {
+//                collect(position);
+//            }
+//        });
+//        gridShare.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     private void like(int position){
@@ -163,14 +195,20 @@ public class ShareCateFragment extends BaseFragment implements SwipeRefreshLayou
         params.put("userId",Cache.currenUser.getData().getId()+"");
         VolleyUtil.getInstance().doPost(APIAddress.COLLECTION,params,new TypeToken<BaseVo>(){}.getType(),"collect#"+position);
     }
+    boolean isLoading;
     private void loadCate(boolean refresh) {
 
+        if(isLoading)
+            return;
+        isLoading=true;
+        Log.e("boruiz", "loadCate: refresh="+refresh );
         if(refresh){
             end=false;
             page=1;
         }
         Map<String,String> params=new HashMap<>();
-        params.put("longitude", SPUtil.getString(getContext(),SPUtil.KEY_LONGITUDE));
+        Log.e("boruiz", "loadCate: getContext="+getContext()+"//"+getActivity() );
+        params.put("longitude", SPUtil.getString(getActivity(),SPUtil.KEY_LONGITUDE));
         params.put("latitude",SPUtil.getString(getContext(),SPUtil.KEY_LATITUDE));
         params.put("merchantType",cateCode+"");
         params.put("distance","50");
@@ -213,15 +251,19 @@ public class ShareCateFragment extends BaseFragment implements SwipeRefreshLayou
 
     public void onResult(Shares shares) {
 
+        isLoading=false;
         if (!shares.getTag().equals("" + cateCode))
             return;
-        refreshLayout.setRefreshing(false);
-        tvFooter.setText("");
+        gridShare.setPullLoadMoreCompleted();
+//        refreshLayout.setRefreshing(false);
+//        tvFooter.setText("");
 
         if (shares.getCode().equals("0")) {
 
             if(shares.getData()==null||shares.getData().size()==0){
-                tvFooter.setText("暂无更多数据");
+//                tvFooter.setText("暂无更多数据");
+                gridShare.setPushRefreshEnable(false);
+                gridShare.noMoreData();
                 end=true;
             }else{
                 if(page<=1){
@@ -233,15 +275,13 @@ public class ShareCateFragment extends BaseFragment implements SwipeRefreshLayou
                     Cache.shareCache.get(cateCode).addAll(shares.getData());
                     adapter.notifyItemRangeChanged(adapter.getItemCount(), shares.getData().size());
                 }
+                gridShare.setPushRefreshEnable(true);
+                gridShare.setFooterViewText(R.string.load_more_text);
                 page++;
             }
 
         }
     }
 
-    @Override
-    public void onRefresh() {
-        loadCate(true);
-    }
 
 }
