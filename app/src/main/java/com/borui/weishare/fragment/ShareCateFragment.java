@@ -128,17 +128,17 @@ public class ShareCateFragment extends BaseFragment {
 
         int width=gridShare.getWidth()/2-DensityUtil.dip2px(10);
         adapter = new ShareCateAdapter(getContext(), cateCode,width);
-        adapter.setOnOperateClickListener(new ShareCateAdapter.OnOperateClickListener() {
-            @Override
-            public void onLikeClick(int position) {
-                like(position);
-            }
-
-            @Override
-            public void onCollectClick(int position) {
-                collect(position);
-            }
-        });
+//        adapter.setOnOperateClickListener(new ShareCateAdapter.OnOperateClickListener() {
+//            @Override
+//            public void onLikeClick(int position) {
+//                like(position);
+//            }
+//
+//            @Override
+//            public void onCollectClick(int position) {
+//                collect(position);
+//            }
+//        });
         gridShare.setAdapter(adapter);
 
 
@@ -175,26 +175,7 @@ public class ShareCateFragment extends BaseFragment {
         adapter.notifyDataSetChanged();
     }
 
-    private void like(int position){
 
-        Shares.ShareItem item=Cache.shareCache.get(cateCode).get(position);
-
-        Map<String,String> params=new HashMap<>();
-        params.put("token", Cache.currenUser.getMsg());
-        params.put("shareId",item.getId()+"");
-        params.put("userId",Cache.currenUser.getData().getId()+"");
-        VolleyUtil.getInstance().doPost(APIAddress.LIKE,params,new TypeToken<BaseVo>(){}.getType(),"like#"+position);
-    }
-    private void collect(int position){
-
-        Shares.ShareItem item=Cache.shareCache.get(cateCode).get(position);
-
-        Map<String,String> params=new HashMap<>();
-        params.put("token", Cache.currenUser.getMsg());
-        params.put("shareId",item.getId()+"");
-        params.put("userId",Cache.currenUser.getData().getId()+"");
-        VolleyUtil.getInstance().doPost(APIAddress.COLLECTION,params,new TypeToken<BaseVo>(){}.getType(),"collect#"+position);
-    }
     boolean isLoading;
     private void loadCate(boolean refresh) {
 
@@ -222,29 +203,6 @@ public class ShareCateFragment extends BaseFragment {
     public void onResult(BaseVo obj) {
         if(obj instanceof Shares){
             onResult((Shares)obj);
-        }else{
-            if(obj.getTag().startsWith("like")){
-                if(obj.getCode().equals("0")){
-                    String[] strs=obj.getTag().split("#");
-                    int position=Integer.parseInt(strs[1]);
-                    Cache.shareCache.get(cateCode).get(position).setLiked(Cache.shareCache.get(cateCode).get(position).getLiked()+1);
-                    adapter.notifyDataSetChanged();
-                    Toast.makeText(getContext(),"已赞",Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(getContext(),obj.getMsg(),Toast.LENGTH_SHORT).show();
-                }
-            }
-            if(obj.getTag().startsWith("collect")){
-                if(obj.getCode().equals("0")){
-                    String[] strs=obj.getTag().split("#");
-                    int position=Integer.parseInt(strs[1]);
-                    Cache.shareCache.get(cateCode).get(position).setCollections(Cache.shareCache.get(cateCode).get(position).getCollections()+1);
-                    adapter.notifyDataSetChanged();
-                    Toast.makeText(getContext(),"收藏成功",Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(getContext(),obj.getMsg(),Toast.LENGTH_SHORT).show();
-                }
-            }
         }
     }
 

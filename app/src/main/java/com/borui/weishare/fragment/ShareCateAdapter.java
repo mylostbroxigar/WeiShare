@@ -1,6 +1,7 @@
 package com.borui.weishare.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -18,8 +19,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.borui.weishare.R;
+import com.borui.weishare.ShareDetailActivity;
 import com.borui.weishare.net.APIAddress;
 import com.borui.weishare.net.Cache;
+import com.borui.weishare.util.ImageUtil;
 import com.borui.weishare.vo.Shares;
 import com.bumptech.glide.Glide;
 
@@ -37,16 +40,16 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
     private Context context;
     private int cateCode;
     private int frameWidth;
-
-    public interface OnOperateClickListener{
-        public void onLikeClick(int position);
-        public void onCollectClick(int position);
-    }
-    private OnOperateClickListener onOperateClickListener;
-
-    public void setOnOperateClickListener(OnOperateClickListener onOperateClickListener){
-        this.onOperateClickListener=onOperateClickListener;
-    }
+//
+//    public interface OnOperateClickListener{
+//        public void onLikeClick(int position);
+//        public void onCollectClick(int position);
+//    }
+//    private OnOperateClickListener onOperateClickListener;
+//
+//    public void setOnOperateClickListener(OnOperateClickListener onOperateClickListener){
+//        this.onOperateClickListener=onOperateClickListener;
+//    }
 
     public ShareCateAdapter(Context context,int cateCode,int frameWidth){
         this.context=context;
@@ -66,14 +69,14 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        Shares.ShareItem shareItem=Cache.shareCache.get(cateCode).get(position);
+        final Shares.ShareItem shareItem=Cache.shareCache.get(cateCode).get(position);
         ViewGroup.LayoutParams layoutParams=holder.ivShareThumb.getLayoutParams();
         layoutParams.width=frameWidth;
         layoutParams.height=getHeight(shareItem);
         holder.ivShareThumb.setLayoutParams(layoutParams);
 
-        Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPics().get(0).getPicPath()).thumbnail(0.1f).error(getErrorDrawable(layoutParams.width,layoutParams.height)).into(holder.ivShareThumb);
-        Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPersonalPicture()).into(holder.ivHead);
+        Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPics().get(0).getPicPath()).thumbnail(0.1f).error(ImageUtil.getErrorDrawable(context,layoutParams.width,layoutParams.height)).into(holder.ivShareThumb);
+        Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPersonalPicture()).placeholder(R.drawable.avtar_default).error(R.drawable.avtar_default).into(holder.ivHead);
 
 
         holder.tvShareComment.setText(shareItem.getTitle());
@@ -81,36 +84,36 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
         holder.tvCollect.setText(""+shareItem.getCollections());
         holder.tvName.setText(shareItem.getRealname());
         holder.tvLocation.setText(getDistance(shareItem.getDistance()));
-        if(onOperateClickListener!=null){
 
-            holder.ivCollect.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onOperateClickListener.onCollectClick(position);
-                }
-            });
-            holder.ivLike.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onOperateClickListener.onLikeClick(position);
-                }
-            });
-        }
+        holder.ivShareThumb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(context, ShareDetailActivity.class);
+                intent.putExtra("shareId",shareItem.getId()+"");
+                context.startActivity(intent);
+            }
+        });
+//        if(onOperateClickListener!=null){
+//
+//            holder.ivCollect.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    onOperateClickListener.onCollectClick(position);
+//                }
+//            });
+//            holder.ivLike.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    onOperateClickListener.onLikeClick(position);
+//                }
+//            });
+//        }
 //        holder.tvSign.setText(shareItem.getSign());
     }
 
-    private Drawable getErrorDrawable(int width,int height){
-        Bitmap bitmap=Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
-        Canvas canvas=new Canvas(bitmap);
-        canvas.drawColor(context.getResources().getColor(R.color.error_img_bg));
-        Bitmap errBmp= BitmapFactory.decodeResource(context.getResources(),R.drawable.img_error);
-        Rect src=new Rect(0,0,errBmp.getWidth(),errBmp.getHeight());
-        Rect dst=new Rect(width/4,height/2-width/4,width*3/4,height/2+width/4);
-        canvas.drawBitmap(errBmp,src,dst,null);
-        return new BitmapDrawable(bitmap);
-    }
+
     private String getDistance(double distance){
-        if(distance>=1d){
+        if(distance<=1d){
             return "<1KM";
         }else{
             return (int)distance+"KM";

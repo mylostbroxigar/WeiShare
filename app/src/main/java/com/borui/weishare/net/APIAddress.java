@@ -14,6 +14,7 @@ public class APIAddress {
     public static final String REGISTER=ROOT+"user/register";
     public static final String GETVILIDATECODE=ROOT+"user/getValidateCode";
     public static final String LOCAL_SHARE=ROOT+"localshare/share";
+    public static final String LOCAL_SHARE_DETAIL=ROOT+"localshare/share/infos";
     public static final String SHARE_CATE=ROOT+"dict/listDicts";
     public static final String QUERYSHARES=ROOT+"localshare/query";
     public static final String SEND_SCREENSHOT=ROOT+"auditing/application";

@@ -50,7 +50,7 @@ public class UserVo extends BaseVo {
         private String telphone;
         private String email;
         private String roles;
-        private Object balance;
+        private double balance;
         private boolean status;
 
         public int getId() {
@@ -133,11 +133,11 @@ public class UserVo extends BaseVo {
             this.roles = roles;
         }
 
-        public Object getBalance() {
+        public double getBalance() {
             return balance;
         }
 
-        public void setBalance(Object balance) {
+        public void setBalance(double balance) {
             this.balance = balance;
         }
 

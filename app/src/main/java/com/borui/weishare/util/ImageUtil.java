@@ -1,8 +1,15 @@
 package com.borui.weishare.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
+
+import com.borui.weishare.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -57,5 +64,16 @@ public class ImageUtil {
         if(new File(path).exists()){
             new File(path).delete();
         }
+    }
+
+    public static Drawable getErrorDrawable(Context context, int width, int height){
+        Bitmap bitmap=Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
+        Canvas canvas=new Canvas(bitmap);
+        canvas.drawColor(context.getResources().getColor(R.color.error_img_bg));
+        Bitmap errBmp= BitmapFactory.decodeResource(context.getResources(),R.drawable.img_error);
+        Rect src=new Rect(0,0,errBmp.getWidth(),errBmp.getHeight());
+        Rect dst=new Rect(width/4,height/2-width/4,width*3/4,height/2+width/4);
+        canvas.drawBitmap(errBmp,src,dst,null);
+        return new BitmapDrawable(bitmap);
     }
 }

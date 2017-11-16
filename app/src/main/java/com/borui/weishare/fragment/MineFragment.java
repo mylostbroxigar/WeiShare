@@ -73,7 +73,7 @@ public class MineFragment extends BaseFragment {
 
 
     private void initView() {
-        Glide.with(getActivity()).load(APIAddress.SERVERADDRESS + Cache.currenUser.getData().getPersonalPicture()).into(civHead);
+        Glide.with(getActivity()).load(APIAddress.SERVERADDRESS + Cache.currenUser.getData().getPersonalPicture()).placeholder(R.drawable.avtar_default).error(R.drawable.avtar_default).into(civHead);
         tvUsername.setText(Cache.currenUser.getData().getUsername());
         tvTelephone.setText(Cache.currenUser.getData().getTelphone());
 

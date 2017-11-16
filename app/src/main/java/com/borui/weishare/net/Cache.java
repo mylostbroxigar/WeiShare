@@ -20,4 +20,31 @@ public class Cache {
     public static UserVo currenUser;
     public static ShareCate shareCate;
     public static Map<Integer,List<Shares.ShareItem>> shareCache=new HashMap<Integer, List<Shares.ShareItem>>();
+
+    public static void addLike(int shareId){
+
+        for (Map.Entry<Integer, List<Shares.ShareItem>> entry : shareCache.entrySet()) {
+
+            for (Shares.ShareItem shareItem:entry.getValue()) {
+                if(shareItem.getId()==shareId){
+                    shareItem.setLiked(shareItem.getLiked()+1);
+                    return;
+                }
+            }
+
+        }
+    }
+    public static void addCollect(int shareId){
+
+        for (Map.Entry<Integer, List<Shares.ShareItem>> entry : shareCache.entrySet()) {
+
+            for (Shares.ShareItem shareItem:entry.getValue()) {
+                if(shareItem.getId()==shareId){
+                    shareItem.setCollections(shareItem.getCollections()+1);
+                    return;
+                }
+            }
+
+        }
+    }
 }

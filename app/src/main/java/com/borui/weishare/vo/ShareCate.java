@@ -34,7 +34,7 @@ public class ShareCate extends BaseVo{
         private String dictName;
         private String dictValue;
         private int dictOrder;
-        private Object dictRemark;
+        private String dictRemark;
         private int dictStatus;
 
         public int getId() {
@@ -77,11 +77,11 @@ public class ShareCate extends BaseVo{
             this.dictOrder = dictOrder;
         }
 
-        public Object getDictRemark() {
+        public String getDictRemark() {
             return dictRemark;
         }
 
-        public void setDictRemark(Object dictRemark) {
+        public void setDictRemark(String dictRemark) {
             this.dictRemark = dictRemark;
         }
 

@@ -10,7 +10,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.TypeAdapter;
@@ -58,7 +57,6 @@ public class JsonRequest<T> extends Request<T> {
 
     protected static final String PROTOCOL_CHARSET = "utf-8";
     private ResponseListener mListener;
-    private Gson mGson;
     private Type mClazz;
     private Map<String,String> mParams;
     private List<String> imgFiles;
@@ -68,7 +66,6 @@ public class JsonRequest<T> extends Request<T> {
     public JsonRequest(int method,String url, Type type, String tag,ResponseListener listener){
         super(method, url, listener);
         this.mListener = listener ;
-        mGson = new Gson();
         mClazz = type ;
         mTag=tag;
     }
@@ -77,7 +74,6 @@ public class JsonRequest<T> extends Request<T> {
     public JsonRequest(int method,String url, Type type, Map<String,String> params,String tag,ResponseListener listener){
         super(method, url, listener);
         this.mListener = listener ;
-        mGson = new Gson();
         mClazz = type ;
         mParams=params;
         mTag=tag;
@@ -98,7 +94,7 @@ public class JsonRequest<T> extends Request<T> {
             jsonString=jo.toString();
             Log.e(TAG, "jsonStr: "+jsonString);
 //            Gson mGson=new GsonBuilder().create();
-            result = mGson.fromJson(jsonString,mClazz) ;
+            result = VolleyUtil.mGson.fromJson(jsonString,mClazz) ;
             return Response.success(result,
                     HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
