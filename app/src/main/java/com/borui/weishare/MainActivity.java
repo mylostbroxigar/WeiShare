@@ -19,6 +19,7 @@ import com.borui.weishare.fragment.MainFragment;
 import com.borui.weishare.fragment.MerchantFragment;
 import com.borui.weishare.fragment.MineFragment;
 import com.borui.weishare.fragment.ShareEntraFragment;
+import com.borui.weishare.jpush.TagAliasOperatorHelper;
 import com.borui.weishare.net.APIAddress;
 import com.borui.weishare.net.Cache;
 import com.borui.weishare.net.LocationUtil;
@@ -36,10 +37,13 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.jpush.android.api.JPushInterface;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -106,6 +110,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         showProgress("获取定位");
         //初始化位置
         LocationUtil.getInstance().startLocation();
+//        JPushInterface.setAlias(this,0,"weishare_alias_"+Cache.currenUser.getData().getId());
+//        Set<String> tags=new HashSet<>();
+//        tags.add("weishare_tag_"+Cache.currenUser.getData().getRoles());
+//        JPushInterface.setTags(this,1,tags);
+        setTagAlias();
+    }
+
+    private void setTagAlias(){
+        TagAliasOperatorHelper.TagAliasBean tagBean=new TagAliasOperatorHelper.TagAliasBean();
+        tagBean.action=TagAliasOperatorHelper.ACTION_SET;
+        tagBean.isAliasAction=false;
+        tagBean.tags=new HashSet<>();
+        tagBean.tags.add("weishare_tag_"+Cache.currenUser.getData().getRoles());
+        TagAliasOperatorHelper.getInstance().handleAction(this,tagBean);
+
+
+        TagAliasOperatorHelper.TagAliasBean aliasBean=new TagAliasOperatorHelper.TagAliasBean();
+        aliasBean.action=TagAliasOperatorHelper.ACTION_SET;
+        aliasBean.isAliasAction=true;
+        aliasBean.alias="weishare_alias_"+Cache.currenUser.getData().getId();
+        TagAliasOperatorHelper.getInstance().handleAction(this,aliasBean);
     }
     private void loadShareCate(){
 

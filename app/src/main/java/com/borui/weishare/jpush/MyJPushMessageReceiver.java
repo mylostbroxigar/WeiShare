@@ -1,6 +1,7 @@
 package com.borui.weishare.jpush;
 
 import android.content.Context;
+import android.util.Log;
 
 import cn.jpush.android.api.JPushMessage;
 import cn.jpush.android.service.JPushMessageReceiver;

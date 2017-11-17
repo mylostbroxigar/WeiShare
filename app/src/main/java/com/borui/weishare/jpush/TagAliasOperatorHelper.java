@@ -70,11 +70,11 @@ public class TagAliasOperatorHelper {
                 case DELAY_SEND_ACTION:
                     if(msg.obj !=null && msg.obj instanceof  TagAliasBean){
                         Log.i(TAG,"on delay time");
-                        sequence++;
+//                        sequence++;
                         TagAliasBean tagAliasBean = (TagAliasBean) msg.obj;
-                        tagAliasActionCache.put(sequence, tagAliasBean);
+//                        tagAliasActionCache.put(sequence, tagAliasBean);
                         if(context!=null) {
-                            handleAction(context, sequence, tagAliasBean);
+                            handleAction(context, tagAliasBean);
                         }else{
                             Log.e(TAG,"#unexcepted - context was null");
                         }
@@ -88,12 +88,13 @@ public class TagAliasOperatorHelper {
     /**
      * 处理设置tag
      * */
-    public void handleAction(Context context,int sequence, TagAliasBean tagAliasBean){
+    public void handleAction(Context context, TagAliasBean tagAliasBean){
         init(context);
         if(tagAliasBean == null){
             Log.w(TAG,"tagAliasBean was null");
             return;
         }
+        sequence++;
         put(sequence,tagAliasBean);
         if(tagAliasBean.isAliasAction){
             switch (tagAliasBean.action){
@@ -262,10 +263,10 @@ public class TagAliasOperatorHelper {
     }
 
     public static class TagAliasBean{
-        int action;
-        Set<String> tags;
-        String alias;
-        boolean isAliasAction;
+        public int action;
+        public Set<String> tags;
+        public String alias;
+        public boolean isAliasAction;
 
         @Override
         public String toString() {
