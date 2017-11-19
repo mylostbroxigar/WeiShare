@@ -23,4 +23,7 @@ public class APIAddress {
 
     public static final String COLLECTION=ROOT+"localshare/collections";
     public static final String LIKE=ROOT+"localshare/like";
+
+    //支付相关
+    public static final String ALIPAY_WEIXIN_AUTH=ROOT+"user/auth/code";
 }

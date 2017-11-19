@@ -32,12 +32,12 @@
             android:id="@+id/iv_screenshot_elebus"
             android:layout_height="84dp"
             android:layout_width="48dp"
-            android:src="@drawable/ic_launcher"/>
+            android:src="@drawable/screenshot1"/>
         <ImageView
             android:id="@+id/iv_screenshot_timeline"
             android:layout_height="84dp"
             android:layout_width="48dp"
-            android:src="@drawable/ic_launcher"
+            android:src="@drawable/screenshot2"
             android:layout_marginLeft="4dp"/>
     </LinearLayout>
     <TextView

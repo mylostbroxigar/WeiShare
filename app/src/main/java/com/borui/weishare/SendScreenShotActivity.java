@@ -68,7 +68,7 @@ public class SendScreenShotActivity extends BaseActivity {
         setContentView(R.layout.activity_screenshot);
         ButterKnife.bind(this);
         merchant = getIntent().getParcelableExtra("merchant");
-
+        merchant.setMerchantType(RegisterActivity.ROLE_COMPANY_ONLINE);
         int imageWidth = DensityUtil.screenWidth / 2 - 40;
         int imageHeight = imageWidth * DensityUtil.screenHeight / DensityUtil.screenWidth;
 

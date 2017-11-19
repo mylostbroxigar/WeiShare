@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -16,8 +17,17 @@ import com.alipay.sdk.app.AuthTask;
 import com.borui.weishare.alipay.AuthResult;
 import com.borui.weishare.alipay.PayResult;
 import com.borui.weishare.alipay.util.OrderInfoUtil2_0;
+import com.borui.weishare.net.APIAddress;
 import com.borui.weishare.net.Cache;
+import com.borui.weishare.net.VolleyUtil;
+import com.borui.weishare.view.CommonDialog;
+import com.borui.weishare.vo.BaseVo;
+import com.google.gson.reflect.TypeToken;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -28,7 +38,7 @@ import butterknife.OnClick;
  * Created by borui on 2017/11/14.
  */
 
-public class PickCashActivity extends Activity {
+public class PickCashActivity extends BaseActivity {
 
     /** 支付宝支付业务：入参app_id */
     public static final String APPID = "2017111509946623";
@@ -107,6 +117,8 @@ public class PickCashActivity extends Activity {
                         Toast.makeText(PickCashActivity.this,
                                 "授权成功\n" + String.format("authCode:%s", authResult.getAuthCode()), Toast.LENGTH_SHORT)
                                 .show();
+                        auth(authResult.getAuthCode());
+
                     } else {
                         // 其他状态值则为授权失败
                         Toast.makeText(PickCashActivity.this,
@@ -120,6 +132,16 @@ public class PickCashActivity extends Activity {
             }
         };
     };
+
+    private void auth(String auth_token){
+        HashMap<String,String> params=new HashMap<>();
+        params.put("token",Cache.currenUser.getMsg());
+        params.put("userId",Cache.currenUser.getData().getId()+"");
+        params.put("auth_token",auth_token);
+        params.put("auth_type","1");
+        Log.e("log", "auth: token="+auth_token );
+        VolleyUtil.getInstance().doPost(APIAddress.ALIPAY_WEIXIN_AUTH,params,new TypeToken<BaseVo>(){}.getType(),"auth");
+    }
     /**
      * 支付宝账户授权业务
      *
@@ -171,5 +193,30 @@ public class PickCashActivity extends Activity {
         // 必须异步调用
         Thread authThread = new Thread(authRunnable);
         authThread.start();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResult(BaseVo baseVo) {
+        dismissProgress();
+//        if (baseVo.getTag().equals("auth")) {
+//            if (baseVo.getCode().equals("0")) {
+//                commonDialog=new CommonDialog(this);
+//                commonDialog.setContent("提交成功").removeCancleButton().setOKButton("确定", new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        commonDialog.dismiss();
+//                        setResult(200);
+//                        finish();
+//                    }
+//                });
+//
+//            } else {
+//                showDialog("提交失败：" + baseVo.getMsg());
+//            }
+//
+//
+//        }
+
+
     }
 }

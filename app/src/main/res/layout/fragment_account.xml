@@ -91,9 +91,9 @@
         android:layout_width="match_parent"
         android:background="@color/button_gray"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:gravity="center_vertical"
-        android:padding="10dp">
+        android:padding="5dp">
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="0dp"
@@ -104,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:textSize="18sp"
                 android:textColor="@color/text_green"
-                android:text="银行卡"/>
+                android:text="支付宝"/>
 
             <TextView
                 android:id="@+id/tv_card_type"
@@ -112,8 +112,8 @@
                 android:layout_width="wrap_content"
                 android:textSize="18sp"
                 android:textColor="@color/text_black"
-                android:text="立刻绑定"
-                android:layout_marginTop="10dp"/>
+                android:text="已绑定"
+                android:layout_marginTop="5dp"/>
         </LinearLayout>
         <TextView
             android:id="@+id/tv_set_paypass"
@@ -121,7 +121,46 @@
             android:layout_width="wrap_content"
             android:textSize="16sp"
             android:textColor="@color/text_black"
-            android:text="设置支付密码>"/>
+            android:text="立刻绑定>"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_bind2"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:background="@color/button_gray"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
+        android:padding="5dp">
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1.0"
+            android:orientation="vertical">
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/text_green"
+                android:text="微信"/>
+
+            <TextView
+                android:id="@+id/tv_weixin_type"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/text_black"
+                android:text="未绑定"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_banding"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/text_black"
+            android:text="取消绑定>"/>
 
     </LinearLayout>
 </LinearLayout>
