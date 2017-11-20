@@ -3,6 +3,7 @@ package com.borui.weishare;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -51,7 +52,18 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.iv_welcome)
     ImageView ivWelcome;
 
-    private Handler handler=new Handler();
+    long welconeStartTime;
+    private Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(ivWelcome.getVisibility()==View.VISIBLE){
+                ivWelcome.setVisibility(View.GONE);
+                etUsername.setText(SPUtil.getString(LoginActivity.this,SPUtil.KEY_USERNAME));
+                etPassword.setText(SPUtil.getString(LoginActivity.this,SPUtil.KEY_PASSWORD));
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,12 +71,8 @@ public class LoginActivity extends BaseActivity {
         ButterKnife.bind(this);
         initLocation();
         initShareCate();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                dismissWelcome(true);
-            }
-        },6000);
+        welconeStartTime=System.currentTimeMillis();
+        handler.sendEmptyMessageDelayed(0,5000);
     }
     private void initLocation(){
 
@@ -132,16 +140,13 @@ public class LoginActivity extends BaseActivity {
 
     boolean amapInited;
     boolean cateInited;
-    private void dismissWelcome(boolean forceDismiss){
-        if(ivWelcome.getVisibility()==View.VISIBLE){
-            if(forceDismiss||(amapInited&&cateInited)){
-                ivWelcome.setVisibility(View.GONE);
-                etUsername.setText(SPUtil.getString(this,SPUtil.KEY_USERNAME));
-                etPassword.setText(SPUtil.getString(this,SPUtil.KEY_PASSWORD));
-            }
-        }
-
-    }
+//    private void dismissWelcome(boolean forceDismiss){
+//        if(ivWelcome.getVisibility()==View.VISIBLE){
+//            if(forceDismiss||(amapInited&&cateInited)){
+//            }
+//        }
+//
+//    }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResult(ShareCate shareCate){
         if(shareCate.getCode().equals("0")){
@@ -152,7 +157,8 @@ public class LoginActivity extends BaseActivity {
             Cache.shareCate=shareCate;
         }
         cateInited=true;
-        dismissWelcome(false);
+        long staytime=3000+welconeStartTime-System.currentTimeMillis();
+        handler.sendEmptyMessageDelayed(0,staytime<=0?0:staytime);
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResult(AMapLocation amapLocation){
@@ -165,7 +171,8 @@ public class LoginActivity extends BaseActivity {
 
         }
         amapInited=true;
-        dismissWelcome(false);
+        long staytime=3000+welconeStartTime-System.currentTimeMillis();
+        handler.sendEmptyMessageDelayed(0,staytime<=0?0:staytime);
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResult(UserVo uservo) {
