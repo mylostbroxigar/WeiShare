@@ -31,7 +31,7 @@
             <ImageView
                 android:layout_height="16dp"
                 android:layout_width="16dp"
-                android:src="@drawable/iocn_location"/>
+                android:src="@drawable/icon_location"/>
             <TextView
                 android:id="@+id/tv_location"
                 style="@style/discript_text_style"

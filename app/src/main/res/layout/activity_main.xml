@@ -1,137 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_main"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <RelativeLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:padding="12dp"
-        android:background="@color/button_gray">
-        <TextView
-            android:id="@+id/tv_city"
-            style="@style/menu_text_style"
-            android:text="武汉"
-            android:layout_centerInParent="true"/>
-    </RelativeLayout>
-
-
-    <FrameLayout
-        android:id="@+id/layout_content"
-        android:layout_height="0dp"
-        android:layout_weight="1.0"
-        android:layout_width="match_parent"/>
-    <View
-        android:layout_height="1px"
-        android:layout_width="match_parent"
-        android:background="@color/line_gray"/>
+    android:orientation="vertical"
+    android:background="@color/back">
     <LinearLayout
+        android:id="@+id/layout_top"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        >
+        android:gravity="center_vertical"
+        android:padding="12dp">
+        <ImageView
+            android:layout_height="20dp"
+            android:layout_width="15dp"
+            android:src="@drawable/icon_location"/>
+        <TextView
+            android:id="@+id/tv_city"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/text_black"
+            android:text="武汉市"
+            android:layout_marginLeft="5dp"/>
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1.0"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/text_black"
+            android:text="@string/app_name"/>
+
+        <Button
+            android:id="@+id/btn_mine"
+            android:layout_height="24dp"
+            android:layout_width="24dp"
+            android:background="@drawable/icon_mine"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_bottom"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
         <LinearLayout
             android:id="@+id/layout_menu_main"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1.0"
             android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:background="@color/button_white"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:gravity="center_horizontal">
             <ImageView
+                android:id="@+id/iv_menu_main"
                 android:layout_height="28dp"
                 android:layout_width="28dp"
-                android:src="@drawable/menu_main"/>
+                android:src="@drawable/menu_main_normal"/>
             <TextView
                 android:id="@+id/tv_menu_main"
                 style="@style/menu_text_style"
                 android:text="首页"/>
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_menu_share"
-            android:layout_height="wrap_content"
+        <View
+            android:layout_height="1dp"
             android:layout_width="0dp"
-            android:layout_weight="1.0"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:background="@color/button_white"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
-            <ImageView
-                android:layout_height="28dp"
-                android:layout_width="28dp"
-                android:src="@drawable/menu_share"/>
-            <TextView
-                android:id="@+id/tv_menu_share"
-                style="@style/menu_text_style"
-                android:text="分享"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_menu_merchant"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1.0"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:background="@color/button_white"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:visibility="gone">
-            <ImageView
-                android:layout_height="28dp"
-                android:layout_width="28dp"
-                android:src="@drawable/menu_merchant"/>
-            <TextView
-                android:id="@+id/tv_menu_merchant"
-                style="@style/menu_text_style"
-                android:text="商户中心"/>
-        </LinearLayout>
+            android:layout_weight="1.2"/>
         <LinearLayout
             android:id="@+id/layout_menu_account"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1.0"
             android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:background="@color/button_white"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:gravity="center_horizontal">
             <ImageView
+                android:id="@+id/iv_menu_account"
                 android:layout_height="28dp"
                 android:layout_width="28dp"
-                android:src="@drawable/menu_account"/>
+                android:src="@drawable/menu_account_normal"/>
             <TextView
                 android:id="@+id/tv_menu_account"
                 style="@style/menu_text_style"
                 android:text="账号"/>
         </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_below="@id/layout_top"
+        android:layout_above="@id/layout_bottom"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/layout_menu_mine"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
+        <View
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:background="@color/color_border"/>
+        <RelativeLayout
+            android:layout_height="0dp"
             android:layout_weight="1.0"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:background="@color/button_white"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp">
-            <ImageView
-                android:layout_height="28dp"
-                android:layout_width="28dp"
-                android:src="@drawable/menu_mine"/>
-            <TextView
-                android:id="@+id/tv_menu_mine"
-                style="@style/menu_text_style"
-                android:text="我的"/>
-        </LinearLayout>
+            android:layout_width="match_parent">
+            <FrameLayout
+                android:id="@+id/layout_content"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"/>
+            <RelativeLayout
+                android:id="@+id/layout_share"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:background="#88222222"
+                android:paddingBottom="20dp"
+                android:visibility="gone"
+                >
+                <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true">
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal">
+                        <ImageView
+                            android:id="@+id/btn_weishare"
+                            android:layout_height="52dp"
+                            android:layout_width="52dp"
+                            android:padding="2dp"
+                            android:src="@drawable/btn_weishare"
+                            android:background="@drawable/round_white"/>
+                        <TextView
+                            style="@style/menu_text_style"
+                            android:textColor="@color/white"
+                            android:text="微分享"/>
+                    </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:layout_marginLeft="60dp">
+                        <ImageView
+                            android:id="@+id/btn_localshare"
+                            android:layout_height="52dp"
+                            android:layout_width="52dp"
+                            android:padding="2dp"
+                            android:src="@drawable/btn_localshare"
+                            android:background="@drawable/round_white"/>
+                        <TextView
+                            style="@style/menu_text_style"
+                            android:textColor="@color/white"
+                            android:text="本地分享"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+        <View
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:background="@color/color_border"/>
     </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_menu_share"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="5dp">
+        <ImageView
+            android:id="@+id/iv_menu_share"
+            android:layout_height="52dp"
+            android:layout_width="52dp"
+            android:padding="2dp"
+            android:src="@drawable/menu_share_normal"
+            android:background="@drawable/round_white"/>
+        <TextView
+            android:id="@+id/tv_menu_share"
+            style="@style/menu_text_style"
+            android:text="分享"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_menu_merchant"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="5dp"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/iv_menu_merchant"
+            android:layout_height="52dp"
+            android:layout_width="52dp"
+            android:padding="2dp"
+            android:src="@drawable/menu_share_normal"
+            android:background="@drawable/round_white"/>
+        <TextView
+            android:id="@+id/tv_menu_merchant"
+            style="@style/menu_text_style"
+            android:text="商户中心"/>
+    </LinearLayout>
+
+</RelativeLayout>

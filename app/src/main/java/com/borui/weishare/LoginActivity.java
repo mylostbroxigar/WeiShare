@@ -1,28 +1,33 @@
 package com.borui.weishare;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
 import com.borui.weishare.net.APIAddress;
 import com.borui.weishare.net.Cache;
+import com.borui.weishare.net.LocationUtil;
 import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.util.SPUtil;
-import com.borui.weishare.vo.BaseVo;
+import com.borui.weishare.view.CommonDialog;
+import com.borui.weishare.vo.ShareCate;
+import com.borui.weishare.vo.Shares;
 import com.borui.weishare.vo.UserVo;
 import com.google.gson.reflect.TypeToken;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,15 +48,36 @@ public class LoginActivity extends BaseActivity {
     Button btnLogin;
     @BindView(R.id.tv_register)
     TextView tvRegister;
+    @BindView(R.id.iv_welcome)
+    ImageView ivWelcome;
 
+    private Handler handler=new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        etUsername.setText(SPUtil.getString(this,SPUtil.KEY_USERNAME));
-        etPassword.setText(SPUtil.getString(this,SPUtil.KEY_PASSWORD));
+        initLocation();
+        initShareCate();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                dismissWelcome(true);
+            }
+        },6000);
     }
+    private void initLocation(){
+
+        //初始化位置
+        LocationUtil.getInstance().startLocation();
+    }
+    private void initShareCate(){
+
+        Map<String,String> params=new HashMap<>();
+        params.put("dictType","MERCHANT_TYPE");
+        VolleyUtil.getInstance().doPost(APIAddress.SHARE_CATE,params,new TypeToken<ShareCate>(){}.getType(),"");
+    }
+
     @OnClick({R.id.btn_login, R.id.tv_register})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -59,7 +85,7 @@ public class LoginActivity extends BaseActivity {
                 doLogin();
                 break;
             case R.id.tv_register:
-                startActivity(new Intent(this,RegisterActivity.class));
+                startActivity(new Intent(this, RegisterActivity.class));
                 break;
         }
     }
@@ -94,32 +120,69 @@ public class LoginActivity extends BaseActivity {
         }
 
         showProgress("正在登录，请稍候");
-        Map<String,String> params=new HashMap<>();
-        params.put("username",username);
-        params.put("password",password);
-        SPUtil.insertString(this,SPUtil.KEY_USERNAME,username);
-        SPUtil.insertString(this,SPUtil.KEY_PASSWORD,password);
-        VolleyUtil.getInstance().doPost(APIAddress.LOGIN,params,new TypeToken<UserVo>(){}.getType(),"login");
+        Map<String, String> params = new HashMap<>();
+        params.put("username", username);
+        params.put("password", password);
+        SPUtil.insertString(this, SPUtil.KEY_USERNAME, username);
+        SPUtil.insertString(this, SPUtil.KEY_PASSWORD, password);
+        VolleyUtil.getInstance().doPost(APIAddress.LOGIN, params, new TypeToken<UserVo>() {
+        }.getType(), "login");
 //        VolleyUtil.getInstance().doPost(APIAddress.LOGIN,params,null,new TypeToken<UserVo>(){}.getType(),"login");
     }
 
+    boolean amapInited;
+    boolean cateInited;
+    private void dismissWelcome(boolean forceDismiss){
+        if(ivWelcome.getVisibility()==View.VISIBLE){
+            if(forceDismiss||(amapInited&&cateInited)){
+                ivWelcome.setVisibility(View.GONE);
+                etUsername.setText(SPUtil.getString(this,SPUtil.KEY_USERNAME));
+                etPassword.setText(SPUtil.getString(this,SPUtil.KEY_PASSWORD));
+            }
+        }
 
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResult(ShareCate shareCate){
+        if(shareCate.getCode().equals("0")){
+            for (ShareCate.Dict data:shareCate.getData()){
+                Cache.shareCache.put(data.getId(),new ArrayList<Shares.ShareItem>());
+            }
+
+            Cache.shareCate=shareCate;
+        }
+        cateInited=true;
+        dismissWelcome(false);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResult(AMapLocation amapLocation){
+        dismissProgress();
+        if (amapLocation != null&&amapLocation.getErrorCode() == 0) {
+            //解析定位结果
+            SPUtil.insertString(this,SPUtil.KEY_LATITUDE,amapLocation.getLatitude()+"");
+            SPUtil.insertString(this,SPUtil.KEY_LONGITUDE,amapLocation.getLongitude()+"");
+            SPUtil.insertString(this,SPUtil.KEY_CITY,amapLocation.getCity());
+
+        }
+        amapInited=true;
+        dismissWelcome(false);
+    }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResult(UserVo uservo) {
-        if(!uservo.getTag().equals("login")){
+        if (!uservo.getTag().equals("login")) {
             return;
         }
         dismissProgress();
-        if(uservo.getCode().equals("0")){
-            Cache.currenUser=uservo;
-            SPUtil.insertBoolean(this,SPUtil.KEY_LOGINED,true);
+        if (uservo.getCode().equals("0")) {
+            Cache.currenUser = uservo;
+            SPUtil.insertBoolean(this, SPUtil.KEY_LOGINED, true);
 
-            Intent intent=new Intent();
-            intent.putExtra("checkMenu",getIntent().getIntExtra("checkMenu",0));
-            startActivityForResult(new Intent(this,MainActivity.class),100);
-        }else{
-            showDialog("登录失败："+uservo.getMsg());
-            SPUtil.insertBoolean(this,SPUtil.KEY_LOGINED,false);
+            Intent intent = new Intent();
+            intent.putExtra("checkMenu", getIntent().getIntExtra("checkMenu", 0));
+            startActivityForResult(new Intent(this, MainActivity.class), 100);
+        } else {
+            showDialog("登录失败：" + uservo.getMsg());
+            SPUtil.insertBoolean(this, SPUtil.KEY_LOGINED, false);
         }
 
     }
@@ -127,9 +190,9 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==100){
-            if(resultCode==4){
-             finish();
+        if (requestCode == 100) {
+            if (resultCode == 4) {
+                finish();
             }
         }
     }

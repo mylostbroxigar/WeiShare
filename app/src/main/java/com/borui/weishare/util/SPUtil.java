@@ -4,6 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.borui.weishare.vo.ShareCate;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+import static android.R.attr.value;
+
 /**
  * Created by borui on 2017/9/5.
  */
@@ -18,6 +26,7 @@ public class SPUtil {
     public static final String KEY_LATITUDE="key_latitude";
     public static final String KEY_LONGITUDE="key_longitude";
     public static final String KEY_CITY="key_city";
+    public static final String KEY_CATE="key_cate";
 
     public static void insertInt(Context context, String key, int value){
         SharedPreferences sp=context.getSharedPreferences(SP_NAME, Activity.MODE_PRIVATE);
@@ -57,4 +66,5 @@ public class SPUtil {
         boolean value=sp.getBoolean(key,false);
         return value;
     }
+
 }

@@ -93,6 +93,9 @@
         <activity android:name=".PickCashActivity"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait"/>
+        <activity android:name=".MineActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
