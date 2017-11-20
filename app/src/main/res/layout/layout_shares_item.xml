@@ -2,36 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/text_light_gray"
     android:orientation="vertical"
-
-    android:padding="1dp">
-    <LinearLayout
+    android:background="@color/white">
+    <RelativeLayout
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:background="@color/button_white">
+        android:layout_width="match_parent">
+
         <ImageView
             android:id="@+id/iv_share_thumb"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:scaleType="fitCenter"/>
-        <TextView
-            android:id="@+id/tv_share_comment"
-            style="@style/content_text_style"
-            android:layout_margin="5dp"/>
         <LinearLayout
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_width="match_parent"
+            android:padding="5dp"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical|right"
+
+            android:background="@drawable/shape_fade">
             <ImageView
                 android:layout_height="16dp"
                 android:layout_width="16dp"
-                android:src="@drawable/icon_location"/>
+                android:src="@drawable/icon_distance_lite"/>
             <TextView
                 android:id="@+id/tv_location"
                 style="@style/discript_text_style"
@@ -41,7 +36,7 @@
                 android:id="@+id/iv_like"
                 android:layout_height="16dp"
                 android:layout_width="16dp"
-                android:src="@drawable/icon_heart"
+                android:src="@drawable/icon_thumb_lite"
                 android:layout_marginLeft="10dp"/>
             <TextView
                 android:id="@+id/tv_like"
@@ -52,7 +47,7 @@
                 android:id="@+id/iv_collect"
                 android:layout_height="16dp"
                 android:layout_width="16dp"
-                android:src="@drawable/icon_star"
+                android:src="@drawable/icon_collect_lite"
                 android:layout_marginLeft="10dp"/>
             <TextView
                 android:id="@+id/tv_collect"
@@ -60,38 +55,28 @@
                 android:text="30"
                 android:layout_marginLeft="5dp"/>
         </LinearLayout>
-        <View
-            android:layout_height="1dp"
-            android:layout_width="match_parent"
-            android:background="@color/button_gray"
-            android:layout_marginTop="5dp"/>
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:padding="10dp">
-            <ImageView
-                android:id="@+id/iv_head"
-                android:layout_height="50dp"
-                android:layout_width="50dp"
-                />
-            <LinearLayout
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:layout_marginLeft="10dp">
-                <TextView
-                    android:id="@+id/tv_name"
-                    style="@style/content_text_style"
-                    android:lines="1"/>
-                <TextView
-                    android:id="@+id/tv_sign"
-                    style="@style/discript_text_style"
-                    android:lines="1"
-                    android:layout_marginTop="10dp"/>
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/tv_share_comment"
+        style="@style/content_text_style"
+        android:layout_margin="5dp"/>
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="10dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_head"
+            android:layout_height="40dp"
+            android:layout_width="40dp"
+            />
 
+        <TextView
+            android:id="@+id/tv_name"
+            style="@style/content_text_style"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/text_black"
+            android:lines="1"/>
+    </LinearLayout>
 </LinearLayout>

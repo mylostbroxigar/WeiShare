@@ -70,9 +70,19 @@ public class ImageUtil {
         Bitmap bitmap=Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
         Canvas canvas=new Canvas(bitmap);
         canvas.drawColor(context.getResources().getColor(R.color.error_img_bg));
-        Bitmap errBmp= BitmapFactory.decodeResource(context.getResources(),R.drawable.img_error);
+        Bitmap errBmp= BitmapFactory.decodeResource(context.getResources(),R.drawable.image_error);
         Rect src=new Rect(0,0,errBmp.getWidth(),errBmp.getHeight());
-        Rect dst=new Rect(width/4,height/2-width/4,width*3/4,height/2+width/4);
+        Rect dst=new Rect(width*3/8,height/2-width/8,width*5/8,height/2+width/8);
+        canvas.drawBitmap(errBmp,src,dst,null);
+        return new BitmapDrawable(bitmap);
+    }
+    public static Drawable getDefultDrawable(Context context, int width, int height){
+        Bitmap bitmap=Bitmap.createBitmap(width,height, Bitmap.Config.ARGB_8888);
+        Canvas canvas=new Canvas(bitmap);
+        canvas.drawColor(context.getResources().getColor(R.color.default_img_bg));
+        Bitmap errBmp= BitmapFactory.decodeResource(context.getResources(),R.drawable.image_default);
+        Rect src=new Rect(0,0,errBmp.getWidth(),errBmp.getHeight());
+        Rect dst=new Rect(width*3/8,height/2-width/8,width*5/8,height/2+width/8);
         canvas.drawBitmap(errBmp,src,dst,null);
         return new BitmapDrawable(bitmap);
     }

@@ -10,7 +10,8 @@
     <color name="sky">#7ecef4</color>
 
     <color name="text_black">#151515</color>
-    <color name="error_img_bg">#EFEFEF</color>
+    <color name="error_img_bg">#e0e0e0</color>
+    <color name="default_img_bg">#e0e0e0</color>
     <color name="text_gray">#999999</color>
     <color name="text_light_gray">#c6c6c6</color>
     <color name="text_red">#FF4081</color>

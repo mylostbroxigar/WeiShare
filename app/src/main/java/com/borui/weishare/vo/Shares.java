@@ -18,97 +18,39 @@ public class Shares extends BaseVo {
         this.data = data;
     }
 
-    public static class ShareItem {
+    public static class ShareItem{
         /**
-         * id : 1
-         * userId : 2
-         * username : boruiz
+         * thumbs : 1
+         * personalPicture : /20171018/user/boruiz9/20171018130739_ic_default_share.png
+         * id : 46
+         * thumbed : false
+         * pics : [{"picWidth":720,"picPath":"/20171116/share/local/user/boruiz9/20171116212418_weshare_1510838654418.jpg","id":19,"shareId":46,"picHeight":480},{"picWidth":720,"picPath":"/20171116/share/local/user/boruiz9/20171116212418_weshare_1510838654452.jpg","id":20,"shareId":46,"picHeight":224}]
+         * distance : 0.0106847
+         * title : uuuu
+         * username : boruiz9
+         * collectioned : false
          * realname : boruiZhu
-         * personalid : 421023198808133478
-         * sex : true
-         * personalPicture :
-         * telphone : 15007167330
-         * email : borui_zhu@163.com
-         * longitude : 21.23
-         * latitude : 24.23
-         * title : 2
-         * shareTime :
-         * sharePictures :
-         * remark : 2
-         * merchantType : 2
-         * liked : 1
-         * distance : 10446.721
          * collections : 0
-         * pics : [{"id":1,"shareId":1,"picPath":"\\20171011\\share\\local\\user\\admin123\\20171011231316_avatar.png"}]
          */
 
-        private int id;
-        private int userId;
-        private String username;
-        private String realname;
-        private String personalid;
-        private boolean sex;
+        private int thumbs;
         private String personalPicture;
-        private String telphone;
-        private String email;
-        private double longitude;
-        private double latitude;
-        private String title;
-        private String shareTime;
-        private String sharePictures;
-        private String remark;
-        private int merchantType;
-        private int liked;
+        private int id;
+        private boolean thumbed;
         private double distance;
+        private String title;
+        private String username;
+        private boolean collectioned;
+        private String realname;
         private int collections;
         private List<PicsBean> pics;
 
-        public int getId() {
-            return id;
+        public int getThumbs() {
+            return thumbs;
         }
 
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public int getUserId() {
-            return userId;
-        }
-
-        public void setUserId(int userId) {
-            this.userId = userId;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getRealname() {
-            return realname;
-        }
-
-        public void setRealname(String realname) {
-            this.realname = realname;
-        }
-
-        public String getPersonalid() {
-            return personalid;
-        }
-
-        public void setPersonalid(String personalid) {
-            this.personalid = personalid;
-        }
-
-        public boolean isSex() {
-            return sex;
-        }
-
-        public void setSex(boolean sex) {
-            this.sex = sex;
+        public void setThumbs(int thumbs) {
+            this.thumbs = thumbs;
         }
 
         public String getPersonalPicture() {
@@ -119,36 +61,28 @@ public class Shares extends BaseVo {
             this.personalPicture = personalPicture;
         }
 
-        public String getTelphone() {
-            return telphone;
+        public int getId() {
+            return id;
         }
 
-        public void setTelphone(String telphone) {
-            this.telphone = telphone;
+        public void setId(int id) {
+            this.id = id;
         }
 
-        public String getEmail() {
-            return email;
+        public boolean isThumbed() {
+            return thumbed;
         }
 
-        public void setEmail(String email) {
-            this.email = email;
+        public void setThumbed(boolean thumbed) {
+            this.thumbed = thumbed;
         }
 
-        public double getLongitude() {
-            return longitude;
+        public double getDistance() {
+            return distance;
         }
 
-        public void setLongitude(double longitude) {
-            this.longitude = longitude;
-        }
-
-        public double getLatitude() {
-            return latitude;
-        }
-
-        public void setLatitude(double latitude) {
-            this.latitude = latitude;
+        public void setDistance(double distance) {
+            this.distance = distance;
         }
 
         public String getTitle() {
@@ -159,52 +93,28 @@ public class Shares extends BaseVo {
             this.title = title;
         }
 
-        public String getShareTime() {
-            return shareTime;
+        public String getUsername() {
+            return username;
         }
 
-        public void setShareTime(String shareTime) {
-            this.shareTime = shareTime;
+        public void setUsername(String username) {
+            this.username = username;
         }
 
-        public String getSharePictures() {
-            return sharePictures;
+        public boolean isCollectioned() {
+            return collectioned;
         }
 
-        public void setSharePictures(String sharePictures) {
-            this.sharePictures = sharePictures;
+        public void setCollectioned(boolean collectioned) {
+            this.collectioned = collectioned;
         }
 
-        public String getRemark() {
-            return remark;
+        public String getRealname() {
+            return realname;
         }
 
-        public void setRemark(String remark) {
-            this.remark = remark;
-        }
-
-        public int getMerchantType() {
-            return merchantType;
-        }
-
-        public void setMerchantType(int merchantType) {
-            this.merchantType = merchantType;
-        }
-
-        public int getLiked() {
-            return liked;
-        }
-
-        public void setLiked(int liked) {
-            this.liked = liked;
-        }
-
-        public double getDistance() {
-            return distance;
-        }
-
-        public void setDistance(double distance) {
-            this.distance = distance;
+        public void setRealname(String realname) {
+            this.realname = realname;
         }
 
         public int getCollections() {
@@ -225,16 +135,34 @@ public class Shares extends BaseVo {
 
         public static class PicsBean {
             /**
-             * id : 1
-             * shareId : 1
-             * picPath :
+             * picWidth : 720
+             * picPath : /20171116/share/local/user/boruiz9/20171116212418_weshare_1510838654418.jpg
+             * id : 19
+             * shareId : 46
+             * picHeight : 480
              */
 
+            private int picWidth;
+            private String picPath;
             private int id;
             private int shareId;
-            private String picPath;
-            private int picWidth;
             private int picHeight;
+
+            public int getPicWidth() {
+                return picWidth;
+            }
+
+            public void setPicWidth(int picWidth) {
+                this.picWidth = picWidth;
+            }
+
+            public String getPicPath() {
+                return picPath;
+            }
+
+            public void setPicPath(String picPath) {
+                this.picPath = picPath;
+            }
 
             public int getId() {
                 return id;
@@ -250,22 +178,6 @@ public class Shares extends BaseVo {
 
             public void setShareId(int shareId) {
                 this.shareId = shareId;
-            }
-
-            public String getPicPath() {
-                return picPath;
-            }
-
-            public void setPicPath(String picPath) {
-                this.picPath = picPath;
-            }
-
-            public int getPicWidth() {
-                return picWidth;
-            }
-
-            public void setPicWidth(int picWidth) {
-                this.picWidth = picWidth;
             }
 
             public int getPicHeight() {

@@ -58,9 +58,6 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
     }
 
 
-    public Shares.ShareItem getItem(int position){
-        return Cache.shareCache.get(cateCode).get(position);
-    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.layout_shares_item, parent, false);
@@ -75,12 +72,13 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
         layoutParams.height=getHeight(shareItem);
         holder.ivShareThumb.setLayoutParams(layoutParams);
 
-        Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPics().get(0).getPicPath()).thumbnail(0.1f).error(ImageUtil.getErrorDrawable(context,layoutParams.width,layoutParams.height)).into(holder.ivShareThumb);
+        Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPics().get(0).getPicPath()).thumbnail(0.1f).placeholder(ImageUtil.getDefultDrawable(context,layoutParams.width,layoutParams.height))
+                .error(ImageUtil.getErrorDrawable(context,layoutParams.width,layoutParams.height)).into(holder.ivShareThumb);
         Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPersonalPicture()).placeholder(R.drawable.avtar_default).error(R.drawable.avtar_default).into(holder.ivHead);
 
 
         holder.tvShareComment.setText(shareItem.getTitle());
-        holder.tvLike.setText(""+shareItem.getLiked());
+        holder.tvLike.setText(""+shareItem.getThumbs());
         holder.tvCollect.setText(""+shareItem.getCollections());
         holder.tvName.setText(shareItem.getRealname());
         holder.tvLocation.setText(getDistance(shareItem.getDistance()));
@@ -143,8 +141,6 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
         ImageView ivHead;
         @BindView(R.id.tv_name)
         TextView tvName;
-        @BindView(R.id.tv_sign)
-        TextView tvSign;
         @BindView(R.id.iv_like)
         ImageView ivLike;
         @BindView(R.id.iv_collect)

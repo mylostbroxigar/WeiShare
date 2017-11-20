@@ -22,7 +22,7 @@ public class APIAddress {
     public static final String MERCHANT_REGISTER=ROOT+"merchant/authentication";
 
     public static final String COLLECTION=ROOT+"localshare/collections";
-    public static final String LIKE=ROOT+"localshare/like";
+    public static final String LIKE=ROOT+"localshare/thumbs";
 
     //支付相关
     public static final String ALIPAY_WEIXIN_AUTH=ROOT+"user/auth/code";

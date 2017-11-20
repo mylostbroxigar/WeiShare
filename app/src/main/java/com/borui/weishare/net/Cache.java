@@ -27,7 +27,7 @@ public class Cache {
 
             for (Shares.ShareItem shareItem:entry.getValue()) {
                 if(shareItem.getId()==shareId){
-                    shareItem.setLiked(shareItem.getLiked()+1);
+                    shareItem.setThumbs(shareItem.getThumbs()+1);
                     return;
                 }
             }

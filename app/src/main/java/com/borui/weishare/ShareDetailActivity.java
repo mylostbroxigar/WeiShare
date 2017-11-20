@@ -97,7 +97,7 @@ public class ShareDetailActivity extends BaseActivity {
         Map<String,String> params=new HashMap<>();
         params.put("token", Cache.currenUser.getMsg());
         params.put("shareId",shareId);
-        params.put("userId",Cache.currenUser.getData().getId()+"");
+//        params.put("userId",Cache.currenUser.getData().getId()+"");
         VolleyUtil.getInstance().doPost(APIAddress.LIKE,params,new TypeToken<BaseVo>(){}.getType(),"like");
     }
     private void collect(){
