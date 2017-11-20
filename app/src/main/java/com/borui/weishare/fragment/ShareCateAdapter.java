@@ -30,6 +30,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by borui on 2017/9/29.
@@ -138,7 +139,7 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
         @BindView(R.id.tv_collect)
         TextView tvCollect;
         @BindView(R.id.iv_head)
-        ImageView ivHead;
+        CircleImageView ivHead;
         @BindView(R.id.tv_name)
         TextView tvName;
         @BindView(R.id.iv_like)
