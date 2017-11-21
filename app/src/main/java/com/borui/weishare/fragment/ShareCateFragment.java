@@ -126,7 +126,7 @@ public class ShareCateFragment extends BaseFragment {
             }
         });
 
-        int width=gridShare.getWidth()/2-DensityUtil.dip2px(10);
+        int width=gridShare.getWidth()/2-DensityUtil.dip2px(getContext(),10);
         adapter = new ShareCateAdapter(getContext(), cateCode,width);
 //        adapter.setOnOperateClickListener(new ShareCateAdapter.OnOperateClickListener() {
 //            @Override

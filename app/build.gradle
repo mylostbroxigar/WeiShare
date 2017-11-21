@@ -41,4 +41,7 @@ dependencies {
     compile files('lib/jcore-android-1.1.7.jar')
     compile files('lib/jpush-android-3.0.9.jar')
     compile files('lib/alipaySdk-20170922.jar')
+    compile('cn.qqtheme.framework:WheelPicker:latest.release') {
+        exclude group: 'com.android.support'
+    }
 }

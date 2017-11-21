@@ -113,7 +113,7 @@ public class AccountFragment extends BaseFragment {
 
                 break;
             case R.id.layout_bind_weixin:
-                Toast.makeText(getContext(),"正在开发，敬请期待",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"正在努力开发，敬请期待",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.layout_bind_alipay:
                 AliUtil.authV2(getActivity());

@@ -10,7 +10,7 @@ import android.os.Parcelable;
 public class MerchantVo extends BaseVo {
 
     /**
-     * data : {"id":1,"merchantName":"XX商家","merchantAddress":"XX","merchantType":"1","marchantUsers":"1","merchantCertificateUrl":"1","mercharLegalRepresentative":"1","authorize":"1"}
+     * data : {"authorize":"","id":10001,"mercharLegalRepresentative":"/20171114/merchant/55555/licences/20171114215816_open_screen_sub_title_img_1339.png","deposit":12.34,"merchantType":"3","merchantName":"55555","commission":14,"pageURL":"","merchantAddress":"55555","merchantCertificateUrl":"/20171114/merchant/55555/licences/20171114215816_screen_lock_30157.png","merchantUsers":"6"}
      */
 
     private Merchant data;
@@ -23,68 +23,110 @@ public class MerchantVo extends BaseVo {
         this.data = data;
     }
 
-    public static class Merchant implements Parcelable {
+    public static class Merchant implements Parcelable{
         /**
-         * id : 1
-         * merchantName : XX商家
-         * merchantAddress : XX
-         * merchantType : 1
-         * marchantUsers : 1
-         * merchantCertificateUrl : 1
-         * mercharLegalRepresentative : 1
-         * authorize : 1
+         * authorize :
+         * id : 10001
+         * mercharLegalRepresentative : /20171114/merchant/55555/licences/20171114215816_open_screen_sub_title_img_1339.png
+         * deposit : 12.34
+         * merchantType : 3
+         * merchantName : 55555
+         * commission : 14
+         * pageURL :
+         * merchantAddress : 55555
+         * merchantCertificateUrl : /20171114/merchant/55555/licences/20171114215816_screen_lock_30157.png
+         * merchantUsers : 6
          */
 
-        private int id;
-        private String merchantName;
-        private String merchantAddress;
-        private String merchantType;
-        private String marchantUsers;
-        private String merchantCertificateUrl;
-        private String mercharLegalRepresentative;
         private String authorize;
-
+        private int id;
+        private String mercharLegalRepresentative;
+        private double deposit;
+        private String merchantType;
+        private String merchantName;
+        private int commission;
+        private String pageURL;
+        private String merchantAddress;
+        private String merchantCertificateUrl;
+        private String merchantUsers;
         public Merchant(){
 
         }
 
+
+
         public Merchant(Parcel in){
-            id=in.readInt();
-            merchantName=in.readString();
-            merchantAddress=in.readString();
-            merchantType=in.readString();
-            marchantUsers=in.readString();
-            merchantCertificateUrl=in.readString();
-            mercharLegalRepresentative=in.readString();
             authorize=in.readString();
+            id=in.readInt();
+            mercharLegalRepresentative=in.readString();
+            deposit=in.readDouble();
+            merchantType=in.readString();
+            merchantName=in.readString();
+            commission=in.readInt();
+            pageURL=in.readString();
+            merchantAddress=in.readString();
+            merchantCertificateUrl=in.readString();
+            merchantUsers=in.readString();
+
         }
 
-        public static final Parcelable.Creator<Merchant> CREATOR=new Creator<Merchant>() {
+
+
+        public static final Parcelable.Creator<Merchant> CREATOR=new Parcelable.Creator<Merchant>() {
+
             @Override
+
             public Merchant createFromParcel(Parcel in) {
+
                 return new Merchant(in);
+
             }
+
+
 
             @Override
+
             public Merchant[] newArray(int i) {
+
                 return new Merchant[0];
+
             }
+
         };
-        @Override
-        public int describeContents() {
-            return 0;
-        }
 
         @Override
+
+        public int describeContents() {
+
+            return 0;
+
+        }
+
+
+
+        @Override
+
         public void writeToParcel(Parcel out, int i) {
+
+            out.writeString(authorize);
             out.writeInt(id);
-            out.writeString("merchantName");
-            out.writeString("merchantAddress");
-            out.writeString("merchantType");
-            out.writeString("marchantUsers");
-            out.writeString("merchantCertificateUrl");
-            out.writeString("mercharLegalRepresentative");
-            out.writeString("authorize");
+            out.writeString(mercharLegalRepresentative);
+            out.writeDouble(deposit);
+            out.writeString(merchantType);
+            out.writeString(merchantName);
+            out.writeInt(commission);
+            out.writeString(pageURL);
+            out.writeString(merchantAddress);
+            out.writeString(merchantCertificateUrl);
+            out.writeString(merchantUsers);
+
+        }
+        public String getAuthorize() {
+            return authorize;
+        }
+
+        public void setAuthorize(String authorize) {
+            this.authorize = authorize;
         }
 
         public int getId() {
@@ -95,20 +137,20 @@ public class MerchantVo extends BaseVo {
             this.id = id;
         }
 
-        public String getMerchantName() {
-            return merchantName;
+        public String getMercharLegalRepresentative() {
+            return mercharLegalRepresentative;
         }
 
-        public void setMerchantName(String merchantName) {
-            this.merchantName = merchantName;
+        public void setMercharLegalRepresentative(String mercharLegalRepresentative) {
+            this.mercharLegalRepresentative = mercharLegalRepresentative;
         }
 
-        public String getMerchantAddress() {
-            return merchantAddress;
+        public double getDeposit() {
+            return deposit;
         }
 
-        public void setMerchantAddress(String merchantAddress) {
-            this.merchantAddress = merchantAddress;
+        public void setDeposit(double deposit) {
+            this.deposit = deposit;
         }
 
         public String getMerchantType() {
@@ -119,12 +161,36 @@ public class MerchantVo extends BaseVo {
             this.merchantType = merchantType;
         }
 
-        public String getMarchantUsers() {
-            return marchantUsers;
+        public String getMerchantName() {
+            return merchantName;
         }
 
-        public void setMarchantUsers(String marchantUsers) {
-            this.marchantUsers = marchantUsers;
+        public void setMerchantName(String merchantName) {
+            this.merchantName = merchantName;
+        }
+
+        public int getCommission() {
+            return commission;
+        }
+
+        public void setCommission(int commission) {
+            this.commission = commission;
+        }
+
+        public String getPageURL() {
+            return pageURL;
+        }
+
+        public void setPageURL(String pageURL) {
+            this.pageURL = pageURL;
+        }
+
+        public String getMerchantAddress() {
+            return merchantAddress;
+        }
+
+        public void setMerchantAddress(String merchantAddress) {
+            this.merchantAddress = merchantAddress;
         }
 
         public String getMerchantCertificateUrl() {
@@ -135,20 +201,12 @@ public class MerchantVo extends BaseVo {
             this.merchantCertificateUrl = merchantCertificateUrl;
         }
 
-        public String getMercharLegalRepresentative() {
-            return mercharLegalRepresentative;
+        public String getMerchantUsers() {
+            return merchantUsers;
         }
 
-        public void setMercharLegalRepresentative(String mercharLegalRepresentative) {
-            this.mercharLegalRepresentative = mercharLegalRepresentative;
-        }
-
-        public String getAuthorize() {
-            return authorize;
-        }
-
-        public void setAuthorize(String authorize) {
-            this.authorize = authorize;
+        public void setMerchantUsers(String merchantUsers) {
+            this.merchantUsers = merchantUsers;
         }
     }
 }

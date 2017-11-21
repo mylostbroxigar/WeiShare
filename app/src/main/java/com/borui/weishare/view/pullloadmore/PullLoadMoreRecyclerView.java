@@ -113,10 +113,10 @@ public class PullLoadMoreRecyclerView extends LinearLayout {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
-                outRect.left = DensityUtil.dip2px(5);
-                outRect.right = DensityUtil.dip2px(5);
-                outRect.top = DensityUtil.dip2px(10);
-                outRect.bottom = DensityUtil.dip2px(10);
+                outRect.left = DensityUtil.dip2px(getContext(),5);
+                outRect.right = DensityUtil.dip2px(getContext(),5);
+                outRect.top = DensityUtil.dip2px(getContext(),10);
+                outRect.bottom = DensityUtil.dip2px(getContext(),10);
             }
 
         });

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#88333333"
+    android:gravity="bottom">
+    <LinearLayout
+        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@color/white">
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:padding="10dp">
+            <TextView
+                android:id="@+id/tv_cancle"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/text_gray"
+                android:text="取消"/>
+            <TextView
+                android:id="@+id/tv_ok"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/text_gray"
+                android:text="确定"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+        <cn.qqtheme.framework.widget.WheelView
+            android:id="@+id/wv_dict"
+            android:layout_height="match_parent"
+            android:layout_width="200dp"
+            />
+    </LinearLayout>
+</LinearLayout>

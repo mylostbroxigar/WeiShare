@@ -2,84 +2,125 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/button_white"
+    android:background="@color/white"
     android:orientation="vertical">
+
     <RelativeLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:background="@color/colorPrimary"
-        android:padding="10dp"
-        >
+        android:padding="12dp">
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_height="20dp"
+            android:layout_width="12dp"
+            android:src="@drawable/btn_back"/>
         <TextView
+            android:id="@+id/tv_title"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
             android:textSize="16sp"
-            android:textColor="#fff"
+            android:textColor="@color/text_black"
             android:text="分享"/>
     </RelativeLayout>
-    <LinearLayout
-        android:id="@+id/layout_commission"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:padding="10dp">
 
-        <TextView
-            style="@style/commen_text_style"
-            android:text="佣金"
-            />
-        <TextView
-            android:id="@+id/tv_commission"
-            style="@style/commen_text_style"
-            android:textColor="@color/text_red"
-            android:text="5元"
-            android:layout_marginLeft="5dp"
-            />
-    </LinearLayout>
-    <GridView
-        android:id="@+id/grid_select_image"
-        android:layout_height="wrap_content"
+    <View
+        android:layout_height="1dp"
         android:layout_width="match_parent"
-        android:layout_margin="10dp"
-        android:numColumns="4"
-        android:horizontalSpacing="8px"
-        android:verticalSpacing="8px"
-        android:listSelector="@null"
-        />
+        android:background="@color/color_border"/>
     <LinearLayout
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:padding="10dp">
-        <TextView
-            style="@style/commen_text_style"
-            android:text="@string/comment"/>
-        <EditText
-            android:id="@+id/et_comment"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:background="#f3f3f3">
+        <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:lines="5"
-            android:padding="5dp"
-            android:textColor="@color/text_black"
-            android:textSize="14sp"/>
-    </LinearLayout>
-    <CheckBox
-        android:id="@+id/cb_addto_share"
-        style="@style/commen_text_style"
-        android:text="分享到本地"
-        android:layout_marginLeft="10dp"/>
-    <Spinner
-        android:id="@+id/spinner_dict"
-        android:layout_height="wrap_content"
-        android:layout_width="100dp"
-        android:layout_marginLeft="10dp"/>
+            android:orientation="horizontal"
+            android:gravity="top"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:background="@color/white">
 
-    <Button
-        android:id="@+id/btn_share"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_margin="20dp"
-        android:background="@drawable/btn_selector"
-        android:padding="10dp"
-        android:text="分享"/>
+            <TextView
+                style="@style/commen_text_style"
+                android:text="@string/comment"/>
+            <EditText
+                android:id="@+id/et_comment"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:lines="5"
+                android:padding="5dp"
+                android:textColor="@color/text_black"
+                android:textSize="14sp"/>
+        </LinearLayout>
+        <GridView
+            android:id="@+id/grid_select_image"
+            android:layout_height="0dp"
+            android:layout_weight="1.0"
+            android:layout_width="match_parent"
+            android:numColumns="4"
+            android:horizontalSpacing="8px"
+            android:verticalSpacing="8px"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:listSelector="@null"
+            android:background="@color/white"
+            />
+        <RelativeLayout
+            android:id="@+id/layout_addto_share"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:background="@color/white"
+            android:paddingLeft="20dp"
+            android:layout_marginTop="2dp">
+            <CheckBox
+                android:id="@+id/cb_addto_share"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:padding="20dp"
+                android:textSize="14sp"
+                android:textColor="@color/text_gray"
+                android:text="分享到本地"
+                android:button="@drawable/cb_select"/>
+        </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/layout_dict"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1.0"
+                android:textSize="16sp"
+                android:textColor="@color/text_black"
+                android:text="分类"/>
+
+            <TextView
+                android:id="@+id/tv_dict"
+                style="@style/commen_text_style"
+                android:text="未选择"/>
+            <ImageView
+                android:layout_height="14dp"
+                android:layout_width="8dp"
+                android:src="@drawable/arrow_right"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_share"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_margin="20dp"
+            android:background="@drawable/btn_selector"
+            android:padding="10dp"
+            android:text="分享"/>
+    </LinearLayout>
+
 </LinearLayout>

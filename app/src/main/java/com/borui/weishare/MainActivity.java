@@ -250,7 +250,6 @@ public class MainActivity extends BaseActivity{
                     break;
                 case 1:
                     if (Cache.currenUser.getData().getRoles().equals(RegisterActivity.ROLE_USER)) {
-//                        fragments[i] = new ShareEntraFragment();
                     } else {
                         fragments[i] = new MerchantFragment();
                     }

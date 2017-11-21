@@ -89,6 +89,13 @@ public class MineActivity extends BaseActivity {
                     startActivity(new Intent(MineActivity.this, MerchantRegisterActivity.class));
                 }
             }));
+
+            items.add(new ViewItem("商户信息", R.drawable.icon_mine_personalid, "", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MineActivity.this, MerchantInfoActivity.class));
+                }
+            }));
         }
 
         items.add(new ViewItem("我的收藏", R.drawable.icon_mine_collect, "", new View.OnClickListener() {

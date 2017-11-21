@@ -96,6 +96,9 @@
         <activity android:name=".MineActivity"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait"/>
+        <activity android:name=".MerchantInfoActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"

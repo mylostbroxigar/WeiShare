@@ -14,8 +14,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,8 +26,8 @@ import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.util.DensityUtil;
 import com.borui.weishare.util.ImageUtil;
 import com.borui.weishare.util.SPUtil;
+import com.borui.weishare.view.DictSelectDialog;
 import com.borui.weishare.vo.BaseVo;
-import com.borui.weishare.vo.Company;
 import com.borui.weishare.vo.ImagePath;
 import com.borui.weishare.vo.MerchantVo;
 import com.borui.weishare.vo.ShareCate;
@@ -56,29 +57,34 @@ import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
 
 public class ShareActivity extends BaseActivity {
 
-    @BindView(R.id.tv_commission)
-    TextView tvCommission;
-    @BindView(R.id.grid_select_image)
-    GridView gridSelectImage;
-    @BindView(R.id.et_comment)
-    EditText etComment;
-    @BindView(R.id.btn_share)
-    Button btnShare;
 
     MerchantVo.Merchant merchant;
     ImageAdapter imageAdapter;
+    DictSelectDialog dictDialog;
 
     private static final int REQUEST_SEND_TIMELINE = 0x201;
     private static final int REQUEST_SEND_SCREENSHOT = 0x202;
 
     private static final int HANDLER_SHOW_GRID = 0x101;
-    @BindView(R.id.layout_commission)
-    LinearLayout layoutCommission;
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
+    @BindView(R.id.et_comment)
+    EditText etComment;
+    @BindView(R.id.grid_select_image)
+    GridView gridSelectImage;
     @BindView(R.id.cb_addto_share)
     CheckBox cbAddtoShare;
-    @BindView(R.id.spinner_dict)
-    Spinner spinnerDict;
-
+    @BindView(R.id.layout_addto_share)
+    RelativeLayout layoutAddtoShare;
+    @BindView(R.id.tv_dict)
+    TextView tvDict;
+    @BindView(R.id.layout_dict)
+    LinearLayout layoutDict;
+    @BindView(R.id.btn_share)
+    Button btnShare;
+    int selectDict=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,18 +92,17 @@ public class ShareActivity extends BaseActivity {
         ButterKnife.bind(this);
         merchant = getIntent().getParcelableExtra("merchant");
         if (merchant == null) {
-            layoutCommission.setVisibility(View.GONE);
-            cbAddtoShare.setVisibility(View.GONE);
-            spinnerDict.setVisibility(View.VISIBLE);
+            tvTitle.setText("本地分享");
+            layoutAddtoShare.setVisibility(View.GONE);
+            layoutDict.setVisibility(View.VISIBLE);
+            tvDict.setText(Cache.shareCate.getData().get(selectDict).getDictName());
         } else {
-
-            layoutCommission.setVisibility(View.VISIBLE);
-            cbAddtoShare.setVisibility(View.VISIBLE);
-            spinnerDict.setVisibility(View.GONE);
-            tvCommission.setText( "5元");
+            tvTitle.setText("微分享");
+            layoutAddtoShare.setVisibility(View.VISIBLE);
+            layoutDict.setVisibility(View.GONE);
         }
 
-        int imageSize = (DensityUtil.screenWidth - DensityUtil.dip2px(20) - 24) / 4;
+        int imageSize = (DensityUtil.screenWidth - DensityUtil.dip2px(this,20) - 24) / 4;
         imageAdapter = new ImageAdapter(ShareActivity.this, imageSize);
         ViewGroup.LayoutParams layoutParams = gridSelectImage.getLayoutParams();
         layoutParams.height = imageSize * 3 + 24;
@@ -116,9 +121,9 @@ public class ShareActivity extends BaseActivity {
             }
         });
 
-        ArrayAdapter<ShareCate.Dict> adapter = new ArrayAdapter<ShareCate.Dict>(this,android.R.layout.simple_spinner_item, Cache.shareCate.getData());
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerDict.setAdapter(adapter);
+//        ArrayAdapter<ShareCate.Dict> adapter = new ArrayAdapter<ShareCate.Dict>(this, android.R.layout.simple_spinner_item, Cache.shareCate.getData());
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinnerDict.setAdapter(adapter);
     }
 
     private void selectImage() {
@@ -134,8 +139,8 @@ public class ShareActivity extends BaseActivity {
                     protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
                         ArrayList<String> imageUris = new ArrayList<String>();
                         for (MediaBean mediaBean : imageMultipleResultEvent.getResult()) {
-                            String imgPath= ImageUtil.compressImage(mediaBean.getOriginalPath(),720,960);
-                            if(!TextUtils.isEmpty(imgPath))
+                            String imgPath = ImageUtil.compressImage(mediaBean.getOriginalPath(), 720, 960);
+                            if (!TextUtils.isEmpty(imgPath))
                                 imageUris.add(imgPath);
                         }
                         imageAdapter.addUrls(imageUris);
@@ -188,25 +193,19 @@ public class ShareActivity extends BaseActivity {
         startActivityForResult(intent, REQUEST_SEND_TIMELINE);
     }
 
-    private void share(String comment) {
+    private void share(String comment,String merchanType) {
         Map<String, String> params = new HashMap<>();
         params.put("token", Cache.currenUser.getMsg());
         params.put("userId", Cache.currenUser.getData().getId() + "");
-        params.put("longitude", SPUtil.getString(this,SPUtil.KEY_LONGITUDE));
-        params.put("latitude", SPUtil.getString(this,SPUtil.KEY_LATITUDE));
+        params.put("longitude", SPUtil.getString(this, SPUtil.KEY_LONGITUDE));
+        params.put("latitude", SPUtil.getString(this, SPUtil.KEY_LATITUDE));
         params.put("title", comment);
-        String merchanType="";
-        if(merchant==null){
-            merchanType=Cache.shareCate.getData().get(spinnerDict.getSelectedItemPosition()).getId()+"";
-        }else{
-            merchanType="0";
-        }
         params.put("merchantType", merchanType);
         params.put("remark", "");
 
-        List<ImagePath> imagePaths=new ArrayList<>();
-        for (String str:imageAdapter.getUrls()){
-            imagePaths.add(new ImagePath(str,"file"));
+        List<ImagePath> imagePaths = new ArrayList<>();
+        for (String str : imageAdapter.getUrls()) {
+            imagePaths.add(new ImagePath(str, "file"));
         }
         VolleyUtil.getInstance().doPost(APIAddress.LOCAL_SHARE, params, imagePaths, new TypeToken<BaseVo>() {
         }.getType(), "localshare");
@@ -219,7 +218,7 @@ public class ShareActivity extends BaseActivity {
             if (baseVo.getCode().equals("0")) {
                 showDialog("上传成功");
 
-                for (String string:imageAdapter.getUrls()){
+                for (String string : imageAdapter.getUrls()) {
                     ImageUtil.deleteImage(string);
                 }
                 imageAdapter.clearUrls();
@@ -234,25 +233,24 @@ public class ShareActivity extends BaseActivity {
 
     }
 
-    @OnClick(R.id.btn_share)
-    public void onViewClicked() {
+    private void doShare() {
         String comment = etComment.getText().toString().trim();
         if (TextUtils.isEmpty(comment)) {
             Toast.makeText(this, "评语不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(imageAdapter.getUrls().size()==0){
+        if (imageAdapter.getUrls().size() == 0) {
             Toast.makeText(this, "必须添加图片", Toast.LENGTH_SHORT).show();
             return;
         }
         if (merchant != null) {
             shareToTimeline(comment);
             if (cbAddtoShare.isChecked()) {
-                share(comment);
+                share(comment,merchant.getMerchantType());
             }
         } else {
             showProgress("正在上传");
-            share(comment);
+            share(comment,Cache.shareCate.getData().get(selectDict).getId()+"");
         }
 
 
@@ -266,9 +264,9 @@ public class ShareActivity extends BaseActivity {
         if (requestCode == REQUEST_SEND_TIMELINE) {
             Intent intent = new Intent(this, SendScreenShotActivity.class);
             intent.putExtra("merchant", merchant);
-            startActivityForResult(intent,REQUEST_SEND_SCREENSHOT);
+            startActivityForResult(intent, REQUEST_SEND_SCREENSHOT);
         }
-        if(requestCode==REQUEST_SEND_SCREENSHOT&&resultCode==200){
+        if (requestCode == REQUEST_SEND_SCREENSHOT && resultCode == 200) {
             finish();
         }
     }
@@ -280,5 +278,32 @@ public class ShareActivity extends BaseActivity {
             return;
         }
         super.onBackPressed();
+    }
+
+    @OnClick({R.id.iv_back, R.id.layout_dict, R.id.btn_share})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
+            case R.id.layout_dict:
+                ArrayList<String> dicts=new ArrayList<>();
+                for (ShareCate.Dict dict:Cache.shareCate.getData()
+                     ) {
+                    dicts.add(dict.getDictName());
+                }
+                dictDialog=new DictSelectDialog(this, dicts, selectDict, new DictSelectDialog.OnSelectListener() {
+                    @Override
+                    public void onSelect(int index) {
+                        selectDict=index;
+                        tvDict.setText(Cache.shareCate.getData().get(selectDict).getDictName());
+                    }
+                });
+                dictDialog.show();
+                break;
+            case R.id.btn_share:
+                doShare();
+                break;
+        }
     }
 }
