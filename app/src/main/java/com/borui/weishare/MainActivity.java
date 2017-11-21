@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.borui.weishare.fragment.AccountFragment;
@@ -25,6 +27,8 @@ import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.util.DensityUtil;
 import com.borui.weishare.util.SPUtil;
 import com.borui.weishare.view.CommonDialog;
+import com.borui.weishare.view.CommonInputDialog;
+import com.borui.weishare.vo.MerchantVo;
 import com.borui.weishare.vo.ShareCate;
 import com.borui.weishare.vo.Shares;
 import com.google.gson.reflect.TypeToken;
@@ -82,6 +86,8 @@ public class MainActivity extends BaseActivity{
     ImageView btnLocalshare;
     @BindView(R.id.layout_share)
     RelativeLayout layoutShare;
+
+    CommonInputDialog inputDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,7 +200,19 @@ public class MainActivity extends BaseActivity{
             }
         }
     }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResult(MerchantVo merchant){
+        dismissProgress();
 
+        if(merchant.getCode().equals("0")){
+            Intent intent=new Intent(this, ShareActivity.class);
+            intent.putExtra("merchant",merchant.getData());
+
+            startActivity(intent);
+        }else{
+            showDialog("商户信息加载失败，"+merchant.getMsg()+",请稍后再试");
+        }
+    }
     private void onLocationSuccess() {
         tvCity.setText(SPUtil.getString(this, SPUtil.KEY_CITY));
         //初始化分类
@@ -277,6 +295,7 @@ public class MainActivity extends BaseActivity{
 
     @OnClick({R.id.btn_mine, R.id.layout_menu_main, R.id.layout_menu_account, R.id.layout_menu_share, R.id.layout_menu_merchant, R.id.btn_weishare, R.id.btn_localshare})
     public void onViewClicked(View view) {
+
         switch (view.getId()) {
             case R.id.btn_mine:
                 startActivityForResult(new Intent(this,MineActivity.class),REQUEST_CODE_MINE);
@@ -294,18 +313,49 @@ public class MainActivity extends BaseActivity{
                 checkMenu(1);
                 break;
             case R.id.btn_weishare:
-                startActivity(new Intent(this,ShareActivity.class));
+                showMerchantIdDialog();
                 break;
             case R.id.btn_localshare:
                 startActivity(new Intent(this,ShareActivity.class));
                 break;
         }
+        if(view.getId()!=R.id.layout_menu_share){
+            hideShareLayout();
+        }
     }
 
+    private void showMerchantIdDialog(){
+        inputDialog=new CommonInputDialog(this);
+        inputDialog.setDescribe("请输入商户号:").setHint("商户号").setOKButton(View.VISIBLE, null, new CommonInputDialog.OnOkClickListener() {
+            @Override
+            public void onClick(String companyid) {
+                if(TextUtils.isEmpty(companyid)){
+                    Toast.makeText(MainActivity.this,"商户号不能为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+//                        if(companyid.length()<6){
+//                            Toast.makeText(getContext(),"商户号应为不小于6位数字",Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
+                inputDialog.dismiss();
+                showProgress("正在加载商户信息");
+                HashMap<String,String> params=new HashMap<String, String>();
+                params.put("token", Cache.currenUser.getMsg());
+                params.put("merchantId",companyid);
+                VolleyUtil.getInstance().doPost(APIAddress.GET_MERCHANT,params,new TypeToken<MerchantVo>(){}.getType(),"getMerchant");
+            }
+        }).show();
+    }
     public void toggleShareLayout(){
         boolean toShow=layoutShare.getVisibility()!=View.VISIBLE;
         ivMenuShare.setImageResource(toShow?R.drawable.menu_share_checked:R.drawable.menu_share_normal);
         tvMenuShare.setTextColor(ContextCompat.getColor(this, toShow ? R.color.main_yellow : R.color.color_border));
         layoutShare.setVisibility(toShow?View.VISIBLE:View.GONE);
+    }
+    public void hideShareLayout(){
+        if(layoutShare.getVisibility()==View.VISIBLE){
+            toggleShareLayout();
+        }
     }
 }

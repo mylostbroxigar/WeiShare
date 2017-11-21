@@ -1,6 +1,6 @@
 package com.borui.weishare.vo;
 
-import com.google.gson.annotations.SerializedName;
+import java.util.List;
 
 /**
  * Created by borui on 2017/9/29.
@@ -9,88 +9,54 @@ import com.google.gson.annotations.SerializedName;
 public class UserVo extends BaseVo {
 
     /**
-     * code : 0
-     * data : {"id":3,"username":"boruiz2","password":"8cd645ef29e0b28acbe102aa0b0517df5c4e604a92d5df5b3d95c1bd11aec0f2b441e65d586cb625c923b185af8137c922947bcead7ce0a46299c29d","realname":"boruiZhu","personalid":"421023198808133478","sex":true,"personalPicture":"/weshare/upload/pic/20170928/user/boruiz2/20170928212646_7c19cddb82a375c7217ddfc0b83a94db.jpg","telphone":"15007167330","email":"borui_zhu@163.com","roles":"4","balance":null,"status":true}
+     * data : {"personalPicture":"/weshare/upload/pic/20171109/user/boruim1/20171109202223_aHR0cDovL2NkbjJ3b2FzbmFwZ3JhbXdvYWNvL2ltZ3MvMjAxNS8wNy8wNy9pbWFnZTA1MndvYWpwZw==.jpg","sex":true,"auths":[{"id":5,"authenticationCode":"2088602002554514","authenticationNickname":null,"authenticationTime":"2017-11-19 00:00:00","authenticationType":"1","userId":9}],"personalid":"421023198808133478","telphone":"15007167330","id":9,"balance":0,"authenticationStatus":"1","username":"boruim1","email":"borui_zhu@163.com","roles":"3","realname":"boruiZhu"}
      */
 
-    private DataBean data;
+    private UserBean data;
 
-
-    public DataBean getData() {
+    public UserBean getData() {
         return data;
     }
 
-    public void setData(DataBean data) {
+    public void setData(UserBean data) {
         this.data = data;
     }
 
-    public static class DataBean {
+    public static class UserBean {
         /**
-         * id : 3
-         * username : boruiz2
-         * password : 8cd645ef29e0b28acbe102aa0b0517df5c4e604a92d5df5b3d95c1bd11aec0f2b441e65d586cb625c923b185af8137c922947bcead7ce0a46299c29d
-         * realname : boruiZhu
-         * personalid : 421023198808133478
+         * personalPicture : /weshare/upload/pic/20171109/user/boruim1/20171109202223_aHR0cDovL2NkbjJ3b2FzbmFwZ3JhbXdvYWNvL2ltZ3MvMjAxNS8wNy8wNy9pbWFnZTA1MndvYWpwZw==.jpg
          * sex : true
-         * personalPicture : /weshare/upload/pic/20170928/user/boruiz2/20170928212646_7c19cddb82a375c7217ddfc0b83a94db.jpg
+         * auths : [{"id":5,"authenticationCode":"2088602002554514","authenticationNickname":null,"authenticationTime":"2017-11-19 00:00:00","authenticationType":"1","userId":9}]
+         * personalid : 421023198808133478
          * telphone : 15007167330
+         * id : 9
+         * balance : 0.0
+         * authenticationStatus : 1
+         * username : boruim1
          * email : borui_zhu@163.com
-         * roles : 4
-         * balance : null
-         * status : true
+         * roles : 3
+         * realname : boruiZhu
          */
 
-        private int id;
-        private String username;
-        private String password;
-        private String realname;
-        private String personalid;
-        private boolean sex;
         private String personalPicture;
+        private boolean sex;
+        private String personalid;
         private String telphone;
+        private int id;
+        private double balance;
+        private String authenticationStatus;
+        private String username;
         private String email;
         private String roles;
-        private double balance;
-        private boolean status;
+        private String realname;
+        private List<AuthsBean> auths;
 
-        public int getId() {
-            return id;
+        public String getPersonalPicture() {
+            return personalPicture;
         }
 
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
-        public String getRealname() {
-            return realname;
-        }
-
-        public void setRealname(String realname) {
-            this.realname = realname;
-        }
-
-        public String getPersonalid() {
-            return personalid;
-        }
-
-        public void setPersonalid(String personalid) {
-            this.personalid = personalid;
+        public void setPersonalPicture(String personalPicture) {
+            this.personalPicture = personalPicture;
         }
 
         public boolean isSex() {
@@ -101,12 +67,12 @@ public class UserVo extends BaseVo {
             this.sex = sex;
         }
 
-        public String getPersonalPicture() {
-            return personalPicture;
+        public String getPersonalid() {
+            return personalid;
         }
 
-        public void setPersonalPicture(String personalPicture) {
-            this.personalPicture = personalPicture;
+        public void setPersonalid(String personalid) {
+            this.personalid = personalid;
         }
 
         public String getTelphone() {
@@ -115,6 +81,38 @@ public class UserVo extends BaseVo {
 
         public void setTelphone(String telphone) {
             this.telphone = telphone;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public double getBalance() {
+            return balance;
+        }
+
+        public void setBalance(double balance) {
+            this.balance = balance;
+        }
+
+        public String getAuthenticationStatus() {
+            return authenticationStatus;
+        }
+
+        public void setAuthenticationStatus(String authenticationStatus) {
+            this.authenticationStatus = authenticationStatus;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
         }
 
         public String getEmail() {
@@ -133,20 +131,86 @@ public class UserVo extends BaseVo {
             this.roles = roles;
         }
 
-        public double getBalance() {
-            return balance;
+        public String getRealname() {
+            return realname;
         }
 
-        public void setBalance(double balance) {
-            this.balance = balance;
+        public void setRealname(String realname) {
+            this.realname = realname;
         }
 
-        public boolean isStatus() {
-            return status;
+        public List<AuthsBean> getAuths() {
+            return auths;
         }
 
-        public void setStatus(boolean status) {
-            this.status = status;
+        public void setAuths(List<AuthsBean> auths) {
+            this.auths = auths;
+        }
+
+        public static class AuthsBean {
+            /**
+             * id : 5
+             * authenticationCode : 2088602002554514
+             * authenticationNickname : null
+             * authenticationTime : 2017-11-19 00:00:00
+             * authenticationType : 1
+             * userId : 9
+             */
+
+            private int id;
+            private String authenticationCode;
+            private String authenticationNickname;
+            private String authenticationTime;
+            private String authenticationType;
+            private int userId;
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public String getAuthenticationCode() {
+                return authenticationCode;
+            }
+
+            public void setAuthenticationCode(String authenticationCode) {
+                this.authenticationCode = authenticationCode;
+            }
+
+            public String getAuthenticationNickname() {
+                return authenticationNickname;
+            }
+
+            public void setAuthenticationNickname(String authenticationNickname) {
+                this.authenticationNickname = authenticationNickname;
+            }
+
+            public String getAuthenticationTime() {
+                return authenticationTime;
+            }
+
+            public void setAuthenticationTime(String authenticationTime) {
+                this.authenticationTime = authenticationTime;
+            }
+
+            public String getAuthenticationType() {
+                return authenticationType;
+            }
+
+            public void setAuthenticationType(String authenticationType) {
+                this.authenticationType = authenticationType;
+            }
+
+            public int getUserId() {
+                return userId;
+            }
+
+            public void setUserId(int userId) {
+                this.userId = userId;
+            }
         }
     }
 }

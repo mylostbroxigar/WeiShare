@@ -50,9 +50,9 @@ public class CheckAdapter extends BaseAdapter {
             holder = new ViewHolder(view);
             view.setTag(holder);
         }
-        holder.tvOrdernum.setText("000"+i);
-        holder.tvCustomername.setText("张三");
-        holder.tvCommission.setText("3.00元");
+        holder.tvOrdernum.setText("单号："+"000"+i);
+        holder.tvCustomername.setText("客户："+"张三");
+        holder.tvCommission.setText("佣金："+"3.00元");
         holder.btnCheckPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

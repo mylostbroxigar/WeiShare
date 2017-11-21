@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.borui.weishare.PayActivity;
@@ -24,12 +24,12 @@ import butterknife.Unbinder;
 
 public class MerchantFragment extends Fragment {
     View rootView;
-    @BindView(R.id.iv_recharge)
-    ImageView ivRecharge;
+    @BindView(R.id.btn_recharge)
+    Button btnRecharge;
     @BindView(R.id.lv_check)
     ListView lvCheck;
-    CheckAdapter adapter;
     Unbinder unbinder;
+    CheckAdapter adapter;
 
     @Nullable
     @Override
@@ -41,15 +41,15 @@ public class MerchantFragment extends Fragment {
         return rootView;
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
 
-    @OnClick(R.id.iv_recharge)
+    @OnClick(R.id.btn_recharge)
     public void onViewClicked() {
         startActivity(new Intent(getContext(), PayActivity.class));
-
     }
 }
