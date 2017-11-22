@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.borui.weishare.net.APIAddress;
 import com.borui.weishare.net.Cache;
@@ -47,8 +48,8 @@ public class MerchantInfoActivity extends BaseActivity {
     EditText etCommision;
     @BindView(R.id.iv_main_image)
     ImageView ivMainImage;
-    @BindView(R.id.btn_register)
-    Button btnRegister;
+    @BindView(R.id.btn_update)
+    Button btnUpdate;
     MerchantVo.Merchant merchant;
 
     @Override
@@ -64,31 +65,44 @@ public class MerchantInfoActivity extends BaseActivity {
         HashMap<String,String> params=new HashMap<>();
         params.put("token", Cache.currenUser.getMsg());
         VolleyUtil.getInstance().doPost(APIAddress.GET_MERCHANT_INFO,params,new TypeToken<MerchantVo>(){}.getType(),"getInfo");
+        showProgress("");
     }
 
     private void updateMerchantInfo(){
 
+        String commissionStr=etCommision.getText().toString().trim();
+
+        if(TextUtils.isEmpty(commissionStr)){
+            Toast.makeText(this,"佣金不能为空",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        int commission=Integer.parseInt(commissionStr);
+        if(commission<=0){
+            Toast.makeText(this,"佣金至少为1元",Toast.LENGTH_SHORT).show();
+            return;
+        }
         HashMap<String,String> params=new HashMap<>();
         params.put("token", Cache.currenUser.getMsg());
         params.put("id", merchant.getId()+"");
+        params.put("commission",commissionStr);
         if(!TextUtils.isEmpty(imagePath)){
             List<ImagePath> images=new ArrayList<>();
-            ImagePath ip=new ImagePath(imagePath,"file");
+            ImagePath ip=new ImagePath(imagePath,"pages");
             images.add(ip);
             VolleyUtil.getInstance().doPost(APIAddress.GET_MERCHANT_INFO,params,images,new TypeToken<BaseVo>(){}.getType(),"updateInfo");
         }else{
             VolleyUtil.getInstance().doPost(APIAddress.GET_MERCHANT_INFO,params,new TypeToken<BaseVo>(){}.getType(),"updateInfo");
         }
-
+        showProgress("正在修改");
     }
 
-    @OnClick({R.id.iv_main_image, R.id.btn_register})
+    @OnClick({R.id.iv_main_image, R.id.btn_update})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_main_image:
                 selectImage();
                 break;
-            case R.id.btn_register:
+            case R.id.btn_update:
                 updateMerchantInfo();
                 break;
         }
@@ -112,10 +126,15 @@ public class MerchantInfoActivity extends BaseActivity {
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResult(BaseVo baseVo) {
+        dismissProgress();
         if( baseVo instanceof MerchantVo){
             onResult((MerchantVo)baseVo);
         }else{
-
+            if(baseVo.getCode().equals("0")){
+                showDialog("修改成功");
+            }else{
+                showDialog("修改失败，"+baseVo.getMsg());
+            }
         }
     }
 
@@ -126,6 +145,8 @@ public class MerchantInfoActivity extends BaseActivity {
             tvMerchantnum.setText(merchant.getId()+"");
             etCommision.setText(merchant.getCommission()+"");
 
+            if(!TextUtils.isEmpty(merchant.getPageURL()))
+                Glide.with(this).load(APIAddress.IMAGEPATH+merchant.getPageURL()).into(ivMainImage);
         }
 
     }
