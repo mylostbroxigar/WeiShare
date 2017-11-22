@@ -102,21 +102,17 @@ public class ShareActivity extends BaseActivity {
             layoutDict.setVisibility(View.GONE);
         }
 
-        int imageSize = (DensityUtil.screenWidth - DensityUtil.dip2px(this,20) - 24) / 4;
+        int imageSize = (DensityUtil.screenWidth - DensityUtil.dip2px(this,20+4*16))/4 ;
         imageAdapter = new ImageAdapter(ShareActivity.this, imageSize);
-        ViewGroup.LayoutParams layoutParams = gridSelectImage.getLayoutParams();
-        layoutParams.height = imageSize * 3 + 24;
-        gridSelectImage.setLayoutParams(layoutParams);
+//        ViewGroup.LayoutParams layoutParams = gridSelectImage.getLayoutParams();
+//        layoutParams.height = imageSize * 3 + 24;
+//        gridSelectImage.setLayoutParams(layoutParams);
         gridSelectImage.setAdapter(imageAdapter);
         gridSelectImage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (imageAdapter.isAddButton(i)) {
                     selectImage();
-                } else if (imageAdapter.isSubButton(i)) {
-                    imageAdapter.setDelMode(true);
-                } else {
-
                 }
             }
         });
@@ -128,11 +124,10 @@ public class ShareActivity extends BaseActivity {
 
     private void selectImage() {
 
-        final String TAG = "shareActvity";
         RxGalleryFinal.with(this)
                 .image()
                 .multiple()
-                .maxSize(8)
+                .maxSize(8-imageAdapter.getImageCount())
                 .imageLoader(ImageLoaderType.GLIDE)
                 .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
                     @Override
@@ -271,14 +266,6 @@ public class ShareActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        if (imageAdapter.isDelMode()) {
-            imageAdapter.setDelMode(false);
-            return;
-        }
-        super.onBackPressed();
-    }
 
     @OnClick({R.id.iv_back, R.id.layout_dict, R.id.btn_share})
     public void onViewClicked(View view) {

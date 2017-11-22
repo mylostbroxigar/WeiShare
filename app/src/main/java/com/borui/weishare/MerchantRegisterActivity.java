@@ -1,6 +1,5 @@
 package com.borui.weishare;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,7 +17,6 @@ import com.borui.weishare.vo.ImagePath;
 import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -53,6 +51,9 @@ public class MerchantRegisterActivity extends BaseActivity {
 
     String business_licence_image;
     String legal_personalid_image;
+    @BindView(R.id.iv_back)
+    ImageView ivBack;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,14 +61,17 @@ public class MerchantRegisterActivity extends BaseActivity {
         ButterKnife.bind(this);
     }
 
-    @OnClick({R.id.iv_business_licence, R.id.iv_legal_persionalid, R.id.btn_register})
+    @OnClick({R.id.iv_back, R.id.iv_business_licence, R.id.iv_legal_persionalid, R.id.btn_register})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
             case R.id.iv_business_licence:
-                selectImage(ivBusinessLicence,0);
+                selectImage(ivBusinessLicence, 0);
                 break;
             case R.id.iv_legal_persionalid:
-                selectImage(ivLegalPersionalid,1);
+                selectImage(ivLegalPersionalid, 1);
                 break;
             case R.id.btn_register:
                 doRegister();
@@ -85,11 +89,11 @@ public class MerchantRegisterActivity extends BaseActivity {
                 .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
                     @Override
                     protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
-                        String imagePath=imageMultipleResultEvent.getResult().get(0).getOriginalPath();
-                        if(position==0){
-                            business_licence_image=imagePath;
-                        }else{
-                            legal_personalid_image=imagePath;
+                        String imagePath = imageMultipleResultEvent.getResult().get(0).getOriginalPath();
+                        if (position == 0) {
+                            business_licence_image = imagePath;
+                        } else {
+                            legal_personalid_image = imagePath;
                         }
                         Glide.with(MerchantRegisterActivity.this).load(new File(imagePath)).centerCrop().override(imageView.getWidth(), imageView.getHeight()).into(imageView);
                     }
@@ -97,9 +101,9 @@ public class MerchantRegisterActivity extends BaseActivity {
                 }).openGallery();
     }
 
-    private void doRegister(){
-        String merchantname=etMerchantname.getText().toString().trim();
-        String merchantAddress=etMerchantaddress.getText().toString().trim();
+    private void doRegister() {
+        String merchantname = etMerchantname.getText().toString().trim();
+        String merchantAddress = etMerchantaddress.getText().toString().trim();
 
         if (TextUtils.isEmpty(merchantname)) {
             Toast.makeText(this, getResources().getString(R.string.string_cannot_null, getResources().getString(R.string.merchantname)), Toast.LENGTH_SHORT).show();
@@ -109,11 +113,11 @@ public class MerchantRegisterActivity extends BaseActivity {
             Toast.makeText(this, getResources().getString(R.string.string_cannot_null, getResources().getString(R.string.merchantaddress)), Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(business_licence_image)){
+        if (TextUtils.isEmpty(business_licence_image)) {
             Toast.makeText(this, getResources().getString(R.string.string_cannot_null, getResources().getString(R.string.business_licence)), Toast.LENGTH_SHORT).show();
             return;
         }
-        if(TextUtils.isEmpty(legal_personalid_image)){
+        if (TextUtils.isEmpty(legal_personalid_image)) {
             Toast.makeText(this, getResources().getString(R.string.string_cannot_null, getResources().getString(R.string.legal_personalid)), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -122,10 +126,10 @@ public class MerchantRegisterActivity extends BaseActivity {
         params.put("merchantName", merchantname);
         params.put("merchantAddress", merchantAddress);
         params.put("merchantType", Cache.currenUser.getData().getRoles());
-        params.put("merchantUsers", Cache.currenUser.getData().getId()+"");
-        ArrayList<ImagePath> images=new ArrayList<>();
-        images.add(new ImagePath(business_licence_image,"licences"));
-        images.add(new ImagePath(legal_personalid_image,"personCard"));
+        params.put("merchantUsers", Cache.currenUser.getData().getId() + "");
+        ArrayList<ImagePath> images = new ArrayList<>();
+        images.add(new ImagePath(business_licence_image, "licences"));
+        images.add(new ImagePath(legal_personalid_image, "personCard"));
         VolleyUtil.getInstance().doPost(APIAddress.MERCHANT_REGISTER, params, images, new TypeToken<BaseVo>() {
         }.getType(), "merchantregister");
     }
@@ -150,4 +154,5 @@ public class MerchantRegisterActivity extends BaseActivity {
         }
 
     }
+
 }

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -13,6 +13,7 @@ import com.borui.weishare.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by borui on 2017/9/4.
@@ -20,14 +21,18 @@ import butterknife.ButterKnife;
 
 public class CommonInputDialog extends Dialog {
 
+
     @BindView(R.id.common_tv_title)
     TextView commonTvTitle;
-    @BindView(R.id.common_tv_content)
-    EditText commonTvContent;
-    @BindView(R.id.common_btn_ok)
-    Button commonBtnOk;
+    @BindView(R.id.common_et_input)
+    EditText commonEtInput;
     @BindView(R.id.common_btn_cancle)
-    Button commonBtnCancle;
+    TextView commonBtnCancle;
+    @BindView(R.id.view_devider)
+    View viewDevider;
+    @BindView(R.id.common_btn_ok)
+    TextView commonBtnOk;
+
 
     public interface OnOkClickListener {
         public void onClick(String input);
@@ -58,16 +63,19 @@ public class CommonInputDialog extends Dialog {
         return this;
     }
 
-    public CommonInputDialog setDescribe(String des) {
+    public CommonInputDialog setTitle(String des) {
         commonTvTitle.setText(des);
         return this;
     }
 
     public CommonInputDialog setHint(String hint) {
-        commonTvContent.setHint(hint);
+        commonEtInput.setHint(hint);
         return this;
     }
-
+    public CommonInputDialog setInputType(int inputType) {
+        commonEtInput.setInputType(inputType);
+        return this;
+    }
     public CommonInputDialog setOKButton(int visable, String text, final OnOkClickListener okBtnListener) {
         commonBtnOk.setVisibility(visable);
         if (!TextUtils.isEmpty(text))
@@ -76,7 +84,7 @@ public class CommonInputDialog extends Dialog {
             commonBtnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    okBtnListener.onClick(commonTvContent.getText().toString().trim());
+                    okBtnListener.onClick(commonEtInput.getText().toString().trim());
                 }
             });
         }

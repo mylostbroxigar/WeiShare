@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -325,7 +326,7 @@ public class MainActivity extends BaseActivity{
 
     private void showMerchantIdDialog(){
         inputDialog=new CommonInputDialog(this);
-        inputDialog.setDescribe("请输入商户号:").setHint("商户号").setOKButton(View.VISIBLE, null, new CommonInputDialog.OnOkClickListener() {
+        inputDialog.setTitle("请输入商户号:").setHint("商户号").setInputType(EditorInfo.TYPE_CLASS_NUMBER).setOKButton(View.VISIBLE, null, new CommonInputDialog.OnOkClickListener() {
             @Override
             public void onClick(String companyid) {
                 if(TextUtils.isEmpty(companyid)){

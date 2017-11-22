@@ -37,6 +37,7 @@ import cn.finalteam.rxgalleryfinal.RxGalleryFinal;
 import cn.finalteam.rxgalleryfinal.imageloader.ImageLoaderType;
 import cn.finalteam.rxgalleryfinal.rxbus.RxBusResultSubscriber;
 import cn.finalteam.rxgalleryfinal.rxbus.event.ImageMultipleResultEvent;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by borui on 2017/9/25.
@@ -78,7 +79,7 @@ public class RegisterActivity extends BaseActivity {
     @BindView(R.id.et_vericode)
     EditText etVericode;
     @BindView(R.id.iv_head)
-    ImageView ivHead;
+    CircleImageView ivHead;
 
     String headPath;
     @BindView(R.id.btn_register)

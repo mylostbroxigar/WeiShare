@@ -20,17 +20,14 @@ public class CommonDialog extends Dialog {
 		super(context, R.style.dialog_style);
 		initView();
 	}
-	private TextView tv_content;
-//	private ImageButton ib_cancle;
-	private Button btn_ok,btn_cancle;
-//	private TextView mtv_content;
-	private TextView tv_title;
+	private TextView tv_content,btn_ok,btn_cancle;
+	private View view_devider;
 	private void initView(){
 		setContentView(R.layout.common_dialog_layout);
-		tv_title=(TextView) findViewById(R.id.common_tv_title);
+		view_devider=findViewById(R.id.view_devider);
 		tv_content=(TextView) findViewById(R.id.common_tv_content);
-		btn_ok=(Button) findViewById(R.id.common_btn_ok);
-		btn_cancle=(Button) findViewById(R.id.common_btn_cancle);
+		btn_ok=(TextView) findViewById(R.id.common_btn_ok);
+		btn_cancle=(TextView) findViewById(R.id.common_btn_cancle);
 		btn_cancle.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -58,10 +55,6 @@ public class CommonDialog extends Dialog {
 		btn_cancle.setText(text);
 		return this;
 	}
-	public CommonDialog setTitle(String title){
-		tv_title.setText(title);
-		return this;
-	}
 	public CommonDialog setContent(String content){
 
 		if(tv_content!=null)
@@ -84,10 +77,12 @@ public class CommonDialog extends Dialog {
 	}
 	public CommonDialog removeOkButton(){
 		btn_ok.setVisibility(View.GONE);
+		view_devider.setVisibility(View.GONE);
 		return this;
 	}
 	public CommonDialog removeCancleButton(){
 		btn_cancle.setVisibility(View.GONE);
+		view_devider.setVisibility(View.GONE);
 		return this;
 	}
 

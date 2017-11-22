@@ -28,11 +28,10 @@ public class ImageAdapter extends BaseAdapter {
     Context context;
     List<String> urls;
     int imageSize;
-    boolean delMode;
     public ImageAdapter(Context context,int imageSize) {
         this.context = context;
         urls = new ArrayList<>();
-        this.imageSize=imageSize-2;
+        this.imageSize=imageSize;
     }
 
 
@@ -52,33 +51,20 @@ public class ImageAdapter extends BaseAdapter {
         this.urls=new ArrayList<>();
         notifyDataSetChanged();
     }
-    public void setDelMode(boolean delMode){
-        this.delMode=delMode;
-        notifyDataSetChanged();
-    }
-
-    public boolean isDelMode(){
-        return delMode;
-    }
 
     public boolean isAddButton(int i){
         return i==urls.size();
     }
 
-    public boolean isSubButton(int i){
-        return i==urls.size()+1;
-    }
 
     @Override
     public int getCount() {
-        if(delMode){
-            return urls.size();
-        }else{
-            return urls.size()+2;
-        }
-
+        int count=urls.size()<8?urls.size()+1:urls.size();
+        return count;
     }
-
+    public int getImageCount() {
+        return urls.size();
+    }
     @Override
     public Object getItem(int i) {
         return i;
@@ -99,8 +85,7 @@ public class ImageAdapter extends BaseAdapter {
             holder = new ViewHolder(view);
             view.setTag(holder);
         }
-
-        if(delMode){
+        if(i<urls.size()){
             File file=new File(urls.get(i));
             Glide.with(context).load(file).centerCrop().override(imageSize,imageSize).into(holder.iv);
             holder.ivDel.setVisibility(View.VISIBLE);
@@ -112,16 +97,8 @@ public class ImageAdapter extends BaseAdapter {
                     notifyDataSetChanged();
                 }
             });
-        }else{
-            if(i<urls.size()){
-
-                File file=new File(urls.get(i));
-                Glide.with(context).load(file).centerCrop().override(imageSize,imageSize).into(holder.iv);
-            }else if(i==urls.size()){
-                Glide.with(context).load(R.drawable.icon_add).centerCrop().override(imageSize,imageSize).into(holder.iv);
-            }else if(i==urls.size()+1){
-                Glide.with(context).load(R.drawable.icon_sub).centerCrop().override(imageSize,imageSize).into(holder.iv);
-            }
+        }else if(i==urls.size()){
+            Glide.with(context).load(R.drawable.btn_image_add).centerCrop().override(imageSize,imageSize).into(holder.iv);
             holder.ivDel.setVisibility(View.GONE);
         }
 

@@ -3,18 +3,18 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/text_gray"
-    android:padding="1px">
+    android:background="@color/white">
     <ImageView
         android:id="@+id/iv"
         android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+        android:layout_width="match_parent"
+        android:layout_margin="8dp"/>
     <ImageView
         android:id="@+id/iv_del"
         android:layout_height="20dp"
         android:layout_width="20dp"
         android:focusable="false"
         android:layout_alignParentRight="true"
-        android:src="@drawable/icon_sub"
+        android:src="@drawable/btn_del"
         />
 </RelativeLayout>

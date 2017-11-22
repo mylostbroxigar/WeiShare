@@ -52,9 +52,7 @@ public class DictSelectDialog extends Dialog {
 
         if(dicts==null)
             return;
-        WheelView.LineConfig config = new WheelView.LineConfig();
-        config.setColor(getContext().getResources().getColor(R.color.color_border));//设置分割线颜色
-        // wheelView_line.setLineConfig(config);
+        wvDict.setDividerColor(getContext().getResources().getColor(R.color.color_border));
         wvDict.setTextColor(getContext().getResources().getColor(R.color.text_gray),getContext().getResources().getColor(R.color.text_black));//设置选中字体颜色
         wvDict.setTextSize(16);
         wvDict.setItems(dicts);

@@ -7,87 +7,78 @@
     <RelativeLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:background="@color/colorPrimary"
-        android:padding="10dp"
-        >
+        android:padding="12dp">
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_height="20dp"
+            android:layout_width="12dp"
+            android:src="@drawable/btn_back"/>
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
             android:textSize="16sp"
-            android:textColor="#fff"
-            android:text="提交"/>
+            android:textColor="@color/text_black"
+            android:text="提交审核"/>
     </RelativeLayout>
-    <LinearLayout
-        android:layout_height="wrap_content"
+    <View
+        android:layout_height="1dp"
         android:layout_width="match_parent"
-        android:orientation="horizontal">
+        android:background="@color/color_border"/>
+    <ScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:background="@color/color_background"
+        android:scrollbars="none">
         <LinearLayout
-            android:id="@+id/layout_screenshot_timeline"
             android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1.0"
+            android:layout_width="match_parent"
             android:orientation="vertical"
             android:gravity="center_horizontal">
-            <RelativeLayout
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content">
-                <ImageView
-                    android:id="@+id/iv_screenshot_timeline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-
-                <ImageView
-                    android:id="@+id/iv_del_timeline"
-                    android:layout_height="20dp"
-                    android:layout_width="20dp"
-                    android:focusable="false"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/icon_sub"
-                    />
-            </RelativeLayout>
             <TextView
-                style="@style/commen_text_style"
-                android:text="朋友圈截图"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_screenshot_elebus"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1.0"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
-            <RelativeLayout
+                android:id="@+id/tv_commission"
                 android:layout_height="wrap_content"
-                android:layout_width="wrap_content">
-                <ImageView
-                    android:id="@+id/iv_screenshot_elebus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                android:layout_width="match_parent"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:textColor="@color/text_black"
+                android:text="佣金："/>
 
-                <ImageView
-                    android:id="@+id/iv_del_elebus"
-                    android:layout_height="20dp"
-                    android:layout_width="20dp"
-                    android:focusable="false"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/icon_sub"
-                    />
-            </RelativeLayout>
             <TextView
-                style="@style/commen_text_style"
-                android:text="电商好评截图"/>
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:textColor="@color/text_gray"
+                android:text="请上传您的审核截图"/>
+            <ImageView
+                android:id="@+id/iv_timeline"
+                android:layout_height="257dp"
+                android:layout_width="191dp"
+                android:background="@drawable/img_timeline_default"
+                android:padding="5dp"
+                android:scaleType="fitXY"
+                android:layout_marginTop="20dp"
+                />
+            <ImageView
+                android:id="@+id/iv_elebus"
+                android:layout_height="257dp"
+                android:layout_width="191dp"
+                android:background="@drawable/img_elebus_default"
+                android:padding="5dp"
+                android:scaleType="fitXY"
+                android:layout_marginTop="20dp"
+                />
+            <Button
+                android:id="@+id/btn_share_submit"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_margin="20dp"
+                android:textSize="16sp"
+                android:textColor="@color/white"
+                android:background="@drawable/btn_selector"
+                android:padding="10dp"
+                android:text="提交审核"/>
         </LinearLayout>
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_share_submit"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_margin="20dp"
-        android:background="@drawable/btn_selector"
-        android:padding="10dp"
-        android:text="提交"/>
+    </ScrollView>
 </LinearLayout>
