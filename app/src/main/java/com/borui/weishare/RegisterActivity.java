@@ -110,9 +110,12 @@ public class RegisterActivity extends BaseActivity {
 
     int countSec = 60;
 
-    @OnClick({R.id.btn_get_vericode, R.id.btn_register, R.id.iv_head})
+    @OnClick({R.id.iv_back,R.id.btn_get_vericode, R.id.btn_register, R.id.iv_head})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.iv_back:
+                finish();
+                break;
             case R.id.btn_get_vericode:
                 getVericode();
                 break;

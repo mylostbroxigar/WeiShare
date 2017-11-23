@@ -198,8 +198,8 @@
                     android:textSize="@dimen/normal_text_size"/>
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/iv_head"
-                    android:layout_height="100dp"
-                    android:layout_width="100dp"
+                    android:layout_height="60dp"
+                    android:layout_width="60dp"
                     android:layout_marginLeft="10dp"
                     android:src="@drawable/avtar_default"/>
             </LinearLayout>
