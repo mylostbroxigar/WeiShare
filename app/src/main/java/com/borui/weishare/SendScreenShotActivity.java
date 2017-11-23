@@ -59,7 +59,6 @@ public class SendScreenShotActivity extends BaseActivity {
         setContentView(R.layout.activity_screenshot);
         ButterKnife.bind(this);
         merchant = getIntent().getParcelableExtra("merchant");
-        merchant.setMerchantType(RegisterActivity.ROLE_COMPANY_ONLINE);
         tvCommission.setText("佣金："+merchant.getCommission()+"元");
 //        int imageWidth = DensityUtil.screenWidth / 2 - 40;
 //        int imageHeight = imageWidth * DensityUtil.screenHeight / DensityUtil.screenWidth;
@@ -161,7 +160,7 @@ public class SendScreenShotActivity extends BaseActivity {
                 params.put("userId", Cache.currenUser.getData().getId() + "");
                 List<ImagePath> images = new ArrayList<>();
                 images.add(new ImagePath(timeline_shot.getOriginalPath(), "auditingfile1"));
-                if (merchant.getMerchantType().equals("3"))
+                if (merchant.getMerchantType().equals(RegisterActivity.ROLE_COMPANY_ONLINE))
                     images.add(new ImagePath(elebus_shot.getOriginalPath(), "auditingfile2"));
                 VolleyUtil.getInstance().doPost(APIAddress.SEND_SCREENSHOT, params, images, new TypeToken<BaseVo>() {
                 }.getType(), "sendScreenshot");

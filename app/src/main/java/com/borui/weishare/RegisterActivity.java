@@ -52,8 +52,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class RegisterActivity extends BaseActivity {
 
     public static final String ROLE_USER="4";
-    public static final String ROLE_COMPANY="3";
-    public static final String ROLE_COMPANY_ONLINE="2";
+    public static final String ROLE_COMPANY_ONLINE="3";
+    public static final String ROLE_COMPANY="2";
 
     public static final int RESULT_REQUEST_CODE=0x101;
     @BindView(R.id.et_username)

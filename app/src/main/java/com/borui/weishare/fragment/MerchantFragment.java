@@ -12,6 +12,14 @@ import android.widget.ListView;
 
 import com.borui.weishare.PayActivity;
 import com.borui.weishare.R;
+import com.borui.weishare.net.APIAddress;
+import com.borui.weishare.net.Cache;
+import com.borui.weishare.net.VolleyUtil;
+import com.borui.weishare.vo.AuditingVo;
+import com.borui.weishare.vo.BaseVo;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,9 +46,16 @@ public class MerchantFragment extends Fragment {
         unbinder = ButterKnife.bind(this, rootView);
         adapter = new CheckAdapter(getContext());
         lvCheck.setAdapter(adapter);
+        loadAuditing();
         return rootView;
     }
 
+    private void loadAuditing(){
+        HashMap<String,String> params=new HashMap<>();
+        params.put("token", Cache.currenUser.getMsg());
+        params.put("auditingStatus","1");
+        VolleyUtil.getInstance().doPost(APIAddress.GET_MERCHANT_AUDITING,params,new TypeToken<AuditingVo>(){}.getType(),"loadAuditing");
+    }
 
     @Override
     public void onDestroyView() {
