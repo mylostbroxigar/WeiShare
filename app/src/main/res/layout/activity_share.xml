@@ -53,7 +53,9 @@
                 android:lines="5"
                 android:padding="5dp"
                 android:textColor="@color/text_black"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:gravity="start"
+                android:background="@drawable/shape_gray_border"/>
         </LinearLayout>
         <GridView
             android:id="@+id/grid_select_image"
@@ -82,6 +84,7 @@
                 android:textSize="14sp"
                 android:textColor="@color/text_gray"
                 android:text="分享到本地"
+                android:checked="true"
                 android:button="@drawable/cb_select"/>
         </RelativeLayout>
         <LinearLayout

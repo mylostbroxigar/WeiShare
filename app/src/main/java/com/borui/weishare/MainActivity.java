@@ -130,6 +130,7 @@ public class MainActivity extends BaseActivity{
                 SPUtil.getString(this, SPUtil.KEY_LONGITUDE).equals("") ||
                 SPUtil.getString(this, SPUtil.KEY_CITY).equals("")) {
             startActivityForResult(new Intent(this, CitySelectActivity.class), REQUEST_CODE_LOCATION);
+//                startActivityForResult(new Intent(MainActivity.this, CityPickerActivity.class),REQUEST_CODE_LOCATION);
         } else {
             onLocationSuccess();
         }
@@ -283,6 +284,7 @@ public class MainActivity extends BaseActivity{
             finish();
         }
         if (requestCode == REQUEST_CODE_LOCATION && resultCode == 200) {
+//            String city = data.getStringExtra(CityPickerActivity.KEY_PICKED_CITY);
             onLocationSuccess();
         }
     }

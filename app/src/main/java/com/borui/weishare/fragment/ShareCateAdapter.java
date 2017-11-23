@@ -23,6 +23,7 @@ import com.borui.weishare.ShareDetailActivity;
 import com.borui.weishare.net.APIAddress;
 import com.borui.weishare.net.Cache;
 import com.borui.weishare.util.ImageUtil;
+import com.borui.weishare.view.CornerImageView;
 import com.borui.weishare.vo.Shares;
 import com.bumptech.glide.Glide;
 
@@ -129,7 +130,7 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
 
     static class ViewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.iv_share_thumb)
-        ImageView ivShareThumb;
+        CornerImageView ivShareThumb;
         @BindView(R.id.tv_share_comment)
         TextView tvShareComment;
         @BindView(R.id.tv_location)

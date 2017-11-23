@@ -60,6 +60,30 @@ public class ImageUtil {
         return newPath;
     }
 
+    public static String saveBitmap(Bitmap bmp,String bmpname){
+        String newPath=SdcardUtil.getCompressFolder()+"/"+bmpname+".jpg";
+        File file = new File(newPath);
+        file.delete();
+        FileOutputStream fos = null;
+        try {
+            file.createNewFile();
+            fos = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 90, fos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.flush();
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return newPath;
+    }
+
     public static void deleteImage(String path){
         if(new File(path).exists()){
             new File(path).delete();

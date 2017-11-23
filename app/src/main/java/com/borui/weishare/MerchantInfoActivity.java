@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.borui.weishare.net.APIAddress;
 import com.borui.weishare.net.Cache;
 import com.borui.weishare.net.VolleyUtil;
+import com.borui.weishare.view.CommonDialog;
 import com.borui.weishare.vo.BaseVo;
 import com.borui.weishare.vo.ImagePath;
 import com.borui.weishare.vo.MerchantVo;
@@ -89,9 +90,9 @@ public class MerchantInfoActivity extends BaseActivity {
             List<ImagePath> images=new ArrayList<>();
             ImagePath ip=new ImagePath(imagePath,"pages");
             images.add(ip);
-            VolleyUtil.getInstance().doPost(APIAddress.GET_MERCHANT_INFO,params,images,new TypeToken<BaseVo>(){}.getType(),"updateInfo");
+            VolleyUtil.getInstance().doPost(APIAddress.UPDATE_MERCHANT_INFO,params,images,new TypeToken<BaseVo>(){}.getType(),"updateInfo");
         }else{
-            VolleyUtil.getInstance().doPost(APIAddress.GET_MERCHANT_INFO,params,new TypeToken<BaseVo>(){}.getType(),"updateInfo");
+            VolleyUtil.getInstance().doPost(APIAddress.UPDATE_MERCHANT_INFO,params,new TypeToken<BaseVo>(){}.getType(),"updateInfo");
         }
         showProgress("正在修改");
     }
@@ -147,6 +148,20 @@ public class MerchantInfoActivity extends BaseActivity {
 
             if(!TextUtils.isEmpty(merchant.getPageURL()))
                 Glide.with(this).load(APIAddress.IMAGEPATH+merchant.getPageURL()).into(ivMainImage);
+        }else{
+            commonDialog=new CommonDialog(this);
+            commonDialog.setContent("获取商户信息失败，是否重试？").setCancleButton(getResources().getString(R.string.cancle), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    commonDialog.dismiss();
+                    finish();
+                }
+            }).setOKButton(getResources().getString(R.string.ok), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    commonDialog.dismiss();
+                }
+            }).show();
         }
 
     }

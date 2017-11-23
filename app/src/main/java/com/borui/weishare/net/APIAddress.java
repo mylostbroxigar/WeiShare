@@ -24,7 +24,7 @@ public class APIAddress {
     public static final String COLLECTION=ROOT+"localshare/collections";
     public static final String LIKE=ROOT+"localshare/thumbs";
 
-    public static final String GET_MERCHANT_INFO=ROOT+"merchant/getWeshareMerchant";
+    public static final String GET_MERCHANT_INFO=ROOT+"merchant/getWeshareMerchantByUserId";
     public static final String UPDATE_MERCHANT_INFO=ROOT+"merchant/updateWeshareMerchant";
 
     //支付相关

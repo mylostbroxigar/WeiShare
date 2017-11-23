@@ -1,9 +1,14 @@
 package com.borui.weishare;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +19,7 @@ import android.widget.Toast;
 
 import com.borui.weishare.net.APIAddress;
 import com.borui.weishare.net.VolleyUtil;
+import com.borui.weishare.util.ImageUtil;
 import com.borui.weishare.util.RegexUtil;
 import com.borui.weishare.view.CommonDialog;
 import com.borui.weishare.vo.BaseVo;
@@ -48,6 +54,8 @@ public class RegisterActivity extends BaseActivity {
     public static final String ROLE_USER="4";
     public static final String ROLE_COMPANY="3";
     public static final String ROLE_COMPANY_ONLINE="2";
+
+    public static final int RESULT_REQUEST_CODE=0x101;
     @BindView(R.id.et_username)
     EditText etUsername;
     @BindView(R.id.et_password)
@@ -128,13 +136,45 @@ public class RegisterActivity extends BaseActivity {
                 .subscribe(new RxBusResultSubscriber<ImageMultipleResultEvent>() {
                     @Override
                     protected void onEvent(ImageMultipleResultEvent imageMultipleResultEvent) throws Exception {
-                        headPath = imageMultipleResultEvent.getResult().get(0).getOriginalPath();
-                        Glide.with(RegisterActivity.this).load(new File(headPath)).centerCrop().override(ivHead.getWidth(), ivHead.getHeight()).into(ivHead);
+//                        headPath = imageMultipleResultEvent.getResult().get(0).getOriginalPath();
+//                        Glide.with(RegisterActivity.this).load(new File(headPath)).centerCrop().override(ivHead.getWidth(), ivHead.getHeight()).into(ivHead);
+                            startPhotoZoom(Uri.fromFile(new File(imageMultipleResultEvent.getResult().get(0).getOriginalPath())));
                     }
 
                 }).openGallery();
     }
+    /**
+     * 裁剪图片方法实现
+     *
+     * @param uri
+     */
+    public void startPhotoZoom(Uri uri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        // 设置裁剪
+        intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        // outputX outputY 是裁剪图片宽高
+//        intent.putExtra("outputX", 340);
+//        intent.putExtra("outputY", 340);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, RESULT_REQUEST_CODE);
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("boruiz", "onActivityResult: ===" );
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==RESULT_REQUEST_CODE&&resultCode==RESULT_OK){
+            if (data.getExtras() != null) {
+                Bitmap photo = data.getExtras().getParcelable("data");
+                headPath=ImageUtil.saveBitmap(photo,"avtor");
+                ivHead.setImageBitmap(photo);
+            }
+        }
+    }
     private void getVericode() {
         String telephone = etTelephone.getText().toString().trim();
         if (TextUtils.isEmpty(telephone)) {

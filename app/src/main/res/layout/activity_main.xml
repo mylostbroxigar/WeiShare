@@ -84,7 +84,7 @@
             <TextView
                 android:id="@+id/tv_menu_account"
                 style="@style/menu_text_style"
-                android:text="账号"/>
+                android:text="账户"/>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout

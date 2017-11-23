@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@drawable/bg_round_white">
     <RelativeLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
 
-        <ImageView
+        <com.borui.weishare.view.CornerImageView
             android:id="@+id/iv_share_thumb"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
