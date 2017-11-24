@@ -44,4 +44,5 @@ dependencies {
     compile('cn.qqtheme.framework:WheelPicker:latest.release') {
         exclude group: 'com.android.support'
     }
+    compile files('lib/pinyin4j-2.5.0.jar')
 }
