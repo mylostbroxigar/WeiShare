@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:ignore="RtlHardcoded">
+
+    <TextView
+        android:id="@+id/tv_item_city_listview_letter"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textColor="@color/text_gray"
+        android:textSize="18sp"
+        android:background="@color/color_border"
+        android:clickable="false"
+        android:padding="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_item_city_listview_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:background="@color/white"
+        android:clickable="true"
+        android:textSize="14sp"
+        android:textColor="@color/text_gray"/>
+</LinearLayout>

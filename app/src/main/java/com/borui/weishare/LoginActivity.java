@@ -73,11 +73,17 @@ public class LoginActivity extends BaseActivity {
         initShareCate();
         welconeStartTime=System.currentTimeMillis();
         handler.sendEmptyMessageDelayed(0,5000);
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                new CreateCity().createCity(LoginActivity.this);
+//            }
+//        }).start();
     }
     private void initLocation(){
 
         //初始化位置
-        LocationUtil.getInstance().startLocation();
+//        LocationUtil.getInstance().startLocation();
     }
     private void initShareCate(){
 

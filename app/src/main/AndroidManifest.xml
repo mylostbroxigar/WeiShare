@@ -81,7 +81,7 @@
         <activity android:name=".PasswordActivity"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait"/>
-        <activity android:name=".CitySelectActivity"
+        <activity android:name=".view.citypicker.CityPickerActivity"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait"/>
         <activity android:name=".MerchantRegisterActivity"

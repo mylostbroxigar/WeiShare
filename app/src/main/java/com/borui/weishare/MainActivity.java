@@ -29,6 +29,7 @@ import com.borui.weishare.util.DensityUtil;
 import com.borui.weishare.util.SPUtil;
 import com.borui.weishare.view.CommonDialog;
 import com.borui.weishare.view.CommonInputDialog;
+import com.borui.weishare.view.citypicker.CityPickerActivity;
 import com.borui.weishare.vo.MerchantVo;
 import com.borui.weishare.vo.ShareCate;
 import com.borui.weishare.vo.Shares;
@@ -129,7 +130,7 @@ public class MainActivity extends BaseActivity{
         if (SPUtil.getString(this, SPUtil.KEY_LATITUDE).equals("") ||
                 SPUtil.getString(this, SPUtil.KEY_LONGITUDE).equals("") ||
                 SPUtil.getString(this, SPUtil.KEY_CITY).equals("")) {
-            startActivityForResult(new Intent(this, CitySelectActivity.class), REQUEST_CODE_LOCATION);
+            startActivityForResult(new Intent(this, CityPickerActivity.class), REQUEST_CODE_LOCATION);
 //                startActivityForResult(new Intent(MainActivity.this, CityPickerActivity.class),REQUEST_CODE_LOCATION);
         } else {
             onLocationSuccess();

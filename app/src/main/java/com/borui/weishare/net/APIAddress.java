@@ -26,7 +26,7 @@ public class APIAddress {
 
     public static final String GET_MERCHANT_INFO=ROOT+"merchant/getWeshareMerchantByUserId";
     public static final String UPDATE_MERCHANT_INFO=ROOT+"merchant/updateWeshareMerchant";
-    public static final String GET_MERCHANT_AUDITING=ROOT+"/auditing/merchant/query";
+    public static final String GET_MERCHANT_AUDITING=ROOT+"auditing/merchant/query";
 
     //支付相关
     public static final String ALIPAY_WEIXIN_AUTH=ROOT+"user/auth/code";
