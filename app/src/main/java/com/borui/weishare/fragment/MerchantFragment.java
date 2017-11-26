@@ -69,7 +69,6 @@ public class MerchantFragment extends BaseFragment {
     public void onResult(BaseVo baseVo) {
         dismissProgress();
         if (baseVo.getTag().equals("loadAuditing")) {
-
             adapter = new CheckAdapter(getContext());
             lvCheck.setAdapter(adapter);
 
