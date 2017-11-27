@@ -44,16 +44,20 @@ public class MainFragment extends Fragment {
     ViewPager sharesContent;
 
     Handler handler=new Handler();
-
+    View rootView;
     private ContentAdapter contentAdapter;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_shares, null);
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_shares, null);
 
-        ButterKnife.bind(this, view);
-        return view;
+            ButterKnife.bind(this, rootView);
+        } else {
+            ((ViewGroup) rootView.getRootView()).removeView(rootView);
+        }
+        return rootView;
     }
 
     @Override

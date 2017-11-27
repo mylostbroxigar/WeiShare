@@ -237,7 +237,7 @@ public class MainActivity extends BaseActivity{
 //        layoutMenuMain.setBackgroundColor(ContextCompat.getColor(this, i == 0 ? R.color.button_gray : R.color.button_white));
         ivMenuMain.setImageResource(i == 0 ? R.drawable.menu_main_checked : R.drawable.menu_main_normal);
         tvMenuMain.setTextColor(ContextCompat.getColor(this, i == 0 ? R.color.main_yellow : R.color.color_border));
-        ivMenuMerchant.setImageResource(i == 1 ? R.drawable.menu_merchant_checked : R.drawable.menu_merchant_checked);
+        ivMenuMerchant.setImageResource(i == 1 ? R.drawable.menu_merchant_checked : R.drawable.menu_merchant_normal);
         tvMenuMerchant.setTextColor(ContextCompat.getColor(this, i == 1 ? R.color.main_yellow : R.color.color_border));
         ivMenuAccount.setImageResource(i == 2 ? R.drawable.menu_account_checked : R.drawable.menu_account_normal);
         tvMenuAccount.setTextColor(ContextCompat.getColor(this, i == 2 ? R.color.main_yellow : R.color.color_border));

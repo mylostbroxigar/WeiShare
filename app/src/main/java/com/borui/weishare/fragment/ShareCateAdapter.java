@@ -74,7 +74,8 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
         layoutParams.height=getHeight(shareItem);
         holder.ivShareThumb.setLayoutParams(layoutParams);
 
-        Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPics().get(0).getPicPath()).thumbnail(0.1f).placeholder(ImageUtil.getDefultDrawable(context,layoutParams.width,layoutParams.height))
+        Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPics().get(0).getPicPath())
+//                .placeholder(ImageUtil.getDefultDrawable(context,layoutParams.width,layoutParams.height))
                 .error(ImageUtil.getErrorDrawable(context,layoutParams.width,layoutParams.height)).into(holder.ivShareThumb);
         Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPersonalPicture()).placeholder(R.drawable.avtar_default).error(R.drawable.avtar_default).into(holder.ivHead);
 

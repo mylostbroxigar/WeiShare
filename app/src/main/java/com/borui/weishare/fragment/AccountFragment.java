@@ -59,16 +59,22 @@ public class AccountFragment extends BaseFragment {
     @BindView(R.id.layout_bind_alipay)
     LinearLayout layoutBindAlipay;
     Unbinder unbinder;
-
+    View rootView;
     boolean alipayAuthed;
     boolean weixinAuthed;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_account, null);
-        unbinder = ButterKnife.bind(this, view);
-        initView();
-        return view;
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_account, null);
+
+            ButterKnife.bind(this, rootView);
+
+            initView();
+        } else {
+            ((ViewGroup) rootView.getRootView()).removeView(rootView);
+        }
+        return rootView;
     }
 
     private void initView() {

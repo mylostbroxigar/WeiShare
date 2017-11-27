@@ -8,61 +8,38 @@ import java.util.List;
 
 public class AuditingVo extends BaseVo {
 
-    private List<AuditingItem> data;
+    private List<AuditingBean> data;
 
-    public List<AuditingItem> getData() {
+    public List<AuditingBean> getData() {
         return data;
     }
 
-    public void setData(List<AuditingItem> data) {
+    public void setData(List<AuditingBean> data) {
         this.data = data;
     }
 
-    public static class AuditingItem {
+    public static class AuditingBean {
         /**
          * id : 3
-         * merchantId : 10010
-         * userId : 2
          * auditingPicture1 : /20171123/auditing/10010/20171123223919_zuimei_wallpaper_b77a4c9568790ee515403c0ffd3514b0_f73796facad0fbe91970363b8b312bd4_0.jpg
          * auditingPicture2 :
-         * auditingTime : 2017-11-23 22:39:19
-         * auditingStatus : 1
-         * comment :
-         * uploadTime : 2017-11-23 22:39:19
+         * username : boruiz
+         * commission : 3
          */
 
         private int id;
-        private int merchantId;
-        private int userId;
         private String auditingPicture1;
         private String auditingPicture2;
-        private String auditingTime;
-        private int auditingStatus;
-        private String comment;
-        private String uploadTime;
+        private String username;
+        private int commission;
 
+        private int auditingStatus;
         public int getId() {
             return id;
         }
 
         public void setId(int id) {
             this.id = id;
-        }
-
-        public int getMerchantId() {
-            return merchantId;
-        }
-
-        public void setMerchantId(int merchantId) {
-            this.merchantId = merchantId;
-        }
-
-        public int getUserId() {
-            return userId;
-        }
-
-        public void setUserId(int userId) {
-            this.userId = userId;
         }
 
         public String getAuditingPicture1() {
@@ -81,12 +58,20 @@ public class AuditingVo extends BaseVo {
             this.auditingPicture2 = auditingPicture2;
         }
 
-        public String getAuditingTime() {
-            return auditingTime;
+        public String getUsername() {
+            return username;
         }
 
-        public void setAuditingTime(String auditingTime) {
-            this.auditingTime = auditingTime;
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public int getCommission() {
+            return commission;
+        }
+
+        public void setCommission(int commission) {
+            this.commission = commission;
         }
 
         public int getAuditingStatus() {
@@ -95,22 +80,6 @@ public class AuditingVo extends BaseVo {
 
         public void setAuditingStatus(int auditingStatus) {
             this.auditingStatus = auditingStatus;
-        }
-
-        public String getComment() {
-            return comment;
-        }
-
-        public void setComment(String comment) {
-            this.comment = comment;
-        }
-
-        public String getUploadTime() {
-            return uploadTime;
-        }
-
-        public void setUploadTime(String uploadTime) {
-            this.uploadTime = uploadTime;
         }
     }
 }
