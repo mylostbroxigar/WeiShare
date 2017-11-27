@@ -93,7 +93,7 @@ public class SendScreenShotActivity extends BaseActivity {
                         setResult(200);
                         finish();
                     }
-                });
+                }).show();
 
             } else {
                 showDialog("提交失败：" + baseVo.getMsg());

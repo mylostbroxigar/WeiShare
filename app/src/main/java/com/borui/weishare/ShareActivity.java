@@ -26,6 +26,7 @@ import com.borui.weishare.net.VolleyUtil;
 import com.borui.weishare.util.DensityUtil;
 import com.borui.weishare.util.ImageUtil;
 import com.borui.weishare.util.SPUtil;
+import com.borui.weishare.view.CommonDialog;
 import com.borui.weishare.view.DictSelectDialog;
 import com.borui.weishare.vo.BaseVo;
 import com.borui.weishare.vo.ImagePath;
@@ -218,6 +219,14 @@ public class ShareActivity extends BaseActivity {
                 }
                 imageAdapter.clearUrls();
                 etComment.setText("");
+                commonDialog=new CommonDialog(this);
+                commonDialog.removeCancleButton().setOKButton("上传成功", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        commonDialog.dismiss();
+                        finish();
+                    }
+                }).show();
             } else {
                 showDialog("上传失败：" + baseVo.getMsg());
             }

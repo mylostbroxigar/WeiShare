@@ -154,6 +154,7 @@ public class FileUploadUtil {
             e.printStackTrace();
         }
 
+        Log.e(TAG, "upload: result="+resultStr );
         return resultStr;
     }
 
