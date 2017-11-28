@@ -82,13 +82,13 @@ public class MerchantFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        tvCommission.setText(Cache.currenUser.getData().getBalance()+"");
+        tvCommission.setText(Cache.getInstance().getCurrenUser().getData().getBalance()+"");
         loadAuditing(true);
     }
 
     private void loadAuditing(boolean showProgress) {
         HashMap<String, String> params = new HashMap<>();
-        params.put("token", Cache.currenUser.getMsg());
+        params.put("token", Cache.getInstance().getCurrenUser().getMsg());
         params.put("auditingStatus", "0");
         VolleyUtil.getInstance().doPost(APIAddress.GET_MERCHANT_AUDITING, params, new TypeToken<AuditingVo>() {
         }.getType(), "loadAuditing");
@@ -98,7 +98,7 @@ public class MerchantFragment extends BaseFragment {
 
     private void auditing(AuditingVo.AuditingBean auditingBean,int status){
         HashMap<String, String> params = new HashMap<>();
-        params.put("token", Cache.currenUser.getMsg());
+        params.put("token", Cache.getInstance().getCurrenUser().getMsg());
         params.put("id", auditingBean.getId()+"");
         params.put("auditingStatus", status+"0");
         params.put("comment","");

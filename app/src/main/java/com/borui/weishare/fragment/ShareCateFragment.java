@@ -56,7 +56,6 @@ public class ShareCateFragment extends BaseFragment {
     //    @BindView(R.id.tv_footer)
 //    TextView tvFooter;
     int page;
-    boolean end;
     private Handler handler = new Handler() {
         @Override
         public void dispatchMessage(Message msg) {
@@ -109,7 +108,7 @@ public class ShareCateFragment extends BaseFragment {
                 loadCate(true);
             }
         });
-        gridShare.addOnScrollListener(new EndlessRecyclerOnScrollListener(refreshLayout.getHeight()) {
+        gridShare.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
             @Override
             public void onLoadMore() {
                 loadCate(false);
@@ -120,15 +119,7 @@ public class ShareCateFragment extends BaseFragment {
         gridShare.setAdapter(adapter);
 
 
-        if (Cache.shareCache.get(cateCode) != null && Cache.shareCache.get(cateCode).size() > 0) {
-//            handler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//
-//                    setGridShare();
-//                }
-//            },200);
-        } else {
+        if (Cache.getInstance().getShareCache(cateCode) == null || Cache.getInstance().getShareCache(cateCode).size()==0) {
             loadCate(true);
         }
 
@@ -137,6 +128,7 @@ public class ShareCateFragment extends BaseFragment {
         StaggeredGridLayoutManager staggeredGridLayoutManager =
                 new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL);
         staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+//        gridShare.setRecycledViewPool();
         gridShare.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
@@ -155,40 +147,21 @@ public class ShareCateFragment extends BaseFragment {
         });
         gridShare.setLayoutManager(staggeredGridLayoutManager);
     }
-    private void setGridShare() {
-
-
-//        int width=gridShare.getWidth()/2-DensityUtil.dip2px(20);
-//        adapter = new ShareCateAdapter(getContext(), cateCode,width);
-//        adapter.setOnOperateClickListener(new ShareCateAdapter.OnOperateClickListener() {
-//            @Override
-//            public void onLikeClick(int position) {
-//                like(position);
-//            }
-//
-//            @Override
-//            public void onCollectClick(int position) {
-//                collect(position);
-//            }
-//        });
-//        gridShare.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-    }
 
 
     boolean isLoading;
+    boolean finish;
 
     private void loadCate(boolean refresh) {
 
         if (isLoading)
             return;
         isLoading = true;
-        Log.e("boruiz", "loadCate: refresh=" + refresh);
         if (refresh) {
-            end = false;
+            finish = false;
             page = 1;
         }else{
-            if(!end){
+            if(!finish){
                 tvFooter.setVisibility(View.VISIBLE);
                 tvFooter.setText("正在加载...");
             }else{
@@ -196,7 +169,6 @@ public class ShareCateFragment extends BaseFragment {
             }
         }
         Map<String, String> params = new HashMap<>();
-        Log.e("boruiz", "loadCate: getContext=" + getContext() + "//" + getActivity());
         params.put("longitude", SPUtil.getString(getActivity(), SPUtil.KEY_LONGITUDE));
         params.put("latitude", SPUtil.getString(getContext(), SPUtil.KEY_LATITUDE));
         params.put("merchantType", cateCode + "");
@@ -218,32 +190,28 @@ public class ShareCateFragment extends BaseFragment {
 
     public void onResult(Shares shares) {
 
-        isLoading = false;
         if (!shares.getTag().equals("" + cateCode))
             return;
+
+        isLoading = false;
         tvFooter.setVisibility(View.GONE);
         refreshLayout.setRefreshing(false);
-//        tvFooter.setText("");
 
         if (shares.getCode().equals("0")) {
 
             if (shares.getData() == null || shares.getData().size() == 0) {
                 tvFooter.setText("暂无更多数据");
-//                gridShare.setPushRefreshEnable(false);
-//                gridShare.noMoreData();
-                end = true;
+                tvFooter.setVisibility(View.VISIBLE);
+                finish = true;
             } else {
                 if (page <= 1) {
-                    Cache.shareCache.get(cateCode).clear();
-                    Cache.shareCache.put(cateCode, shares.getData());
-                    setGridShare();
+                    Cache.getInstance().inputShareCache(cateCode,shares.getData(),true);
+                    adapter.notifyDataSetChanged();
                 } else {
 
-                    Cache.shareCache.get(cateCode).addAll(shares.getData());
+                    Cache.getInstance().inputShareCache(cateCode,shares.getData(),false);
                     adapter.notifyItemRangeChanged(adapter.getItemCount(), shares.getData().size());
                 }
-//                gridShare.setPushRefreshEnable(true);
-//                gridShare.setFooterViewText(R.string.load_more_text);
                 page++;
             }
 

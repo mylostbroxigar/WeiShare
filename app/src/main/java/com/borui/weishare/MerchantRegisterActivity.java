@@ -122,11 +122,11 @@ public class MerchantRegisterActivity extends BaseActivity {
             return;
         }
         Map<String, String> params = new HashMap<>();
-        params.put("token", Cache.currenUser.getMsg());
+        params.put("token", Cache.getInstance().getCurrenUser().getMsg());
         params.put("merchantName", merchantname);
         params.put("merchantAddress", merchantAddress);
-        params.put("merchantType", Cache.currenUser.getData().getRoles());
-        params.put("merchantUsers", Cache.currenUser.getData().getId() + "");
+        params.put("merchantType", Cache.getInstance().getCurrenUser().getData().getRoles());
+        params.put("merchantUsers", Cache.getInstance().getCurrenUser().getData().getId() + "");
         ArrayList<ImagePath> images = new ArrayList<>();
         images.add(new ImagePath(business_licence_image, "licences"));
         images.add(new ImagePath(legal_personalid_image, "personCard"));

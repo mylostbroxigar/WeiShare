@@ -37,7 +37,7 @@ public class PasswordActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password);
         ButterKnife.bind(this);
-        tvUsername.setText(Cache.currenUser.getData().getUsername());
+        tvUsername.setText(Cache.getInstance().getCurrenUser().getData().getUsername());
     }
 
     @OnClick(R.id.btn_modify)

@@ -64,7 +64,7 @@ public class MerchantInfoActivity extends BaseActivity {
 
     private void loadMerchantInfo(){
         HashMap<String,String> params=new HashMap<>();
-        params.put("token", Cache.currenUser.getMsg());
+        params.put("token", Cache.getInstance().getCurrenUser().getMsg());
         VolleyUtil.getInstance().doPost(APIAddress.GET_MERCHANT_INFO,params,new TypeToken<MerchantVo>(){}.getType(),"getInfo");
         showProgress("");
     }
@@ -83,7 +83,7 @@ public class MerchantInfoActivity extends BaseActivity {
             return;
         }
         HashMap<String,String> params=new HashMap<>();
-        params.put("token", Cache.currenUser.getMsg());
+        params.put("token", Cache.getInstance().getCurrenUser().getMsg());
         params.put("id", merchant.getId()+"");
         params.put("commission",commissionStr);
         if(!TextUtils.isEmpty(imagePath)){

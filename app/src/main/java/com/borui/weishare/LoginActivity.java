@@ -156,11 +156,7 @@ public class LoginActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResult(ShareCate shareCate){
         if(shareCate.getCode().equals("0")){
-            for (ShareCate.Dict data:shareCate.getData()){
-                Cache.shareCache.put(data.getId(),new ArrayList<Shares.ShareItem>());
-            }
-
-            Cache.shareCate=shareCate;
+            Cache.getInstance().setShareCate(shareCate);
         }
         cateInited=true;
         long staytime=3000+welconeStartTime-System.currentTimeMillis();
@@ -187,7 +183,7 @@ public class LoginActivity extends BaseActivity {
         }
         dismissProgress();
         if (uservo.getCode().equals("0")) {
-            Cache.currenUser = uservo;
+            Cache.getInstance().setCurrenUser(uservo);
             SPUtil.insertBoolean(this, SPUtil.KEY_LOGINED, true);
 
             Intent intent = new Intent();
@@ -211,7 +207,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void autoLogin() {
-        if (SPUtil.getBoolean(this, SPUtil.KEY_LOGINED) && Cache.currenUser == null) {
+        if (SPUtil.getBoolean(this, SPUtil.KEY_LOGINED) && Cache.getInstance().getCurrenUser() == null) {
             Log.e("==========", "autoLogin: ");
             Map<String, String> params = new HashMap<>();
             params.put("username", SPUtil.getString(this, SPUtil.KEY_USERNAME));

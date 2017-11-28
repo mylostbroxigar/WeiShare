@@ -114,17 +114,17 @@ public class MainFragment extends Fragment {
         @Override
         public Fragment getItem(int position) {
             Bundle bundle=new Bundle();
-            bundle.putInt("cateCode",Cache.shareCate.getData().get(position).getId());
+            bundle.putInt("cateCode",Cache.getInstance().getShareCate().getData().get(position).getId());
             return Fragment.instantiate(getActivity(),ShareCateFragment.class.getName(),bundle);
         }
 
         @Override
         public int getCount() {
-            return Cache.shareCate.getData().size();
+            return Cache.getInstance().getShareCate().getData().size();
         }
         @Override
         public CharSequence getPageTitle(int position) {
-            return Cache.shareCate.getData().get(position).getDictName();
+            return Cache.getInstance().getShareCate().getData().get(position).getDictName();
         }
     }
 }

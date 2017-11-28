@@ -96,7 +96,7 @@ public class ShareActivity extends BaseActivity {
             tvTitle.setText("本地分享");
             layoutAddtoShare.setVisibility(View.GONE);
             layoutDict.setVisibility(View.VISIBLE);
-            tvDict.setText(Cache.shareCate.getData().get(selectDict).getDictName());
+            tvDict.setText(Cache.getInstance().getShareCate().getData().get(selectDict).getDictName());
         } else {
             tvTitle.setText("微分享");
             layoutAddtoShare.setVisibility(View.VISIBLE);
@@ -191,8 +191,8 @@ public class ShareActivity extends BaseActivity {
 
     private void share(String comment,String merchanType) {
         Map<String, String> params = new HashMap<>();
-        params.put("token", Cache.currenUser.getMsg());
-        params.put("userId", Cache.currenUser.getData().getId() + "");
+        params.put("token", Cache.getInstance().getCurrenUser().getMsg());
+        params.put("userId", Cache.getInstance().getCurrenUser().getData().getId() + "");
         params.put("longitude", SPUtil.getString(this, SPUtil.KEY_LONGITUDE));
         params.put("latitude", SPUtil.getString(this, SPUtil.KEY_LATITUDE));
         params.put("title", comment);
@@ -254,7 +254,7 @@ public class ShareActivity extends BaseActivity {
             }
         } else {
             showProgress("正在上传");
-            share(comment,Cache.shareCate.getData().get(selectDict).getId()+"");
+            share(comment,Cache.getInstance().getShareCate().getData().get(selectDict).getId()+"");
         }
 
 
@@ -284,7 +284,7 @@ public class ShareActivity extends BaseActivity {
                 break;
             case R.id.layout_dict:
                 ArrayList<String> dicts=new ArrayList<>();
-                for (ShareCate.Dict dict:Cache.shareCate.getData()
+                for (ShareCate.Dict dict:Cache.getInstance().getShareCate().getData()
                      ) {
                     dicts.add(dict.getDictName());
                 }
@@ -292,7 +292,7 @@ public class ShareActivity extends BaseActivity {
                     @Override
                     public void onSelect(int index) {
                         selectDict=index;
-                        tvDict.setText(Cache.shareCate.getData().get(selectDict).getDictName());
+                        tvDict.setText(Cache.getInstance().getShareCate().getData().get(selectDict).getDictName());
                     }
                 });
                 dictDialog.show();

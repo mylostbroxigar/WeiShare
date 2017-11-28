@@ -85,7 +85,7 @@ public class PickCashActivity extends BaseActivity {
             layoutAlipay.setVisibility(View.GONE);
             cbPickWeixin.setChecked(true);
         }
-        tvBalance.setText("账户余额："+ Cache.currenUser.getData().getBalance()+"元");
+        tvBalance.setText("账户余额："+Cache.getInstance().getCurrenUser().getData().getBalance()+"元");
     }
 
 
@@ -127,7 +127,7 @@ public class PickCashActivity extends BaseActivity {
                     return;
                 }
                 double num=Double.parseDouble(numStr);
-                if(num>Cache.currenUser.getData().getBalance()){
+                if(num>Cache.getInstance().getCurrenUser().getData().getBalance()){
                     showDialog("余额不足");
                     return;
                 }

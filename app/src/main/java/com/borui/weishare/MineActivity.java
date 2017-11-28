@@ -65,9 +65,9 @@ public class MineActivity extends BaseActivity {
 
 
     private void initView() {
-        Glide.with(this).load(APIAddress.SERVERADDRESS + Cache.currenUser.getData().getPersonalPicture()).placeholder(R.drawable.avtar_default).error(R.drawable.avtar_default).into(civHead);
-        tvUsername.setText(Cache.currenUser.getData().getUsername());
-        tvTelephone.setText(Cache.currenUser.getData().getTelphone());
+        Glide.with(this).load(APIAddress.SERVERADDRESS + Cache.getInstance().getCurrenUser().getData().getPersonalPicture()).placeholder(R.drawable.avtar_default).error(R.drawable.avtar_default).into(civHead);
+        tvUsername.setText(Cache.getInstance().getCurrenUser().getData().getUsername());
+        tvTelephone.setText(Cache.getInstance().getCurrenUser().getData().getTelphone());
 
         items.add(new ViewItem("密码管理", R.drawable.icon_mine_password, "", new View.OnClickListener() {
             @Override
@@ -75,7 +75,7 @@ public class MineActivity extends BaseActivity {
                 startActivity(new Intent(MineActivity.this, PasswordActivity.class));
             }
         }));
-        if (Cache.currenUser.getData().getRoles().equals(RegisterActivity.ROLE_USER)) {
+        if (Cache.getInstance().getCurrenUser().getData().getRoles().equals(RegisterActivity.ROLE_USER)) {
             items.add(new ViewItem("实名认证", R.drawable.icon_mine_personalid, "", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -142,7 +142,7 @@ public class MineActivity extends BaseActivity {
                 break;
             case R.id.btn_logout:
                 SPUtil.insertBoolean(this, SPUtil.KEY_LOGINED, false);
-                Cache.currenUser = null;
+                Cache.getInstance().setCurrenUser(null);
                 setResult(501);
                 finish();
                 break;

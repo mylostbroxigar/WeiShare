@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.borui.weishare.R;
@@ -62,21 +63,24 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         View view = LayoutInflater.from(context).inflate(R.layout.layout_shares_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        final Shares.ShareItem shareItem=Cache.shareCache.get(cateCode).get(position);
-        ViewGroup.LayoutParams layoutParams=holder.ivShareThumb.getLayoutParams();
+        final Shares.ShareItem shareItem=Cache.getInstance().getShareCache(cateCode).get(position);
+        ViewGroup.LayoutParams layoutParams=holder.layoutShareThumb.getLayoutParams();
         layoutParams.width=frameWidth;
         layoutParams.height=getHeight(shareItem);
-        holder.ivShareThumb.setLayoutParams(layoutParams);
+        holder.layoutShareThumb.setLayoutParams(layoutParams);
 
         Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPics().get(0).getPicPath())
+                .override(layoutParams.width,layoutParams.height)
 //                .placeholder(ImageUtil.getDefultDrawable(context,layoutParams.width,layoutParams.height))
-                .error(ImageUtil.getErrorDrawable(context,layoutParams.width,layoutParams.height)).into(holder.ivShareThumb);
+//                .error(ImageUtil.getErrorDrawable(context,layoutParams.width,layoutParams.height))
+                .into(holder.ivShareThumb);
         Glide.with(context).load(APIAddress.IMAGEPATH +shareItem.getPersonalPicture()).placeholder(R.drawable.avtar_default).error(R.drawable.avtar_default).into(holder.ivHead);
 
 
@@ -125,7 +129,7 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
     }
     @Override
     public int getItemCount() {
-        return Cache.shareCache.get(cateCode)==null?0: Cache.shareCache.get(cateCode).size();
+        return Cache.getInstance().getShareCache(cateCode)==null?0: Cache.getInstance().getShareCache(cateCode).size();
     }
 
 
@@ -148,6 +152,8 @@ public class ShareCateAdapter extends RecyclerView.Adapter<ShareCateAdapter.View
         ImageView ivLike;
         @BindView(R.id.iv_collect)
         ImageView ivCollect;
+        @BindView(R.id.layout_share_thumb)
+        RelativeLayout layoutShareThumb;
 
         ViewHolder(View view) {
             super(view);

@@ -155,9 +155,9 @@ public class SendScreenShotActivity extends BaseActivity {
                 break;
             case R.id.btn_share_submit:
                 HashMap<String, String> params = new HashMap<>();
-                params.put("token", Cache.currenUser.getMsg());
+                params.put("token", Cache.getInstance().getCurrenUser().getMsg());
                 params.put("merchantId", merchant.getId() + "");
-                params.put("userId", Cache.currenUser.getData().getId() + "");
+                params.put("userId", Cache.getInstance().getCurrenUser().getData().getId() + "");
                 List<ImagePath> images = new ArrayList<>();
                 images.add(new ImagePath(timeline_shot.getOriginalPath(), "auditingfile1"));
                 if (merchant.getMerchantType().equals(RegisterActivity.ROLE_COMPANY_ONLINE))

@@ -78,7 +78,7 @@ public class AccountFragment extends BaseFragment {
     }
 
     private void initView() {
-        tvCurrAccount.setText(Cache.currenUser.getData().getBalance()+"");
+        tvCurrAccount.setText(Cache.getInstance().getCurrenUser().getData().getBalance()+"");
         alipayAuthed=isAuthed("1");
         weixinAuthed=isAuthed("2");
         tvOperateAlipay.setText(alipayAuthed?"解除绑定":"立即绑定");
@@ -86,10 +86,10 @@ public class AccountFragment extends BaseFragment {
     }
 
     private boolean isAuthed(String type){
-        if(Cache.currenUser.getData().getAuths()==null||Cache.currenUser.getData().getAuths().size()==0)
+        if(Cache.getInstance().getCurrenUser().getData().getAuths()==null||Cache.getInstance().getCurrenUser().getData().getAuths().size()==0)
             return false;
 
-        for (UserVo.UserBean.AuthsBean auth:Cache.currenUser.getData().getAuths()) {
+        for (UserVo.UserBean.AuthsBean auth:Cache.getInstance().getCurrenUser().getData().getAuths()) {
             if(auth.getAuthenticationType().equals(type)){
                 return true;
             }
@@ -150,8 +150,8 @@ public class AccountFragment extends BaseFragment {
     }
     private void authAlipay(String auth_token){
         HashMap<String,String> params=new HashMap<>();
-        params.put("token",Cache.currenUser.getMsg());
-        params.put("userId",Cache.currenUser.getData().getId()+"");
+        params.put("token",Cache.getInstance().getCurrenUser().getMsg());
+        params.put("userId",Cache.getInstance().getCurrenUser().getData().getId()+"");
         params.put("auth_token",auth_token);
         params.put("auth_type","1");
         VolleyUtil.getInstance().doPost(APIAddress.ALIPAY_WEIXIN_AUTH,params,new TypeToken<BaseVo>(){}.getType(),"authAlipay");
@@ -167,10 +167,10 @@ public class AccountFragment extends BaseFragment {
                 Toast.makeText(getContext(),"绑定成功",Toast.LENGTH_SHORT).show();
                 UserVo.UserBean.AuthsBean authsBean=new UserVo.UserBean.AuthsBean();
                 authsBean.setAuthenticationType("1");
-                if(Cache.currenUser.getData().getAuths()==null){
-                    Cache.currenUser.getData().setAuths(new ArrayList<UserVo.UserBean.AuthsBean>());
+                if(Cache.getInstance().getCurrenUser().getData().getAuths()==null){
+                    Cache.getInstance().getCurrenUser().getData().setAuths(new ArrayList<UserVo.UserBean.AuthsBean>());
                 }
-                Cache.currenUser.getData().getAuths().add(authsBean);
+                Cache.getInstance().getCurrenUser().getData().getAuths().add(authsBean);
                 initView();
             }else{
                 Toast.makeText(getContext(),"绑定失败，"+baseVo.getMsg(),Toast.LENGTH_SHORT).show();

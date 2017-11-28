@@ -111,7 +111,7 @@ public class MainActivity extends BaseActivity{
 //        layoutMenuMerchant.setOnClickListener(this);
         fragments = new Fragment[3];
 
-        if (Cache.currenUser.getData().getRoles().equals(RegisterActivity.ROLE_USER)) {
+        if (Cache.getInstance().getCurrenUser().getData().getRoles().equals(RegisterActivity.ROLE_USER)) {
             layoutMenuShare.setVisibility(View.VISIBLE);
             layoutMenuMerchant.setVisibility(View.GONE);
             layoutShare.setOnClickListener(new View.OnClickListener() {
@@ -142,14 +142,14 @@ public class MainActivity extends BaseActivity{
         tagBean.action = TagAliasOperatorHelper.ACTION_SET;
         tagBean.isAliasAction = false;
         tagBean.tags = new HashSet<>();
-        tagBean.tags.add("weishare_tag_" + Cache.currenUser.getData().getRoles());
+        tagBean.tags.add("weishare_tag_" + Cache.getInstance().getCurrenUser().getData().getRoles());
         TagAliasOperatorHelper.getInstance().handleAction(this, tagBean);
 
 
         TagAliasOperatorHelper.TagAliasBean aliasBean = new TagAliasOperatorHelper.TagAliasBean();
         aliasBean.action = TagAliasOperatorHelper.ACTION_SET;
         aliasBean.isAliasAction = true;
-        aliasBean.alias = "weishare_alias_" + Cache.currenUser.getData().getId();
+        aliasBean.alias = "weishare_alias_" + Cache.getInstance().getCurrenUser().getData().getId();
         TagAliasOperatorHelper.getInstance().handleAction(this, aliasBean);
     }
 
@@ -167,11 +167,7 @@ public class MainActivity extends BaseActivity{
     public void onResult(ShareCate shareCate) {
         dismissProgress();
         if (shareCate.getCode().equals("0")) {
-            for (ShareCate.Dict data : shareCate.getData()) {
-                Cache.shareCache.put(data.getId(), new ArrayList<Shares.ShareItem>());
-            }
-
-            Cache.shareCate = shareCate;
+            Cache.getInstance().setShareCate(shareCate);
             checkMenu(0);
         } else {
             commonDialog = new CommonDialog(this);
@@ -219,7 +215,7 @@ public class MainActivity extends BaseActivity{
     private void onLocationSuccess() {
         tvCity.setText(SPUtil.getString(this, SPUtil.KEY_CITY));
         //初始化分类
-        if (Cache.shareCate == null) {
+        if (Cache.getInstance().getShareCate() == null) {
             loadShareCate();
         } else {
             checkMenu(0);
@@ -252,7 +248,7 @@ public class MainActivity extends BaseActivity{
                     fragments[i] = new MainFragment();
                     break;
                 case 1:
-                    if (Cache.currenUser.getData().getRoles().equals(RegisterActivity.ROLE_USER)) {
+                    if (Cache.getInstance().getCurrenUser().getData().getRoles().equals(RegisterActivity.ROLE_USER)) {
                     } else {
                         fragments[i] = new MerchantFragment();
                     }
@@ -344,7 +340,7 @@ public class MainActivity extends BaseActivity{
                 inputDialog.dismiss();
                 showProgress("正在加载商户信息");
                 HashMap<String,String> params=new HashMap<String, String>();
-                params.put("token", Cache.currenUser.getMsg());
+                params.put("token", Cache.getInstance().getCurrenUser().getMsg());
                 params.put("merchantId",companyid);
                 VolleyUtil.getInstance().doPost(APIAddress.GET_MERCHANT,params,new TypeToken<MerchantVo>(){}.getType(),"getMerchant");
             }

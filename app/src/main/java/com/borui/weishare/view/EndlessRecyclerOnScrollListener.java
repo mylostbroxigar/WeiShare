@@ -13,13 +13,9 @@ import com.borui.weishare.util.DensityUtil;
  */
 
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
-    private int maxHeight;
-    public EndlessRecyclerOnScrollListener(int maxheight){
-        this.maxHeight=maxheight;
-    }
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-
+        super.onScrollStateChanged(recyclerView, newState);
         int lastPosition=-1;
         StaggeredGridLayoutManager layoutManager=(StaggeredGridLayoutManager) recyclerView.getLayoutManager();
         layoutManager.invalidateSpanAssignments();
@@ -29,8 +25,12 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
             lastPosition = findMax(lastPositions);
         }
         if(lastPosition == layoutManager.getItemCount()-1){
-            if(layoutManager.getItemCount()>=10)
+            Log.e("boruiz", "onScrollStateChanged: 1##"+layoutManager.getItemCount() );
+            if(layoutManager.getItemCount()>=6){
+
+                Log.e("boruiz", "onScrollStateChanged: 2" );
                 onLoadMore();
+            }
         }
     }
     //找到数组中的最大值

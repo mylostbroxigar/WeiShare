@@ -66,8 +66,8 @@ public class ShareDetailActivity extends BaseActivity {
 
         shareId = getIntent().getStringExtra("shareId");
         HashMap<String, String> params = new HashMap<>();
-        params.put("token", Cache.currenUser.getMsg());
-        params.put("userId", Cache.currenUser.getData().getId() + "");
+        params.put("token", Cache.getInstance().getCurrenUser().getMsg());
+        params.put("userId",Cache.getInstance().getCurrenUser().getData().getId() + "");
         params.put("shareId", shareId);
         params.put("longitude", SPUtil.getString(this, SPUtil.KEY_LONGITUDE));
         params.put("latitude", SPUtil.getString(this, SPUtil.KEY_LATITUDE));
@@ -98,7 +98,7 @@ public class ShareDetailActivity extends BaseActivity {
         ivLike.setClickable(false);
         ivLike.setImageResource(R.drawable.icon_thumb_select);
         Map<String, String> params = new HashMap<>();
-        params.put("token", Cache.currenUser.getMsg());
+        params.put("token",Cache.getInstance().getCurrenUser().getMsg());
         params.put("shareId", shareId);
 //        params.put("userId",Cache.currenUser.getData().getId()+"");
         VolleyUtil.getInstance().doPost(APIAddress.LIKE, params, new TypeToken<BaseVo>() {
@@ -112,9 +112,9 @@ public class ShareDetailActivity extends BaseActivity {
         ivCollect.setClickable(false);
         ivCollect.setImageResource(R.drawable.icon_collect_select);
         Map<String, String> params = new HashMap<>();
-        params.put("token", Cache.currenUser.getMsg());
+        params.put("token",Cache.getInstance().getCurrenUser().getMsg());
         params.put("shareId", shareId);
-        params.put("userId", Cache.currenUser.getData().getId() + "");
+        params.put("userId",Cache.getInstance().getCurrenUser().getData().getId() + "");
         VolleyUtil.getInstance().doPost(APIAddress.COLLECTION, params, new TypeToken<BaseVo>() {
         }.getType(), "collect");
     }
@@ -127,7 +127,7 @@ public class ShareDetailActivity extends BaseActivity {
         } else {
             if (obj.getTag().equals("like")) {
                 if (obj.getCode().equals("0")) {
-                    Cache.addLike(Integer.parseInt(shareId));
+                    Cache.getInstance().addLike(Integer.parseInt(shareId));
                     tvLike.setText((shareDetail.getData().getLiked() + 1) + "");
                     Toast.makeText(this, "已赞", Toast.LENGTH_SHORT).show();
                 } else {
@@ -138,7 +138,7 @@ public class ShareDetailActivity extends BaseActivity {
             }
             if (obj.getTag().equals("collect")) {
                 if (obj.getCode().equals("0")) {
-                    Cache.addCollect(Integer.parseInt(shareId));
+                    Cache.getInstance().addCollect(Integer.parseInt(shareId));
                     tvCollect.setText((shareDetail.getData().getCollections() + 1) + "");
                     Toast.makeText(this, "收藏成功", Toast.LENGTH_SHORT).show();
                 } else {
