@@ -1,5 +1,7 @@
 package com.borui.weishare.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -47,7 +49,6 @@ public class MerchantFragment extends BaseFragment {
     @BindView(R.id.tv_commission)
     TextView tvCommission;
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -73,6 +74,7 @@ public class MerchantFragment extends BaseFragment {
                 }
             });
             lvCheck.setAdapter(adapter);
+
         } else {
             ((ViewGroup) rootView.getRootView()).removeView(rootView);
         }
@@ -83,9 +85,11 @@ public class MerchantFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         tvCommission.setText(Cache.getInstance().getCurrenUser().getData().getBalance()+"");
-        loadAuditing(true);
     }
 
+    public void addNewAuditing(){
+
+    }
     private void loadAuditing(boolean showProgress) {
         HashMap<String, String> params = new HashMap<>();
         params.put("token", Cache.getInstance().getCurrenUser().getMsg());

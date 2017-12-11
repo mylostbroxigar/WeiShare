@@ -1,11 +1,24 @@
 package com.borui.weishare.jpush;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.borui.weishare.*;
+import com.borui.weishare.MainActivity;
+import com.borui.weishare.net.Cache;
+import com.borui.weishare.net.VolleyUtil;
+import com.borui.weishare.vo.JPAuditingResultVo;
+import com.borui.weishare.vo.JPNewAuditing;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +26,8 @@ import org.json.JSONObject;
 import java.util.Iterator;
 
 import cn.jpush.android.api.JPushInterface;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * 自定义接收器
@@ -38,6 +53,31 @@ public class MyReceiver extends BroadcastReceiver {
 			} else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
 				Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
 //				processCustomMessage(context, bundle);
+				String jsonStr=bundle.getString(JPushInterface.EXTRA_MESSAGE);
+				JSONObject jo=new JSONObject(jsonStr);
+				int flag=jo.getInt("flag");
+				if(flag==1){
+					JPNewAuditing newAuditing=VolleyUtil.mGson.fromJson(jsonStr,new TypeToken<JPNewAuditing>(){}.getType());
+					if(Cache.getInstance().getCurrenUser()!=null&&!Cache.getInstance().getCurrenUser().getData().getRoles().equals(RegisterActivity.ROLE_USER)){
+						if(MainActivity.isShowing){
+
+							Intent intent1=new Intent("com.borui.weishare.action_newauditing");
+							intent.putExtra("newAuditing",newAuditing);
+							context.sendBroadcast(intent1);
+						}else{
+							showNotification1(context);
+						}
+
+					}
+
+					//TODO 显示通知栏
+				}else if(flag==2){
+					JPAuditingResultVo auditingResultVo=VolleyUtil.mGson.fromJson(jsonStr,new TypeToken<JPAuditingResultVo>(){}.getType());
+//					Intent intent1=new Intent();
+//					intent.putExtra("newAuditing",newAuditing);
+//					context.sendBroadcast(intent1);
+					//TODO 保存到数据库
+				}
 
 			} else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
 				Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
@@ -68,6 +108,31 @@ public class MyReceiver extends BroadcastReceiver {
 
 		}
 
+	}
+
+	private void showNotification1(Context context){
+		NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+		Intent intent;
+		if(Cache.getInstance().getCurrenUser()!=null){
+
+			intent=new Intent(context, com.borui.weishare.MainActivity.class);
+			intent.putExtra("flag",1);
+		}else{
+			intent=new Intent(context, com.borui.weishare.LoginActivity.class);
+		}
+		mBuilder.setContentTitle("您有新的分享任务待审核")//设置通知栏标题
+//				.setContentText("测试内容") ///设置通知栏显示内容
+		.setContentIntent(PendingIntent.getActivities(context,0,new Intent[]{intent},0)) //设置通知栏点击意图
+//  .setNumber(number) //设置通知集合的数量
+				.setTicker("您有新的分享任务待审核") //通知首次出现在通知栏，带上升动画效果的
+				.setWhen(System.currentTimeMillis())//通知产生的时间，会在通知信息里显示，一般是系统获取到的时间
+				.setPriority(Notification.PRIORITY_DEFAULT) //设置该通知优先级
+//  .setAutoCancel(true)//设置这个标志当用户单击面板就可以让通知将自动取消
+				.setOngoing(false)//ture，设置他为一个正在进行的通知。他们通常是用来表示一个后台任务,用户积极参与(如播放音乐)或以某种方式正在等待,因此占用设备(如一个文件下载,同步操作,主动网络连接)
+				.setDefaults(Notification.DEFAULT_VIBRATE)//向通知添加声音、闪灯和振动效果的最简单、最一致的方式是使用当前的用户默认设置，使用defaults属性，可以组合
+				//Notification.DEFAULT_ALL  Notification.DEFAULT_SOUND 添加声音 // requires VIBRATE permission
+				.setSmallIcon(R.drawable.ic_launcher);//设置通知小ICON
 	}
 
 	// 打印所有的 intent extra 数据

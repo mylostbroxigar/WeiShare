@@ -201,12 +201,28 @@
             android:layout_height="52dp"
             android:layout_width="52dp"
             android:padding="2dp"
-            android:src="@drawable/menu_share_normal"
+            android:src="@drawable/menu_merchant_normal"
             android:background="@drawable/round_white"/>
         <TextView
             android:id="@+id/tv_menu_merchant"
             style="@style/menu_text_style"
             android:text="商户中心"/>
     </LinearLayout>
-
+    <RelativeLayout
+        android:id="@+id/layout_num"
+        android:layout_height="30dp"
+        android:layout_width="30dp"
+        android:background="@drawable/round_red"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/layout_menu_share"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="60dp">
+        <TextView
+            android:id="@+id/tv_num"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:textSize="10sp"
+            android:textColor="@color/white"
+            android:gravity="center"/>
+    </RelativeLayout>
 </RelativeLayout>

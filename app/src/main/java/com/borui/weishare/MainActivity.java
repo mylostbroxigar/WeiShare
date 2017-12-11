@@ -1,6 +1,9 @@
 package com.borui.weishare;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -88,9 +91,11 @@ public class MainActivity extends BaseActivity{
     ImageView btnLocalshare;
     @BindView(R.id.layout_share)
     RelativeLayout layoutShare;
-
+    public static boolean isShowing;
     CommonInputDialog inputDialog;
 
+    BroadcastReceiver newAuditingReceiver;
+    int newAuditingNum;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,6 +139,20 @@ public class MainActivity extends BaseActivity{
 //                startActivityForResult(new Intent(MainActivity.this, CityPickerActivity.class),REQUEST_CODE_LOCATION);
         } else {
             onLocationSuccess();
+        }
+        newAuditingReceiver=new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(currentMenu==1){
+                    ((MerchantFragment)fragments[1]).addNewAuditing();
+                }else{
+                    newAuditingNum++;
+                    showNewAuditingNum();
+                }
+            }
+        };
+        if(getIntent().getIntExtra("flag",0)==1){
+            checkMenu(1);
         }
     }
 
@@ -266,6 +285,9 @@ public class MainActivity extends BaseActivity{
         trans.commit();
     }
 
+    private void showNewAuditingNum(){
+
+    }
     private void hideFragments(FragmentTransaction trans) {
 
         for (Fragment fragment : fragments) {
@@ -356,5 +378,19 @@ public class MainActivity extends BaseActivity{
         if(layoutShare.getVisibility()==View.VISIBLE){
             toggleShareLayout();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isShowing=true;
+        registerReceiver(newAuditingReceiver,new IntentFilter("com.borui.weishare.action_newauditing"));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isShowing=false;
+        unregisterReceiver(newAuditingReceiver);
     }
 }
