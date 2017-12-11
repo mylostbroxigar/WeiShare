@@ -58,7 +58,6 @@ public class AccountFragment extends BaseFragment {
     TextView tvOperateAlipay;
     @BindView(R.id.layout_bind_alipay)
     LinearLayout layoutBindAlipay;
-    Unbinder unbinder;
     View rootView;
     boolean alipayAuthed;
     boolean weixinAuthed;
@@ -95,11 +94,6 @@ public class AccountFragment extends BaseFragment {
             }
         }
         return false;
-    }
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     @OnClick({R.id.tv_details, R.id.btn_cash, R.id.layout_bind_weixin, R.id.layout_bind_alipay})

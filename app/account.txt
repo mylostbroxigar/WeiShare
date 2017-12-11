@@ -1,7 +1,8 @@
 高德  15007167330
 
 jpush 76393679@qq.com
-
+masterSecret :a71d06d0dc4c02a53f919084
+appKey: 7375b0d34455da3ba2fe3282
 alipay
 
 weixin
