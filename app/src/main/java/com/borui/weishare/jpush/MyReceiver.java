@@ -15,8 +15,10 @@ import com.borui.weishare.*;
 import com.borui.weishare.MainActivity;
 import com.borui.weishare.net.Cache;
 import com.borui.weishare.net.VolleyUtil;
+import com.borui.weishare.sqlite.SqliteUtil;
 import com.borui.weishare.vo.JPAuditingResultVo;
 import com.borui.weishare.vo.JPNewAuditing;
+import com.borui.weishare.vo.MessageVo;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
@@ -77,6 +79,15 @@ public class MyReceiver extends BroadcastReceiver {
 //					intent.putExtra("newAuditing",newAuditing);
 //					context.sendBroadcast(intent1);
 					//TODO 保存到数据库
+					MessageVo msg=new MessageVo();
+					msg.setUser_id(Cache.getInstance().getCurrenUser().getData().getId());
+					msg.setTime(System.currentTimeMillis());
+					msg.setReaded(0);
+					msg.setTitle("审核通知");
+					msg.setContent("您于"+auditingResultVo.getData().getTime()+"向商户["+auditingResultVo.getData().getMerchantName()+"]提交的审核"
+							+(auditingResultVo.getData().getAuditingStatus()==1?"通过审核，获得佣金"+auditingResultVo.getData().getCommission()+"元。":"未通过审核。"));
+					msg.setAction("");
+					SqliteUtil.getInstance().insertMessage(context,msg);
 				}
 
 			} else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {

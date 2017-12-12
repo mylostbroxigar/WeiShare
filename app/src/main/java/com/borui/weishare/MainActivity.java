@@ -33,15 +33,14 @@ import com.borui.weishare.util.SPUtil;
 import com.borui.weishare.view.CommonDialog;
 import com.borui.weishare.view.CommonInputDialog;
 import com.borui.weishare.view.citypicker.CityPickerActivity;
+import com.borui.weishare.vo.AuditingVo;
 import com.borui.weishare.vo.MerchantVo;
 import com.borui.weishare.vo.ShareCate;
-import com.borui.weishare.vo.Shares;
 import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -50,7 +49,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends BaseActivity{
+public class MainActivity extends BaseActivity {
 
 
     public static int REQUEST_CODE_LOCATION = 0x101;
@@ -91,11 +90,17 @@ public class MainActivity extends BaseActivity{
     ImageView btnLocalshare;
     @BindView(R.id.layout_share)
     RelativeLayout layoutShare;
+
+    @BindView(R.id.tv_num)
+    TextView tvNum;
+    @BindView(R.id.layout_num)
+    RelativeLayout layoutNum;
     public static boolean isShowing;
     CommonInputDialog inputDialog;
 
     BroadcastReceiver newAuditingReceiver;
     int newAuditingNum;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,7 +136,18 @@ public class MainActivity extends BaseActivity{
         }
 
         setTagAlias();
-
+        newAuditingReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (currentMenu == 1) {
+                    AuditingVo.AuditingBean newAuditing=(AuditingVo.AuditingBean) intent.getSerializableExtra("newAuditing");
+                    ((MerchantFragment) fragments[1]).addNewAuditing(newAuditing);
+                } else {
+                    newAuditingNum++;
+                    showNewAuditingNum();
+                }
+            }
+        };
         if (SPUtil.getString(this, SPUtil.KEY_LATITUDE).equals("") ||
                 SPUtil.getString(this, SPUtil.KEY_LONGITUDE).equals("") ||
                 SPUtil.getString(this, SPUtil.KEY_CITY).equals("")) {
@@ -140,20 +156,7 @@ public class MainActivity extends BaseActivity{
         } else {
             onLocationSuccess();
         }
-        newAuditingReceiver=new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if(currentMenu==1){
-                    ((MerchantFragment)fragments[1]).addNewAuditing();
-                }else{
-                    newAuditingNum++;
-                    showNewAuditingNum();
-                }
-            }
-        };
-        if(getIntent().getIntExtra("flag",0)==1){
-            checkMenu(1);
-        }
+
     }
 
     private void setTagAlias() {
@@ -187,7 +190,7 @@ public class MainActivity extends BaseActivity{
         dismissProgress();
         if (shareCate.getCode().equals("0")) {
             Cache.getInstance().setShareCate(shareCate);
-            checkMenu(0);
+            checkMenu(Cache.getInstance().getCurrenUser().getData().getRoles().equals(RegisterActivity.ROLE_USER)?0:1);
         } else {
             commonDialog = new CommonDialog(this);
             commonDialog.setContent("分类加载失败，点击重试").removeCancleButton().setOKButton(null, new View.OnClickListener() {
@@ -218,29 +221,30 @@ public class MainActivity extends BaseActivity{
             }
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onResult(MerchantVo merchant){
+    public void onResult(MerchantVo merchant) {
         dismissProgress();
 
-        if(merchant.getCode().equals("0")){
-            Intent intent=new Intent(this, ShareActivity.class);
-            intent.putExtra("merchant",merchant.getData());
+        if (merchant.getCode().equals("0")) {
+            Intent intent = new Intent(this, ShareActivity.class);
+            intent.putExtra("merchant", merchant.getData());
 
             startActivity(intent);
-        }else{
-            showDialog("商户信息加载失败，"+merchant.getMsg()+",请稍后再试");
+        } else {
+            showDialog("商户信息加载失败，" + merchant.getMsg() + ",请稍后再试");
         }
     }
+
     private void onLocationSuccess() {
         tvCity.setText(SPUtil.getString(this, SPUtil.KEY_CITY));
         //初始化分类
         if (Cache.getInstance().getShareCate() == null) {
             loadShareCate();
         } else {
-            checkMenu(0);
+            onResult(Cache.getInstance().getShareCate());
         }
     }
-
 
 
     private int currentMenu = -1;
@@ -285,9 +289,15 @@ public class MainActivity extends BaseActivity{
         trans.commit();
     }
 
-    private void showNewAuditingNum(){
-
+    private void showNewAuditingNum() {
+        if(newAuditingNum==0){
+            layoutNum.setVisibility(View.GONE);
+        }else{
+            layoutNum.setVisibility(View.VISIBLE);
+            tvNum.setText(newAuditingNum>=100?"99+":""+newAuditingNum);
+        }
     }
+
     private void hideFragments(FragmentTransaction trans) {
 
         for (Fragment fragment : fragments) {
@@ -299,7 +309,7 @@ public class MainActivity extends BaseActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_CODE_MINE&&resultCode==501){
+        if (requestCode == REQUEST_CODE_MINE && resultCode == 501) {
             finish();
         }
         if (requestCode == REQUEST_CODE_LOCATION && resultCode == 200) {
@@ -319,7 +329,7 @@ public class MainActivity extends BaseActivity{
 
         switch (view.getId()) {
             case R.id.btn_mine:
-                startActivityForResult(new Intent(this,MineActivity.class),REQUEST_CODE_MINE);
+                startActivityForResult(new Intent(this, MineActivity.class), REQUEST_CODE_MINE);
                 break;
             case R.id.layout_menu_main:
                 checkMenu(0);
@@ -332,26 +342,28 @@ public class MainActivity extends BaseActivity{
                 break;
             case R.id.layout_menu_merchant:
                 checkMenu(1);
+                newAuditingNum=0;
+                showNewAuditingNum();
                 break;
             case R.id.btn_weishare:
                 showMerchantIdDialog();
                 break;
             case R.id.btn_localshare:
-                startActivity(new Intent(this,ShareActivity.class));
+                startActivity(new Intent(this, ShareActivity.class));
                 break;
         }
-        if(view.getId()!=R.id.layout_menu_share){
+        if (view.getId() != R.id.layout_menu_share) {
             hideShareLayout();
         }
     }
 
-    private void showMerchantIdDialog(){
-        inputDialog=new CommonInputDialog(this);
+    private void showMerchantIdDialog() {
+        inputDialog = new CommonInputDialog(this);
         inputDialog.setTitle("请输入商户号:").setHint("商户号").setInputType(EditorInfo.TYPE_CLASS_NUMBER).setOKButton(View.VISIBLE, null, new CommonInputDialog.OnOkClickListener() {
             @Override
             public void onClick(String companyid) {
-                if(TextUtils.isEmpty(companyid)){
-                    Toast.makeText(MainActivity.this,"商户号不能为空",Toast.LENGTH_SHORT).show();
+                if (TextUtils.isEmpty(companyid)) {
+                    Toast.makeText(MainActivity.this, "商户号不能为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -361,21 +373,24 @@ public class MainActivity extends BaseActivity{
 //                        }
                 inputDialog.dismiss();
                 showProgress("正在加载商户信息");
-                HashMap<String,String> params=new HashMap<String, String>();
+                HashMap<String, String> params = new HashMap<String, String>();
                 params.put("token", Cache.getInstance().getCurrenUser().getMsg());
-                params.put("merchantId",companyid);
-                VolleyUtil.getInstance().doPost(APIAddress.GET_MERCHANT,params,new TypeToken<MerchantVo>(){}.getType(),"getMerchant");
+                params.put("merchantId", companyid);
+                VolleyUtil.getInstance().doPost(APIAddress.GET_MERCHANT, params, new TypeToken<MerchantVo>() {
+                }.getType(), "getMerchant");
             }
         }).show();
     }
-    public void toggleShareLayout(){
-        boolean toShow=layoutShare.getVisibility()!=View.VISIBLE;
-        ivMenuShare.setImageResource(toShow?R.drawable.menu_share_checked:R.drawable.menu_share_normal);
+
+    public void toggleShareLayout() {
+        boolean toShow = layoutShare.getVisibility() != View.VISIBLE;
+        ivMenuShare.setImageResource(toShow ? R.drawable.menu_share_checked : R.drawable.menu_share_normal);
         tvMenuShare.setTextColor(ContextCompat.getColor(this, toShow ? R.color.main_yellow : R.color.color_border));
-        layoutShare.setVisibility(toShow?View.VISIBLE:View.GONE);
+        layoutShare.setVisibility(toShow ? View.VISIBLE : View.GONE);
     }
-    public void hideShareLayout(){
-        if(layoutShare.getVisibility()==View.VISIBLE){
+
+    public void hideShareLayout() {
+        if (layoutShare.getVisibility() == View.VISIBLE) {
             toggleShareLayout();
         }
     }
@@ -383,14 +398,14 @@ public class MainActivity extends BaseActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        isShowing=true;
-        registerReceiver(newAuditingReceiver,new IntentFilter("com.borui.weishare.action_newauditing"));
+        isShowing = true;
+        registerReceiver(newAuditingReceiver, new IntentFilter("com.borui.weishare.action_newauditing"));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        isShowing=false;
+        isShowing = false;
         unregisterReceiver(newAuditingReceiver);
     }
 }

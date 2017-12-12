@@ -87,8 +87,8 @@ public class MerchantFragment extends BaseFragment {
         tvCommission.setText(Cache.getInstance().getCurrenUser().getData().getBalance()+"");
     }
 
-    public void addNewAuditing(){
-
+    public void addNewAuditing(AuditingVo.AuditingBean auditingBean){
+        adapter.addAuditingBean(auditingBean);
     }
     private void loadAuditing(boolean showProgress) {
         HashMap<String, String> params = new HashMap<>();
